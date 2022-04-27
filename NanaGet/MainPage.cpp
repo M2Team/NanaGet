@@ -24,6 +24,6 @@ namespace winrt::NanaGet::implementation
 
     void MainPage::ClickHandler(IInspectable const&, RoutedEventArgs const&)
     {
-        //myButton().Content(box_value(L"Clicked"));
+        myButton().Content(box_value(L"Clicked"));
     }
 }
