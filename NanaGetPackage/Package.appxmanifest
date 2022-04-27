@@ -9,7 +9,7 @@
   <Identity
     Name="ea4b44da-1628-4e82-b7bf-18aa0bf15f76"
     Publisher="CN=Mouri"
-    Version="1.0.0.0" />
+    Version="1.0.3.0" />
 
   <Properties>
     <DisplayName>NanaGet</DisplayName>
