@@ -74,6 +74,17 @@ namespace
                 return -1;
             }
 
+            UINT DpiValue = ::GetDpiForWindow(hWnd);
+
+            ::SetWindowPos(
+                hWnd,
+                nullptr,
+                0,
+                0,
+                ::MulDiv(480, DpiValue, USER_DEFAULT_SCREEN_DPI),
+                ::MulDiv(360, DpiValue, USER_DEFAULT_SCREEN_DPI),
+                SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
+
             return 0;
         }
         case WM_SETFOCUS:
@@ -199,7 +210,7 @@ int WINAPI StartXamlIslandHost(
         WS_EX_CLIENTEDGE,
         WindowClass.lpszClassName,
         WindowTitle,
-        WS_OVERLAPPEDWINDOW,
+        WS_OVERLAPPEDWINDOW, //WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
         CW_USEDEFAULT,
         0,
         CW_USEDEFAULT,
@@ -246,7 +257,7 @@ int WINAPI wWinMain(
     int Result = ::StartXamlIslandHost(
         hInstance,
         nullptr,
-        L"NanaGetWindow",
+        L"NanaGet",
         winrt::get_abi(XamlWindowContent),
         nShowCmd);
 
