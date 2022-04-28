@@ -10,6 +10,8 @@
 #include <winrt/Windows.UI.Xaml.Hosting.h>
 #include <windows.ui.xaml.hosting.desktopwindowxamlsource.h>
 
+#include "NanaGetResources.h"
+
 namespace winrt
 {
     using winrt::Windows::UI::Xaml::ElementTheme;
@@ -256,7 +258,13 @@ int WINAPI wWinMain(
 
     int Result = ::StartXamlIslandHost(
         hInstance,
-        nullptr,
+        reinterpret_cast<HICON>(::LoadImageW(
+            hInstance,
+            MAKEINTRESOURCE(IDI_NANAGET),
+            IMAGE_ICON,
+            256,
+            256,
+            LR_SHARED)),
         L"NanaGet",
         winrt::get_abi(XamlWindowContent),
         nShowCmd);

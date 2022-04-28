@@ -20,11 +20,15 @@
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="Mile.Project.Properties.h" />
+    <ClInclude Include="NanaGetResources.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="PropertySheet.props" />
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="NanaGet.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="NanaGetResources.rc" />
   </ItemGroup>
 </Project>
