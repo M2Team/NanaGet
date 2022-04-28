@@ -6,12 +6,74 @@
   xmlns:local="using:NanaGet"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   mc:Ignorable="d">
-  <Grid>
+  <Grid Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+    <CommandBar
+      HorizontalContentAlignment="Stretch"
+      VerticalContentAlignment="Center"
+      Background="Transparent"
+      DefaultLabelPosition="Collapsed"
+      IsDynamicOverflowEnabled="False"
+      IsOpen="False">
+      <AppBarButton
+        Width="44"
+        Icon="Add"
+        ToolTipService.ToolTip="New Task" />
+      <AppBarButton
+        Width="44"
+        Icon="Play"
+        ToolTipService.ToolTip="Start All" />
+      <AppBarButton
+        Width="44"
+        Icon="Pause"
+        ToolTipService.ToolTip="Pause All" />
+      <AppBarButton
+        Width="44"
+        Icon="Delete"
+        ToolTipService.ToolTip="Clear List" />
+      <CommandBar.SecondaryCommands>
+        <AppBarButton Icon="Folder" Label="Open Downloads Folder" />
+        <AppBarButton Icon="Setting" Label="Settings" />
+        <AppBarButton Icon="Help" Label="About" />
+      </CommandBar.SecondaryCommands>
+      <CommandBar.Content>
+        <AutoSuggestBox
+          Margin="4,0"
+          HorizontalAlignment="Stretch"
+          VerticalAlignment="Center"
+          PlaceholderText="Search Downloads"
+          QueryIcon="Find" />
+      </CommandBar.Content>
+    </CommandBar>
     <Button
       x:Name="myButton"
       HorizontalAlignment="Center"
-      VerticalAlignment="Center"
       Click="ClickHandler"
       Content="Click Me" />
+
+    <StackPanel
+      Height="32"
+      Padding="4"
+      VerticalAlignment="Bottom"
+      Background="Transparent"
+      Orientation="Horizontal">
+      <FontIcon
+        VerticalAlignment="Center"
+        FontSize="15"
+        Glyph="&#xE74B;" />
+      <TextBlock
+        Margin="4,0,8,0"
+        VerticalAlignment="Center"
+        FontSize="15"
+        Text="500 KiB/s" />
+      <FontIcon
+        VerticalAlignment="Center"
+        FontSize="15"
+        Glyph="&#xE74A;" />
+      <TextBlock
+        Margin="4,0,8,0"
+        VerticalAlignment="Center"
+        FontSize="15"
+        Text="100 KiB/s" />
+    </StackPanel>
   </Grid>
 </Page>
