@@ -6,8 +6,14 @@
   xmlns:local="using:NanaGet"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   mc:Ignorable="d">
-  <Grid Background="{ThemeResource SystemControlAcrylicWindowBrush}">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="auto" />
+      <RowDefinition Height="*" />
+      <RowDefinition Height="auto" />
+    </Grid.RowDefinitions>
     <CommandBar
+      Grid.Row="0"
       HorizontalContentAlignment="Stretch"
       VerticalContentAlignment="Center"
       Background="Transparent"
@@ -44,13 +50,71 @@
           QueryIcon="Find" />
       </CommandBar.Content>
     </CommandBar>
-    <Button
-      x:Name="myButton"
-      HorizontalAlignment="Center"
-      Click="ClickHandler"
-      Content="Click Me" />
-
+    <ListView Grid.Row="1">
+      <ListView.ItemContainerStyle>
+        <Style TargetType="ListViewItem">
+          <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+          <Setter Property="VerticalContentAlignment" Value="Stretch" />
+          <Setter Property="Padding" Value="0" />
+        </Style>
+      </ListView.ItemContainerStyle>
+      <CommandBar
+        HorizontalContentAlignment="Stretch"
+        VerticalContentAlignment="Center"
+        Background="Transparent"
+        DefaultLabelPosition="Collapsed"
+        IsDynamicOverflowEnabled="False"
+        IsOpen="False">
+        <AppBarButton
+          Width="44"
+          Icon="Refresh"
+          ToolTipService.ToolTip="Retry"
+          Visibility="Collapsed" />
+        <AppBarButton
+          Width="44"
+          Icon="Play"
+          ToolTipService.ToolTip="Resume"
+          Visibility="Collapsed" />
+        <AppBarButton
+          Width="44"
+          Icon="Pause"
+          ToolTipService.ToolTip="Pause" />
+        <CommandBar.SecondaryCommands>
+          <AppBarButton Icon="Link" Label="Copy Link" />
+          <AppBarButton Icon="OpenLocal" Label="Open Folder" />
+          <AppBarSeparator />
+          <AppBarButton Icon="Cancel" Label="Cancel" />
+          <AppBarButton Icon="Delete" Label="Remove" />
+        </CommandBar.SecondaryCommands>
+        <CommandBar.Content>
+          <Grid
+            Margin="4,0"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Center">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock
+              Grid.Column="0"
+              Margin="12,0"
+              VerticalAlignment="Center"
+              Text="QQ9.0.9.exe" />
+            <StackPanel Grid.Column="1">
+              <TextBlock Text="31 MiB/s 47 MiB / 72.78 MiB 0:00:01" />
+              <ProgressBar
+                Height="4"
+                BorderThickness="0"
+                Foreground="Green"
+                Maximum="100"
+                Value="60" />
+            </StackPanel>
+          </Grid>
+        </CommandBar.Content>
+      </CommandBar>
+    </ListView>
     <StackPanel
+      Grid.Row="2"
       Height="32"
       Padding="4"
       VerticalAlignment="Bottom"
