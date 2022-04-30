@@ -7,13 +7,13 @@
   IgnorableNamespaces="uap rescap">
 
   <Identity
-    Name="ea4b44da-1628-4e82-b7bf-18aa0bf15f76"
-    Publisher="CN=Mouri"
+    Name="40174MouriNaruto.NanaGet"
+    Publisher="CN=E310A153-74A9-4D81-800B-857A8D58408A"
     Version="1.0.3.0" />
 
   <Properties>
     <DisplayName>NanaGet</DisplayName>
-    <PublisherDisplayName>Mouri</PublisherDisplayName>
+    <PublisherDisplayName>Kenji Mouri</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
