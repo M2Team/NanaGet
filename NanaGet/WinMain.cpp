@@ -20,6 +20,7 @@ namespace winrt
     using winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource;
     using winrt::Windows::UI::Xaml::Media::VisualTreeHelper;
 }
+
 namespace
 {
     static LRESULT CALLBACK XamlIslandWindowCallback(
@@ -76,6 +77,9 @@ namespace
                 return -1;
             }
 
+            // Focus on XAML Island host window for Acrylic brush support.
+            ::SetFocus(XamlWindowHandle);
+
             UINT DpiValue = ::GetDpiForWindow(hWnd);
 
             ::SetWindowPos(
@@ -83,8 +87,8 @@ namespace
                 nullptr,
                 0,
                 0,
-                ::MulDiv(480, DpiValue, USER_DEFAULT_SCREEN_DPI),
-                ::MulDiv(360, DpiValue, USER_DEFAULT_SCREEN_DPI),
+                ::MulDiv(560, DpiValue, USER_DEFAULT_SCREEN_DPI),
+                ::MulDiv(420, DpiValue, USER_DEFAULT_SCREEN_DPI),
                 SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
 
             return 0;
@@ -199,7 +203,8 @@ int WINAPI StartXamlIslandHost(
     WindowClass.hInstance = InstanceHandle;
     WindowClass.hIcon = WindowIconHandle;
     WindowClass.hCursor = ::LoadCursorW(nullptr, IDC_ARROW);
-    WindowClass.hbrBackground = reinterpret_cast<HBRUSH>(COLOR_WINDOW + 1);
+    WindowClass.hbrBackground = reinterpret_cast<HBRUSH>(
+        ::GetStockObject(BLACK_BRUSH));
     WindowClass.lpszMenuName = nullptr;
     WindowClass.lpszClassName = L"Mile.Xaml.IslandWindow";
     WindowClass.hIconSm = WindowIconHandle;
@@ -212,7 +217,7 @@ int WINAPI StartXamlIslandHost(
         WS_EX_CLIENTEDGE,
         WindowClass.lpszClassName,
         WindowTitle,
-        WS_OVERLAPPEDWINDOW, //WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
+        WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
         CW_USEDEFAULT,
         0,
         CW_USEDEFAULT,
