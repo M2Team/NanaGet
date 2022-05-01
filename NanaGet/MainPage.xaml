@@ -7,58 +7,14 @@
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   mc:Ignorable="d">
   <Grid>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="auto" />
-      <RowDefinition Height="*" />
-      <RowDefinition Height="auto" />
-    </Grid.RowDefinitions>
-    <CommandBar
-      Grid.Row="0"
-      HorizontalContentAlignment="Stretch"
-      VerticalContentAlignment="Center"
-      Background="Transparent"
-      DefaultLabelPosition="Collapsed"
-      IsDynamicOverflowEnabled="False"
-      IsOpen="False">
-      <AppBarButton
-        Width="44"
-        Icon="Add"
-        ToolTipService.ToolTip="New Task" />
-      <AppBarButton
-        Width="44"
-        Icon="Play"
-        ToolTipService.ToolTip="Start All" />
-      <AppBarButton
-        Width="44"
-        Icon="Pause"
-        ToolTipService.ToolTip="Pause All" />
-      <AppBarButton
-        Width="44"
-        Icon="Delete"
-        ToolTipService.ToolTip="Clear List" />
-      <CommandBar.SecondaryCommands>
-        <AppBarButton Icon="Folder" Label="Open Downloads Folder" />
-        <AppBarButton Icon="Setting" Label="Settings" />
-        <AppBarButton Icon="Help" Label="About" />
-      </CommandBar.SecondaryCommands>
-      <CommandBar.Content>
-        <AutoSuggestBox
-          Margin="4,0"
-          HorizontalAlignment="Stretch"
-          VerticalAlignment="Center"
-          PlaceholderText="Search Downloads"
-          QueryIcon="Find" />
-      </CommandBar.Content>
-    </CommandBar>
-    <ListView Grid.Row="1">
-      <ListView.ItemContainerStyle>
-        <Style TargetType="ListViewItem">
-          <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-          <Setter Property="VerticalContentAlignment" Value="Stretch" />
-          <Setter Property="Padding" Value="0" />
-        </Style>
-      </ListView.ItemContainerStyle>
+    <Grid>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="auto" />
+        <RowDefinition Height="*" />
+        <RowDefinition Height="auto" />
+      </Grid.RowDefinitions>
       <CommandBar
+        Grid.Row="0"
         HorizontalContentAlignment="Stretch"
         VerticalContentAlignment="Center"
         Background="Transparent"
@@ -67,77 +23,288 @@
         IsOpen="False">
         <AppBarButton
           Width="44"
-          Icon="Refresh"
-          ToolTipService.ToolTip="Retry"
-          Visibility="Collapsed" />
+          Click="NewTaskButtonClick"
+          Icon="Add"
+          ToolTipService.ToolTip="New Task" />
         <AppBarButton
           Width="44"
           Icon="Play"
-          ToolTipService.ToolTip="Resume"
-          Visibility="Collapsed" />
+          ToolTipService.ToolTip="Start All" />
         <AppBarButton
           Width="44"
           Icon="Pause"
-          ToolTipService.ToolTip="Pause" />
+          ToolTipService.ToolTip="Pause All" />
+        <AppBarButton
+          Width="44"
+          Icon="Delete"
+          ToolTipService.ToolTip="Clear List" />
         <CommandBar.SecondaryCommands>
-          <AppBarButton Icon="Link" Label="Copy Link" />
-          <AppBarButton Icon="OpenLocal" Label="Open Folder" />
-          <AppBarSeparator />
-          <AppBarButton Icon="Cancel" Label="Cancel" />
-          <AppBarButton Icon="Delete" Label="Remove" />
+          <AppBarButton Icon="Folder" Label="Open Downloads Folder" />
+          <AppBarButton
+            Click="SettingsButtonClick"
+            Icon="Setting"
+            Label="Settings" />
+          <AppBarButton
+            Click="AboutButtonClick"
+            Icon="Help"
+            Label="About" />
         </CommandBar.SecondaryCommands>
         <CommandBar.Content>
-          <Grid
+          <AutoSuggestBox
             Margin="4,0"
             HorizontalAlignment="Stretch"
-            VerticalAlignment="Center">
-            <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="*" />
-              <ColumnDefinition Width="2*" />
-            </Grid.ColumnDefinitions>
-            <TextBlock
-              Grid.Column="0"
-              Margin="12,0"
-              VerticalAlignment="Center"
-              Text="QQ9.0.9.exe" />
-            <StackPanel Grid.Column="1">
-              <TextBlock Text="31 MiB/s 47 MiB / 72.78 MiB 0:00:01" />
-              <ProgressBar
-                Height="4"
-                BorderThickness="0"
-                Foreground="Green"
-                Maximum="100"
-                Value="60" />
-            </StackPanel>
-          </Grid>
+            VerticalAlignment="Center"
+            PlaceholderText="Search Downloads"
+            QueryIcon="Find" />
         </CommandBar.Content>
       </CommandBar>
-    </ListView>
-    <StackPanel
-      Grid.Row="2"
-      Height="32"
-      Padding="4"
-      VerticalAlignment="Bottom"
-      Background="Transparent"
-      Orientation="Horizontal">
-      <FontIcon
+      <ListView Grid.Row="1">
+        <ListView.ItemContainerStyle>
+          <Style TargetType="ListViewItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+            <Setter Property="Padding" Value="0" />
+          </Style>
+        </ListView.ItemContainerStyle>
+        <CommandBar
+          HorizontalContentAlignment="Stretch"
+          VerticalContentAlignment="Center"
+          Background="Transparent"
+          DefaultLabelPosition="Collapsed"
+          IsDynamicOverflowEnabled="False"
+          IsOpen="False">
+          <AppBarButton
+            Width="44"
+            Icon="Refresh"
+            ToolTipService.ToolTip="Retry"
+            Visibility="Collapsed" />
+          <AppBarButton
+            Width="44"
+            Icon="Play"
+            ToolTipService.ToolTip="Resume"
+            Visibility="Collapsed" />
+          <AppBarButton
+            Width="44"
+            Icon="Pause"
+            ToolTipService.ToolTip="Pause" />
+          <CommandBar.SecondaryCommands>
+            <AppBarButton Icon="Link" Label="Copy Link" />
+            <AppBarButton Icon="OpenLocal" Label="Open Folder" />
+            <AppBarSeparator />
+            <AppBarButton Icon="Cancel" Label="Cancel" />
+            <AppBarButton Icon="Delete" Label="Remove" />
+          </CommandBar.SecondaryCommands>
+          <CommandBar.Content>
+            <Grid
+              Margin="4,0"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Center">
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="2*" />
+              </Grid.ColumnDefinitions>
+              <TextBlock
+                Grid.Column="0"
+                Margin="12,0"
+                VerticalAlignment="Center"
+                Text="QQ9.0.9.exe" />
+              <StackPanel Grid.Column="1">
+                <TextBlock Text="31 MiB/s 47 MiB / 72.78 MiB 0:00:01" />
+                <ProgressBar
+                  Height="4"
+                  BorderThickness="0"
+                  Foreground="Green"
+                  Maximum="100"
+                  Value="60" />
+              </StackPanel>
+            </Grid>
+          </CommandBar.Content>
+        </CommandBar>
+      </ListView>
+      <StackPanel
+        Grid.Row="2"
+        Height="32"
+        Padding="4"
+        VerticalAlignment="Bottom"
+        Background="Transparent"
+        Orientation="Horizontal">
+        <FontIcon
+          VerticalAlignment="Center"
+          FontSize="15"
+          Glyph="&#xE74B;" />
+        <TextBlock
+          Margin="4,0,8,0"
+          VerticalAlignment="Center"
+          FontSize="15"
+          Text="500 KiB/s" />
+        <FontIcon
+          VerticalAlignment="Center"
+          FontSize="15"
+          Glyph="&#xE74A;" />
+        <TextBlock
+          Margin="4,0,8,0"
+          VerticalAlignment="Center"
+          FontSize="15"
+          Text="100 KiB/s" />
+      </StackPanel>
+    </Grid>
+    <Grid
+      x:Name="NewTaskGrid"
+      Background="{ThemeResource SystemControlPageBackgroundMediumAltMediumBrush}"
+      Visibility="Collapsed">
+      <Border
+        Padding="12"
+        HorizontalAlignment="Center"
         VerticalAlignment="Center"
-        FontSize="15"
-        Glyph="&#xE74B;" />
-      <TextBlock
-        Margin="4,0,8,0"
+        Background="{ThemeResource SystemControlPageBackgroundAltHighBrush}"
+        BorderBrush="{ThemeResource SystemControlBackgroundBaseLowBrush}"
+        BorderThickness="2">
+        <StackPanel>
+          <TextBlock
+            Margin="0,0,0,12"
+            FontSize="20"
+            Text="New Task" />
+          <StackPanel
+            MinWidth="300"
+            MaxHeight="200"
+            Orientation="Vertical">
+            <StackPanel Orientation="Vertical">
+              <TextBlock FontSize="16" Text="Download Source" />
+              <TextBox
+                Margin="0,4,0,0"
+                BorderThickness="1"
+                PlaceholderText="Please input the download source here." />
+            </StackPanel>
+            <StackPanel Margin="0,8,0,0" Orientation="Vertical">
+              <TextBlock FontSize="16" Text="File Name" />
+              <TextBox
+                Margin="0,4,0,0"
+                BorderThickness="1"
+                PlaceholderText="Please input the file name here." />
+            </StackPanel>
+            <StackPanel Margin="0,8,0,0" Orientation="Vertical">
+              <TextBlock FontSize="16" Text="Save Folder" />
+              <Grid Margin="0,4,0,0" HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition />
+                  <ColumnDefinition Width="32" />
+                </Grid.ColumnDefinitions>
+                <TextBox
+                  HorizontalAlignment="Stretch"
+                  BorderThickness="1"
+                  IsReadOnly="True"
+                  PlaceholderText="N/A" />
+                <Button
+                  Grid.Column="1"
+                  Width="32"
+                  Height="32"
+                  Content="&#xED25;"
+                  FontFamily="Segoe MDL2 Assets"
+                  FontSize="11" />
+              </Grid>
+            </StackPanel>
+          </StackPanel>
+          <StackPanel
+            Margin="0,12,0,0"
+            HorizontalAlignment="Right"
+            Orientation="Horizontal">
+            <Button
+              Margin="0,0,6,0"
+              Click="NewTaskGridDownloadButtonClick"
+              Content="Download" />
+            <Button
+              Margin="6,0,0,0"
+              Click="NewTaskGridCancelButtonClick"
+              Content="Cancel" />
+          </StackPanel>
+        </StackPanel>
+      </Border>
+    </Grid>
+    <Grid
+      x:Name="SettingsGrid"
+      Background="{ThemeResource SystemControlPageBackgroundMediumAltMediumBrush}"
+      Visibility="Collapsed">
+      <Border
+        Padding="12"
+        HorizontalAlignment="Center"
         VerticalAlignment="Center"
-        FontSize="15"
-        Text="500 KiB/s" />
-      <FontIcon
+        Background="{ThemeResource SystemControlPageBackgroundAltHighBrush}"
+        BorderBrush="{ThemeResource SystemControlBackgroundBaseLowBrush}"
+        BorderThickness="2">
+        <StackPanel>
+          <TextBlock
+            Margin="0,0,0,12"
+            FontSize="20"
+            Text="Settings" />
+          <ScrollViewer
+            MinWidth="300"
+            MaxHeight="200"
+            Margin="-12,0"
+            Padding="12,0">
+            <StackPanel Orientation="Vertical">
+              <TextBlock FontSize="16" Text="Default download folder" />
+              <CheckBox Content="Use custom folder instead of last used folder" />
+              <TextBox IsReadOnly="True" PlaceholderText="N/A" />
+              <Button
+                Margin="0,4"
+                HorizontalAlignment="Right"
+                Content="Browse to modify"
+                IsEnabled="False" />
+            </StackPanel>
+          </ScrollViewer>
+          <StackPanel
+            Margin="0,12,0,0"
+            HorizontalAlignment="Right"
+            Orientation="Horizontal">
+            <Button
+              Margin="0,0,6,0"
+              Click="SettingsGridApplyButtonClick"
+              Content="Apply" />
+            <Button
+              Margin="6,0,0,0"
+              Click="SettingsGridCancelButtonClick"
+              Content="Cancel" />
+          </StackPanel>
+        </StackPanel>
+      </Border>
+    </Grid>
+    <Grid
+      x:Name="AboutGrid"
+      Background="{ThemeResource SystemControlPageBackgroundMediumAltMediumBrush}"
+      Visibility="Collapsed">
+      <Border
+        Padding="12"
+        HorizontalAlignment="Center"
         VerticalAlignment="Center"
-        FontSize="15"
-        Glyph="&#xE74A;" />
-      <TextBlock
-        Margin="4,0,8,0"
-        VerticalAlignment="Center"
-        FontSize="15"
-        Text="100 KiB/s" />
-    </StackPanel>
+        Background="{ThemeResource SystemControlPageBackgroundAltHighBrush}"
+        BorderBrush="{ThemeResource SystemControlBackgroundBaseLowBrush}"
+        BorderThickness="2">
+        <StackPanel>
+          <TextBlock
+            Margin="0,0,0,12"
+            FontSize="20"
+            Text="About" />
+          <TextBlock>
+            <Run Text="NanaGet" />
+            <Run Text="1.0 Preview 1 (1.0.3.0) (x64)" />
+            <LineBreak />
+            <Run Text="© M2-Team and Contributors. All rights reserved." />
+          </TextBlock>
+          <StackPanel
+            Margin="0,12,0,0"
+            HorizontalAlignment="Right"
+            Orientation="Horizontal">
+            <Button
+              Margin="0,0,6,0"
+              Click="AboutGridGitHubButtonClick"
+              Content="GitHub" />
+            <Button
+              Margin="6,0,0,0"
+              Click="AboutGridCancelButtonClick"
+              Content="Cancel" />
+          </StackPanel>
+        </StackPanel>
+      </Border>
+    </Grid>
   </Grid>
 </Page>
