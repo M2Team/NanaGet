@@ -26,6 +26,11 @@
       <DeploymentContent>true</DeploymentContent>
       <Link>Assets\%(RecursiveDir)%(FileName)%(Extension)</Link>
     </Content>
+    <!-- aria2 -->
+    <Content Include="..\aria2\aria2c.exe">
+      <DeploymentContent>true</DeploymentContent>
+      <Link>aria2c.exe</Link>
+    </Content>
     <None Include="priconfig.default.xml" />
     <None Include="priconfig.packaging.xml" />
   </ItemGroup>
