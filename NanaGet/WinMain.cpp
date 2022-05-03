@@ -244,6 +244,8 @@ int WINAPI StartXamlIslandHost(
     return static_cast<int>(Message.wParam);
 }
 
+int SimpleDemoEntry();
+
 int WINAPI wWinMain(
     _In_ HINSTANCE hInstance,
     _In_opt_ HINSTANCE hPrevInstance,
@@ -254,6 +256,8 @@ int WINAPI wWinMain(
     UNREFERENCED_PARAMETER(lpCmdLine);
 
     winrt::init_apartment(winrt::apartment_type::single_threaded);
+
+    ::SimpleDemoEntry();
 
     winrt::NanaGet::App app =
         winrt::make<winrt::NanaGet::implementation::App>();
