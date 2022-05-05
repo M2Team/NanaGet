@@ -109,7 +109,7 @@
                 VerticalAlignment="Center"
                 Text="QQ9.0.9.exe" />
               <StackPanel Grid.Column="1">
-                <TextBlock Text="31 MiB/s 47 MiB / 72.78 MiB 0:00:01" />
+                <TextBlock Text="31 MiB/s &#x2193; 0 KiB/s &#x2191; 47 MiB / 72.78 MiB 0:00:01" />
                 <ProgressBar
                   Height="4"
                   BorderThickness="0"
