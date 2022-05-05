@@ -7,10 +7,10 @@
 - [ ] aria2.remove
 - [ ] aria2.pause
 - [ ] aria2.forcePause
-- [ ] aria2.pauseAll
-- [ ] aria2.forcePauseAll
+- [x] aria2.pauseAll
+- [x] aria2.forcePauseAll
 - [ ] aria2.unpause
-- [ ] aria2.unpauseAll
+- [x] aria2.unpauseAll
 - [ ] aria2.forceRemove
 - [ ] aria2.changePosition
 - [ ] aria2.tellStatus
@@ -25,12 +25,12 @@
 - [ ] aria2.changeOption
 - [ ] aria2.getGlobalOption
 - [ ] aria2.changeGlobalOption
-- [ ] aria2.purgeDownloadResult
+- [x] aria2.purgeDownloadResult
 - [ ] aria2.removeDownloadResult
 - [ ] aria2.getVersion
 - [ ] aria2.getSessionInfo
-- [ ] aria2.shutdown
-- [ ] aria2.forceShutdown
+- [x] aria2.shutdown
+- [x] aria2.forceShutdown
 - [ ] aria2.getGlobalStat
 - [ ] aria2.saveSession
 - [ ] system.multicall

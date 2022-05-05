@@ -19,6 +19,7 @@ namespace winrt
 {
     using Windows::Foundation::Uri;
     using Windows::Data::Json::IJsonValue;
+    using Windows::Data::Json::JsonArray;
     using Windows::Data::Json::JsonObject;
     using Windows::Data::Json::JsonValue;
     using Windows::Web::Http::HttpClient;
@@ -33,6 +34,16 @@ public:
         winrt::Uri const& ServerUri,
         winrt::hstring const& ServerToken);
     ~Aria2Client();
+
+    void Shutdown(
+        bool Force = false);
+
+    void PauseAll(
+        bool Force = false);
+
+    void ResumeAll();
+
+    void ClearList();
 
     winrt::JsonValue ExecuteJsonRpcCall(
         winrt::hstring const& MethodName,
@@ -62,6 +73,60 @@ Aria2Client::Aria2Client(
 Aria2Client::~Aria2Client()
 {
     this->m_HttpClient.Close();
+}
+
+void Aria2Client::Shutdown(
+    bool Force)
+{
+    winrt::JsonArray Parameters;
+    Parameters.Append(this->m_ServerTokenJsonValue);
+
+    if (L"OK" != this->ExecuteJsonRpcCall(
+        Force ? L"aria2.forceShutdown" : L"aria2.shutdown",
+        Parameters).GetString())
+    {
+        throw winrt::hresult_error();
+    }
+}
+
+void Aria2Client::PauseAll(
+    bool Force)
+{
+    winrt::JsonArray Parameters;
+    Parameters.Append(this->m_ServerTokenJsonValue);
+
+    if (L"OK" != this->ExecuteJsonRpcCall(
+        Force ? L"aria2.forcePauseAll" : L"aria2.pauseAll",
+        Parameters).GetString())
+    {
+        throw winrt::hresult_error();
+    }
+}
+
+void Aria2Client::ResumeAll()
+{
+    winrt::JsonArray Parameters;
+    Parameters.Append(this->m_ServerTokenJsonValue);
+
+    if (L"OK" != this->ExecuteJsonRpcCall(
+        L"aria2.unpauseAll",
+        Parameters).GetString())
+    {
+        throw winrt::hresult_error();
+    }
+}
+
+void Aria2Client::ClearList()
+{
+    winrt::JsonArray Parameters;
+    Parameters.Append(this->m_ServerTokenJsonValue);
+
+    if (L"OK" != this->ExecuteJsonRpcCall(
+        L"aria2.purgeDownloadResult",
+        Parameters).GetString())
+    {
+        throw winrt::hresult_error();
+    }
 }
 
 winrt::JsonValue Aria2Client::ExecuteJsonRpcCall(
@@ -119,11 +184,6 @@ winrt::JsonValue Aria2Client::ExecuteJsonRpcCall(
 #include <set>
 #include <string>
 #include <vector>
-
-namespace winrt
-{
-    using Windows::Data::Json::JsonArray;
-}
 
 std::wstring FromConsoleString(
     std::string const& Utf8String)
@@ -196,9 +256,13 @@ int SimpleDemoEntry()
         //    L"aria2.getVersion", //L"aria2.tellActive",
         //    Parameters).GetObject();
 
-        winrt::JsonArray ResponseJson = Client.ExecuteJsonRpcCall(
+        /*winrt::JsonArray ResponseJson = Client.ExecuteJsonRpcCall(
             L"system.listMethods",
-            Parameters).GetArray();
+            Parameters).GetArray();*/
+
+        winrt::JsonObject ResponseJson = Client.ExecuteJsonRpcCall(
+            L"aria2.getGlobalOption",
+            Parameters).GetObject();
 
         winrt::hstring ResponseJsonString = ResponseJson.Stringify();
 
@@ -209,7 +273,11 @@ int SimpleDemoEntry()
         ::MessageBoxW(nullptr, ex.message().data(), L"NanaGet", 0);
     }
 
-    ::TerminateProcess(ProcessHandle.get(), 0);
+    Client.Shutdown();
+
+    ::WaitForSingleObjectEx(ProcessHandle.get(), INFINITE, FALSE);
+
+    //::TerminateProcess(ProcessHandle.get(), 0);
 
     /*DWORD TotalBytesAvailable = 0;
     if (::PeekNamedPipe(
