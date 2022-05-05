@@ -10,6 +10,8 @@
 
 #include "NanaGetCore.h"
 
+#include <Mile.Portable.h>
+
 #include <Windows.h>
 #include <objbase.h>
 
@@ -99,4 +101,102 @@ std::uint16_t NanaGet::PickUnusedTcpPort()
     }
 
     return Result;
+}
+
+void NanaGet::StartLocalAria2Instance(
+    std::uint16_t& ServerPort,
+    winrt::hstring& ServerToken,
+    winrt::handle& ProcessHandle,
+    winrt::file_handle& OutputPipeHandle)
+{
+    bool Success = false;
+
+    ServerPort = NanaGet::PickUnusedTcpPort();
+    ServerToken = NanaGet::CreateGuidString();
+    winrt::file_handle Aria2InstanceOutputPipeHandle;
+
+    auto ExitHandler = Mile::ScopeExitTaskHandler([&]()
+    {
+        if (!Success)
+        {
+            ServerPort = 0;
+            ServerToken = winrt::hstring();
+            OutputPipeHandle.close();
+        }
+    });
+
+    std::vector<std::pair<std::wstring, std::wstring>> Settings;
+    Settings.emplace_back(
+        L"enable-rpc",
+        L"true");
+    Settings.emplace_back(
+        L"rpc-listen-port",
+        winrt::to_hstring(ServerPort));
+    Settings.emplace_back(
+        L"rpc-secret",
+        ServerToken);
+
+    std::wstring CommandLine = std::wstring(
+        NanaGet::GetApplicationFolderPath() + L"\\aria2c.exe");
+    for (auto const& Setting : Settings)
+    {
+        CommandLine.append(L" --");
+        CommandLine.append(Setting.first);
+
+        if (!Setting.second.empty())
+        {
+            CommandLine.append(L"=");
+            CommandLine.append(Setting.second);
+        }
+    }
+
+    SECURITY_ATTRIBUTES PipeAttributes;
+    PipeAttributes.nLength = sizeof(SECURITY_ATTRIBUTES);
+    PipeAttributes.bInheritHandle = TRUE;
+    PipeAttributes.lpSecurityDescriptor = nullptr;
+    if (!::CreatePipe(
+        OutputPipeHandle.put(),
+        Aria2InstanceOutputPipeHandle.put(),
+        &PipeAttributes,
+        0))
+    {
+        winrt::throw_last_error();
+    }
+
+    if (!::SetHandleInformation(
+        OutputPipeHandle.get(),
+        HANDLE_FLAG_INHERIT,
+        FALSE))
+    {
+        winrt::throw_last_error();
+    }
+
+    STARTUPINFOW StartupInfo = { 0 };
+    PROCESS_INFORMATION ProcessInformation = { 0 };
+
+    StartupInfo.cb = sizeof(STARTUPINFOW);
+    StartupInfo.dwFlags |= STARTF_USESTDHANDLES;
+    StartupInfo.hStdInput = INVALID_HANDLE_VALUE;
+    StartupInfo.hStdOutput = Aria2InstanceOutputPipeHandle.get();
+    StartupInfo.hStdError = Aria2InstanceOutputPipeHandle.get();
+
+    if (!::CreateProcessW(
+        nullptr,
+        const_cast<LPWSTR>(CommandLine.c_str()),
+        nullptr,
+        nullptr,
+        TRUE,
+        CREATE_UNICODE_ENVIRONMENT | CREATE_NO_WINDOW,
+        nullptr,
+        nullptr,
+        &StartupInfo,
+        &ProcessInformation))
+    {
+        winrt::throw_last_error();
+    }
+
+    ProcessHandle.attach(ProcessInformation.hProcess);
+    ::CloseHandle(ProcessInformation.hThread);
+
+    Success = true;
 }

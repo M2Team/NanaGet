@@ -16,7 +16,7 @@
 #if (defined(__cplusplus) && __cplusplus >= 201703L)
 #elif (defined(_MSVC_LANG) && _MSVC_LANG >= 201703L)
 #else
-#error "[Mile] You should use a C++ compiler with the C++17 standard."
+#error "[NanaGetCore] You should use a C++ compiler with the C++17 standard."
 #endif
 
 #include <winrt/Windows.Foundation.h>
@@ -30,6 +30,12 @@ namespace NanaGet
     winrt::hstring CreateGuidString();
 
     std::uint16_t PickUnusedTcpPort();
+
+    void StartLocalAria2Instance(
+        std::uint16_t& ServerPort,
+        winrt::hstring& ServerToken,
+        winrt::handle& ProcessHandle,
+        winrt::file_handle& OutputPipeHandle);
 }
 
 #endif // !NANA_GET_CORE

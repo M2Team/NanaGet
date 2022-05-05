@@ -56,51 +56,6 @@ Aria2Client::Aria2Client()
         winrt::JsonValue::CreateStringValue(
             L"token:" + this->m_JsonRpcTokenString))
 {
-    std::vector<std::pair<std::wstring, std::wstring>> Settings;
-    Settings.emplace_back(
-        L"enable-rpc",
-        L"true");
-    Settings.emplace_back(
-        L"rpc-listen-port",
-        winrt::to_hstring(this->m_JsonRpcServerUri.Port()));
-    Settings.emplace_back(
-        L"rpc-secret",
-        this->m_JsonRpcTokenString);
-
-    std::wstring CommandLine = std::wstring(
-        NanaGet::GetApplicationFolderPath() + L"\\aria2c.exe");
-    for (auto const& Setting : Settings)
-    {
-        CommandLine.append(L" --");
-        CommandLine.append(Setting.first);
-
-        if (!Setting.second.empty())
-        {
-            CommandLine.append(L"=");
-            CommandLine.append(Setting.second);
-        }
-    }
-
-    /*STARTUPINFOW StartupInfo = { 0 };
-    PROCESS_INFORMATION ProcessInformation = { 0 };
-
-    StartupInfo.cb = sizeof(STARTUPINFOW);
-    StartupInfo.dwFlags |= STARTF_USESTDHANDLES;
-    StartupInfo.hStdInput = INVALID_HANDLE_VALUE;
-    StartupInfo.hStdOutput;
-    StartupInfo.hStdError;
-
-    ::CreateProcessW(
-        nullptr,
-        const_cast<LPWSTR>(CommandLine.c_str()),
-        nullptr,
-        nullptr,
-        TRUE,
-        CREATE_UNICODE_ENVIRONMENT | CREATE_NO_WINDOW,
-        nullptr,
-        nullptr,
-        &StartupInfo,
-        &ProcessInformation);*/
 }
 
 Aria2Client::~Aria2Client()
@@ -162,24 +117,7 @@ winrt::JsonValue Aria2Client::ExecuteJsonRpcCall(
     return ResponseJson.GetNamedValue(L"result");
 }
 
-
-
-
-
-
 #include <Mile.Windows.h>
-
-
-
-
-
-#include <iphlpapi.h>
-#pragma comment(lib, "iphlpapi.lib")
-
-
-
-
-
 
 #include <winrt/Windows.ApplicationModel.h>
 #include <winrt/Windows.Networking.Sockets.h>
@@ -188,24 +126,57 @@ winrt::JsonValue Aria2Client::ExecuteJsonRpcCall(
 #include <string>
 #include <vector>
 
-
-
-
-
 namespace winrt
 {
     using Windows::Data::Json::JsonArray;
 }
 
+std::wstring FromConsoleString(
+    std::string const& Utf8String)
+{
+    std::wstring Utf16String;
 
+    UINT CurrentCodePage = ::GetConsoleOutputCP();
 
+    int Utf16StringLength = ::MultiByteToWideChar(
+        CurrentCodePage,
+        0,
+        Utf8String.c_str(),
+        static_cast<int>(Utf8String.size()),
+        nullptr,
+        0);
+    if (Utf16StringLength > 0)
+    {
+        Utf16String.resize(Utf16StringLength);
+        Utf16StringLength = ::MultiByteToWideChar(
+            CurrentCodePage,
+            0,
+            Utf8String.c_str(),
+            static_cast<int>(Utf8String.size()),
+            &Utf16String[0],
+            Utf16StringLength);
+        Utf16String.resize(Utf16StringLength);
+    }
 
+    return Utf16String;
+}
 
 
 
 
 int SimpleDemoEntry()
 {
+    std::uint16_t ServerPort = 0;
+    winrt::hstring ServerToken;
+    winrt::handle ProcessHandle;
+    winrt::file_handle OutputPipeHandle;
+
+    NanaGet::StartLocalAria2Instance(
+        ServerPort,
+        ServerToken,
+        ProcessHandle,
+        OutputPipeHandle);
+
     //::MessageBoxW(nullptr, winrt::to_hstring(::PickUnusedTcpPort()).data(), L"sucks", 0);
 
     
@@ -222,7 +193,7 @@ int SimpleDemoEntry()
     try
     {
         winrt::JsonValue TokenValue = winrt::JsonValue::CreateStringValue(
-            L"token:{E6628220-5201-424D-8E64-C23C99528851}");
+            L"token:" + ServerToken);
 
         winrt::JsonArray Parameters;
         Parameters.Append(TokenValue);
@@ -233,7 +204,7 @@ int SimpleDemoEntry()
         //    Parameters).GetObject();
 
         winrt::JsonArray ResponseJson = Aria2Client().ExecuteJsonRpcCall(
-            winrt::Uri(L"http://localhost:6800/jsonrpc"),
+            winrt::Uri(L"http://localhost:" + winrt::to_hstring(ServerPort) + L"/jsonrpc"),
             L"system.listMethods",
             Parameters).GetArray();
 
@@ -244,163 +215,193 @@ int SimpleDemoEntry()
         ::MessageBoxW(nullptr, ex.message().data(), L"Fucking Error Window", 0);
     }
 
-    
+    ::TerminateProcess(ProcessHandle.get(), 0);
+
+    DWORD TotalBytesAvailable = 0;
+    if (::PeekNamedPipe(
+        OutputPipeHandle.get(),
+        nullptr,
+        0,
+        nullptr,
+        &TotalBytesAvailable,
+        nullptr))
+    {
+        std::string Buffer;
+        Buffer.resize(TotalBytesAvailable);
+        DWORD NumberOfBytesRead = 0;
+        if (::ReadFile(
+            OutputPipeHandle.get(),
+            &Buffer[0],
+            TotalBytesAvailable,
+            &NumberOfBytesRead,
+            nullptr))
+        {
+            ::MessageBoxW(
+                nullptr,
+                ::FromConsoleString(Buffer).c_str(),
+                L"NanaGet",
+                MB_ICONINFORMATION);
+        }
+    }
 
     return 0;
 }
 
-void test()
-{
-    /*std::set<std::uint16_t> UsedLocalTcpPorts;
-
-    {
-        ULONG TcpTableLength = 0;
-        DWORD Error = ::GetExtendedTcpTable(
-            nullptr,
-            &TcpTableLength,
-            FALSE,
-            AF_INET,
-            TCP_TABLE_OWNER_PID_ALL,
-            0);
-        if (Error == ERROR_INSUFFICIENT_BUFFER)
-        {
-            PMIB_TCPTABLE_OWNER_PID TcpTable =
-                reinterpret_cast<PMIB_TCPTABLE_OWNER_PID>(
-                    Mile::HeapMemory::Allocate(TcpTableLength));
-            if (TcpTable)
-            {
-                Error = ::GetExtendedTcpTable(
-                    TcpTable,
-                    &TcpTableLength,
-                    FALSE,
-                    AF_INET,
-                    TCP_TABLE_OWNER_PID_ALL,
-                    0);
-                if (Error == NO_ERROR)
-                {
-                    for (DWORD i = 0; i < TcpTable->dwNumEntries; ++i)
-                    {
-                        UsedLocalTcpPorts.insert(::ntohs(static_cast<u_short>(
-                            TcpTable->table[i].dwLocalPort)));
-                    }
-                }
-
-                Mile::HeapMemory::Free(TcpTable);
-            }
-        }
-    }
-
-    {
-        ULONG TcpTableLength = 0;
-        DWORD Error = ::GetExtendedTcpTable(
-            nullptr,
-            &TcpTableLength,
-            FALSE,
-            AF_INET6,
-            TCP_TABLE_OWNER_PID_ALL,
-            0);
-        if (Error == ERROR_INSUFFICIENT_BUFFER)
-        {
-            PMIB_TCP6TABLE_OWNER_PID TcpTable =
-                reinterpret_cast<PMIB_TCP6TABLE_OWNER_PID>(
-                    Mile::HeapMemory::Allocate(TcpTableLength));
-            if (TcpTable)
-            {
-                Error = ::GetExtendedTcpTable(
-                    TcpTable,
-                    &TcpTableLength,
-                    FALSE,
-                    AF_INET6,
-                    TCP_TABLE_OWNER_PID_ALL,
-                    0);
-                if (Error == NO_ERROR)
-                {
-                    for (DWORD i = 0; i < TcpTable->dwNumEntries; ++i)
-                    {
-                        UsedLocalTcpPorts.insert(::ntohs(static_cast<u_short>(
-                            TcpTable->table[i].dwLocalPort)));
-                    }
-                }
-
-                Mile::HeapMemory::Free(TcpTable);
-            }
-        }
-    }
-
-    {
-        ULONG TcpTableLength = 0;
-        DWORD Error = ::GetExtendedUdpTable(
-            nullptr,
-            &TcpTableLength,
-            FALSE,
-            AF_INET,
-            UDP_TABLE_OWNER_PID,
-            0);
-        if (Error == ERROR_INSUFFICIENT_BUFFER)
-        {
-            PMIB_UDPTABLE_OWNER_PID TcpTable =
-                reinterpret_cast<PMIB_UDPTABLE_OWNER_PID>(
-                    Mile::HeapMemory::Allocate(TcpTableLength));
-            if (TcpTable)
-            {
-                Error = ::GetExtendedUdpTable(
-                    TcpTable,
-                    &TcpTableLength,
-                    FALSE,
-                    AF_INET,
-                    UDP_TABLE_OWNER_PID,
-                    0);
-                if (Error == NO_ERROR)
-                {
-                    for (DWORD i = 0; i < TcpTable->dwNumEntries; ++i)
-                    {
-                        UsedLocalTcpPorts.insert(::ntohs(static_cast<u_short>(
-                            TcpTable->table[i].dwLocalPort)));
-                    }
-                }
-
-                Mile::HeapMemory::Free(TcpTable);
-            }
-        }
-    }
-
-    {
-        ULONG TcpTableLength = 0;
-        DWORD Error = ::GetExtendedUdpTable(
-            nullptr,
-            &TcpTableLength,
-            FALSE,
-            AF_INET6,
-            UDP_TABLE_OWNER_PID,
-            0);
-        if (Error == ERROR_INSUFFICIENT_BUFFER)
-        {
-            PMIB_UDP6TABLE_OWNER_PID TcpTable =
-                reinterpret_cast<PMIB_UDP6TABLE_OWNER_PID>(
-                    Mile::HeapMemory::Allocate(TcpTableLength));
-            if (TcpTable)
-            {
-                Error = ::GetExtendedUdpTable(
-                    TcpTable,
-                    &TcpTableLength,
-                    FALSE,
-                    AF_INET6,
-                    UDP_TABLE_OWNER_PID,
-                    0);
-                if (Error == NO_ERROR)
-                {
-                    for (DWORD i = 0; i < TcpTable->dwNumEntries; ++i)
-                    {
-                        UsedLocalTcpPorts.insert(::ntohs(static_cast<u_short>(
-                            TcpTable->table[i].dwLocalPort)));
-                    }
-                }
-
-                Mile::HeapMemory::Free(TcpTable);
-            }
-        }
-    }*/
-}
+//#include <iphlpapi.h>
+//#pragma comment(lib, "iphlpapi.lib")
+//
+//void test()
+//{
+//    std::set<std::uint16_t> UsedLocalTcpPorts;
+//
+//    {
+//        ULONG TcpTableLength = 0;
+//        DWORD Error = ::GetExtendedTcpTable(
+//            nullptr,
+//            &TcpTableLength,
+//            FALSE,
+//            AF_INET,
+//            TCP_TABLE_OWNER_PID_ALL,
+//            0);
+//        if (Error == ERROR_INSUFFICIENT_BUFFER)
+//        {
+//            PMIB_TCPTABLE_OWNER_PID TcpTable =
+//                reinterpret_cast<PMIB_TCPTABLE_OWNER_PID>(
+//                    Mile::HeapMemory::Allocate(TcpTableLength));
+//            if (TcpTable)
+//            {
+//                Error = ::GetExtendedTcpTable(
+//                    TcpTable,
+//                    &TcpTableLength,
+//                    FALSE,
+//                    AF_INET,
+//                    TCP_TABLE_OWNER_PID_ALL,
+//                    0);
+//                if (Error == NO_ERROR)
+//                {
+//                    for (DWORD i = 0; i < TcpTable->dwNumEntries; ++i)
+//                    {
+//                        UsedLocalTcpPorts.insert(::ntohs(static_cast<u_short>(
+//                            TcpTable->table[i].dwLocalPort)));
+//                    }
+//                }
+//
+//                Mile::HeapMemory::Free(TcpTable);
+//            }
+//        }
+//    }
+//
+//    {
+//        ULONG TcpTableLength = 0;
+//        DWORD Error = ::GetExtendedTcpTable(
+//            nullptr,
+//            &TcpTableLength,
+//            FALSE,
+//            AF_INET6,
+//            TCP_TABLE_OWNER_PID_ALL,
+//            0);
+//        if (Error == ERROR_INSUFFICIENT_BUFFER)
+//        {
+//            PMIB_TCP6TABLE_OWNER_PID TcpTable =
+//                reinterpret_cast<PMIB_TCP6TABLE_OWNER_PID>(
+//                    Mile::HeapMemory::Allocate(TcpTableLength));
+//            if (TcpTable)
+//            {
+//                Error = ::GetExtendedTcpTable(
+//                    TcpTable,
+//                    &TcpTableLength,
+//                    FALSE,
+//                    AF_INET6,
+//                    TCP_TABLE_OWNER_PID_ALL,
+//                    0);
+//                if (Error == NO_ERROR)
+//                {
+//                    for (DWORD i = 0; i < TcpTable->dwNumEntries; ++i)
+//                    {
+//                        UsedLocalTcpPorts.insert(::ntohs(static_cast<u_short>(
+//                            TcpTable->table[i].dwLocalPort)));
+//                    }
+//                }
+//
+//                Mile::HeapMemory::Free(TcpTable);
+//            }
+//        }
+//    }
+//
+//    {
+//        ULONG TcpTableLength = 0;
+//        DWORD Error = ::GetExtendedUdpTable(
+//            nullptr,
+//            &TcpTableLength,
+//            FALSE,
+//            AF_INET,
+//            UDP_TABLE_OWNER_PID,
+//            0);
+//        if (Error == ERROR_INSUFFICIENT_BUFFER)
+//        {
+//            PMIB_UDPTABLE_OWNER_PID TcpTable =
+//                reinterpret_cast<PMIB_UDPTABLE_OWNER_PID>(
+//                    Mile::HeapMemory::Allocate(TcpTableLength));
+//            if (TcpTable)
+//            {
+//                Error = ::GetExtendedUdpTable(
+//                    TcpTable,
+//                    &TcpTableLength,
+//                    FALSE,
+//                    AF_INET,
+//                    UDP_TABLE_OWNER_PID,
+//                    0);
+//                if (Error == NO_ERROR)
+//                {
+//                    for (DWORD i = 0; i < TcpTable->dwNumEntries; ++i)
+//                    {
+//                        UsedLocalTcpPorts.insert(::ntohs(static_cast<u_short>(
+//                            TcpTable->table[i].dwLocalPort)));
+//                    }
+//                }
+//
+//                Mile::HeapMemory::Free(TcpTable);
+//            }
+//        }
+//    }
+//
+//    {
+//        ULONG TcpTableLength = 0;
+//        DWORD Error = ::GetExtendedUdpTable(
+//            nullptr,
+//            &TcpTableLength,
+//            FALSE,
+//            AF_INET6,
+//            UDP_TABLE_OWNER_PID,
+//            0);
+//        if (Error == ERROR_INSUFFICIENT_BUFFER)
+//        {
+//            PMIB_UDP6TABLE_OWNER_PID TcpTable =
+//                reinterpret_cast<PMIB_UDP6TABLE_OWNER_PID>(
+//                    Mile::HeapMemory::Allocate(TcpTableLength));
+//            if (TcpTable)
+//            {
+//                Error = ::GetExtendedUdpTable(
+//                    TcpTable,
+//                    &TcpTableLength,
+//                    FALSE,
+//                    AF_INET6,
+//                    UDP_TABLE_OWNER_PID,
+//                    0);
+//                if (Error == NO_ERROR)
+//                {
+//                    for (DWORD i = 0; i < TcpTable->dwNumEntries; ++i)
+//                    {
+//                        UsedLocalTcpPorts.insert(::ntohs(static_cast<u_short>(
+//                            TcpTable->table[i].dwLocalPort)));
+//                    }
+//                }
+//
+//                Mile::HeapMemory::Free(TcpTable);
+//            }
+//        }
+//    }
+//}
 
 // Get Download List
 // 
