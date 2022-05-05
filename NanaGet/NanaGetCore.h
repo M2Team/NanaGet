@@ -19,4 +19,17 @@
 #error "[Mile] You should use a C++ compiler with the C++17 standard."
 #endif
 
+#include <winrt/Windows.Foundation.h>
+
+namespace NanaGet
+{
+    winrt::hstring GetApplicationFolderPath();
+
+    winrt::hstring GetSettingsFolderPath();
+
+    winrt::hstring CreateGuidString();
+
+    std::uint16_t PickUnusedTcpPort();
+}
+
 #endif // !NANA_GET_CORE

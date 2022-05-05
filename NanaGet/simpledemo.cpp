@@ -1,14 +1,9 @@
 ﻿#include <Windows.h>
-#include <objbase.h>
-
-#include <WS2tcpip.h>
-#pragma comment(lib, "ws2_32.lib")
 
 #include <winrt/Windows.Foundation.h>
 #include <winrt/Windows.Foundation.Collections.h>
 
 #include <winrt/Windows.Data.Json.h>
-#include <winrt/Windows.Storage.h>
 #include <winrt/Windows.Web.Http.h>
 
 #include <cstdint>
@@ -17,6 +12,8 @@
 #include <string>
 #include <vector>
 #include <utility>
+
+#include "NanaGetCore.h"
 
 namespace winrt
 {
@@ -44,29 +41,17 @@ private:
 
     winrt::Uri m_JsonRpcServerUri;
     winrt::hstring m_JsonRpcTokenString;
-    winrt::JsonValue m_JsonRpcTokenJsonValue;
-
-private:
-
-    winrt::hstring ApplicationFolderPath();
-
-    winrt::hstring SettingsFolderPath();
-
-    winrt::hstring CreateGuidString();
-
-    std::uint16_t PickUnusedTcpPort();
-    
-    
+    winrt::JsonValue m_JsonRpcTokenJsonValue;  
 };
 
 Aria2Client::Aria2Client()
     : m_JsonRpcServerUri(
         winrt::Uri(
             L"http://localhost:"
-            + winrt::to_hstring(this->PickUnusedTcpPort())
+            + winrt::to_hstring(NanaGet::PickUnusedTcpPort())
             + L"/jsonrpc"))
     , m_JsonRpcTokenString(
-        this->CreateGuidString())
+        NanaGet::CreateGuidString())
     , m_JsonRpcTokenJsonValue(
         winrt::JsonValue::CreateStringValue(
             L"token:" + this->m_JsonRpcTokenString))
@@ -83,7 +68,7 @@ Aria2Client::Aria2Client()
         this->m_JsonRpcTokenString);
 
     std::wstring CommandLine = std::wstring(
-        this->ApplicationFolderPath() + L"\\aria2c.exe");
+        NanaGet::GetApplicationFolderPath() + L"\\aria2c.exe");
     for (auto const& Setting : Settings)
     {
         CommandLine.append(L" --");
@@ -122,91 +107,12 @@ Aria2Client::~Aria2Client()
 {
 }
 
-winrt::hstring Aria2Client::ApplicationFolderPath()
-{
-    static winrt::hstring CachedResult = ([]() -> winrt::hstring
-    {
-        // 32767 is the maximum path length without the terminating null
-        // character.
-        const DWORD BufferSize = 32767;
-        wchar_t Buffer[BufferSize];
-        ::GetModuleFileNameW(nullptr, Buffer, BufferSize);
-        std::wcsrchr(Buffer, L'\\')[0] = L'\0';
-        return Buffer;
-    }());
-
-    return CachedResult;
-}
-
-winrt::hstring Aria2Client::SettingsFolderPath()
-{
-    static winrt::hstring CachedResult = ([]() -> winrt::hstring
-    {
-        using winrt::Windows::Storage::ApplicationData;
-        return ApplicationData::Current().LocalFolder().Path();
-    }());
-
-    return CachedResult;
-}
-
-winrt::hstring Aria2Client::CreateGuidString()
-{
-    GUID Result;
-    winrt::check_hresult(::CoCreateGuid(&Result));
-    return winrt::to_hstring(Result);
-}
-
-std::uint16_t Aria2Client::PickUnusedTcpPort()
-{
-    std::uint16_t Result = 0;
-
-    WSADATA WSAData;
-    int Status = ::WSAStartup(
-        MAKEWORD(2, 2),
-        &WSAData);
-    if (ERROR_SUCCESS == Status)
-    {
-        SOCKET ListenSocket = ::socket(
-            AF_INET,
-            SOCK_STREAM,
-            IPPROTO_TCP);
-        if (INVALID_SOCKET != ListenSocket)
-        {
-            sockaddr_in Service;
-            Service.sin_family = AF_INET;
-            Service.sin_addr.s_addr = INADDR_ANY;
-            Service.sin_port = ::htons(0);
-            Status = ::bind(
-                ListenSocket,
-                reinterpret_cast<LPSOCKADDR>(&Service),
-                sizeof(Service));
-            if (ERROR_SUCCESS == Status)
-            {
-                int NameLength = sizeof(Service);
-                Status = ::getsockname(
-                    ListenSocket,
-                    reinterpret_cast<LPSOCKADDR>(&Service),
-                    &NameLength);
-                if (ERROR_SUCCESS == Status)
-                {
-                    Result = ::ntohs(Service.sin_port);
-                }
-            }
-            ::closesocket(ListenSocket);
-        }
-
-        ::WSACleanup();
-    }
-
-    return Result;
-}
-
 winrt::JsonValue Aria2Client::ExecuteJsonRpcCall(
     winrt::Uri const& ServerUri,
     winrt::hstring const& MethodName,
     winrt::IJsonValue const& Parameters)
 {
-    winrt::hstring Identifier = this->CreateGuidString();
+    winrt::hstring Identifier = NanaGet::CreateGuidString();
 
     winrt::HttpClient Client = winrt::HttpClient();
 
