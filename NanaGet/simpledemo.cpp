@@ -45,6 +45,17 @@ public:
 
     void ClearList();
 
+    void Pause(
+        winrt::hstring Gid,
+        bool Force = false);
+
+    void Resume(
+        winrt::hstring Gid);
+
+    void Remove(
+        winrt::hstring Gid,
+        bool Force = false);
+
     winrt::JsonValue ExecuteJsonRpcCall(
         winrt::hstring const& MethodName,
         winrt::IJsonValue const& Parameters);
@@ -123,6 +134,51 @@ void Aria2Client::ClearList()
 
     if (L"OK" != this->ExecuteJsonRpcCall(
         L"aria2.purgeDownloadResult",
+        Parameters).GetString())
+    {
+        throw winrt::hresult_error();
+    }
+}
+
+void Aria2Client::Pause(
+    winrt::hstring Gid,
+    bool Force = false)
+{
+    winrt::JsonArray Parameters;
+    Parameters.Append(this->m_ServerTokenJsonValue);
+    Parameters.Append(winrt::JsonValue::CreateStringValue(Gid));
+
+    this->ExecuteJsonRpcCall(
+        Force ? L"aria2.forcePause" : L"aria2.pause",
+        Parameters);
+}
+
+void Aria2Client::Resume(
+    winrt::hstring Gid)
+{
+    winrt::JsonArray Parameters;
+    Parameters.Append(this->m_ServerTokenJsonValue);
+    Parameters.Append(winrt::JsonValue::CreateStringValue(Gid));
+
+    this->ExecuteJsonRpcCall(
+        L"aria2.unpause",
+        Parameters);
+}
+
+void Aria2Client::Remove(
+    winrt::hstring Gid,
+    bool Force = false)
+{
+    winrt::JsonArray Parameters;
+    Parameters.Append(this->m_ServerTokenJsonValue);
+    Parameters.Append(winrt::JsonValue::CreateStringValue(Gid));
+
+    this->ExecuteJsonRpcCall(
+        Force ? L"aria2.forceRemove" : L"aria2.remove",
+        Parameters);
+
+    if (L"OK" != this->ExecuteJsonRpcCall(
+        L"aria2.removeDownloadResult",
         Parameters).GetString())
     {
         throw winrt::hresult_error();

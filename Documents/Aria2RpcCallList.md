@@ -4,14 +4,14 @@
 - [ ] aria2.addTorrent
 - [ ] aria2.getPeers
 - [ ] aria2.addMetalink
-- [ ] aria2.remove
-- [ ] aria2.pause
-- [ ] aria2.forcePause
+- [x] aria2.remove
+- [x] aria2.pause
+- [x] aria2.forcePause
 - [x] aria2.pauseAll
 - [x] aria2.forcePauseAll
-- [ ] aria2.unpause
+- [x] aria2.unpause
 - [x] aria2.unpauseAll
-- [ ] aria2.forceRemove
+- [x] aria2.forceRemove
 - [ ] aria2.changePosition
 - [ ] aria2.tellStatus
 - [ ] aria2.getUris
@@ -26,7 +26,7 @@
 - [ ] aria2.getGlobalOption
 - [ ] aria2.changeGlobalOption
 - [x] aria2.purgeDownloadResult
-- [ ] aria2.removeDownloadResult
+- [x] aria2.removeDownloadResult
 - [ ] aria2.getVersion
 - [ ] aria2.getSessionInfo
 - [x] aria2.shutdown
