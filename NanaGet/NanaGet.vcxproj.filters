@@ -17,11 +17,13 @@
     <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
     <ClCompile Include="WinMain.cpp" />
     <ClCompile Include="SimpleDemo.cpp" />
+    <ClCompile Include="NanaGetCore.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="Mile.Project.Properties.h" />
     <ClInclude Include="NanaGetResources.h" />
+    <ClInclude Include="NanaGetCore.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="PropertySheet.props" />
