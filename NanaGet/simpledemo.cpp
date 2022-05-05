@@ -29,47 +29,46 @@ namespace winrt
 class Aria2Client
 {
 public:
-    Aria2Client();
+    Aria2Client(
+        winrt::Uri const& ServerUri,
+        winrt::hstring const& ServerToken);
     ~Aria2Client();
 
     winrt::JsonValue ExecuteJsonRpcCall(
-        winrt::Uri const& ServerUri,
         winrt::hstring const& MethodName,
         winrt::IJsonValue const& Parameters);
 
 private:
 
-    winrt::Uri m_JsonRpcServerUri;
-    winrt::hstring m_JsonRpcTokenString;
-    winrt::JsonValue m_JsonRpcTokenJsonValue;  
+    winrt::HttpClient m_HttpClient;
+
+    winrt::Uri m_ServerUri;
+    winrt::hstring m_ServerToken;
+    winrt::JsonValue m_ServerTokenJsonValue;
 };
 
-Aria2Client::Aria2Client()
-    : m_JsonRpcServerUri(
-        winrt::Uri(
-            L"http://localhost:"
-            + winrt::to_hstring(NanaGet::PickUnusedTcpPort())
-            + L"/jsonrpc"))
-    , m_JsonRpcTokenString(
-        NanaGet::CreateGuidString())
-    , m_JsonRpcTokenJsonValue(
+Aria2Client::Aria2Client(
+    winrt::Uri const& ServerUri,
+    winrt::hstring const& ServerToken)
+    : m_HttpClient(winrt::HttpClient())
+    , m_ServerUri(ServerUri)
+    , m_ServerToken(ServerToken)
+    , m_ServerTokenJsonValue(
         winrt::JsonValue::CreateStringValue(
-            L"token:" + this->m_JsonRpcTokenString))
+            L"token:" + this->m_ServerToken))
 {
 }
 
 Aria2Client::~Aria2Client()
 {
+    this->m_HttpClient.Close();
 }
 
 winrt::JsonValue Aria2Client::ExecuteJsonRpcCall(
-    winrt::Uri const& ServerUri,
     winrt::hstring const& MethodName,
     winrt::IJsonValue const& Parameters)
 {
     winrt::hstring Identifier = NanaGet::CreateGuidString();
-
-    winrt::HttpClient Client = winrt::HttpClient();
 
     winrt::JsonObject RequestJson = winrt::JsonObject();
 
@@ -86,8 +85,8 @@ winrt::JsonValue Aria2Client::ExecuteJsonRpcCall(
         L"id",
         winrt::JsonValue::CreateStringValue(Identifier));
 
-    winrt::HttpResponseMessage ResponseMessage = Client.PostAsync(
-        ServerUri,
+    winrt::HttpResponseMessage ResponseMessage = this->m_HttpClient.PostAsync(
+        this->m_ServerUri,
         winrt::HttpStringContent(RequestJson.Stringify())).get();
 
     winrt::hstring ResponseString =
@@ -116,11 +115,6 @@ winrt::JsonValue Aria2Client::ExecuteJsonRpcCall(
 
     return ResponseJson.GetNamedValue(L"result");
 }
-
-#include <Mile.Windows.h>
-
-#include <winrt/Windows.ApplicationModel.h>
-#include <winrt/Windows.Networking.Sockets.h>
 
 #include <set>
 #include <string>
@@ -161,8 +155,16 @@ std::wstring FromConsoleString(
     return Utf16String;
 }
 
-
-
+// Get Download List
+// 
+// Reference: https://aria2.github.io/manual/en
+//            /html/aria2c.html#cmdoption-max-download-result
+//            https://github.com/pawamoy/aria2p
+//            /blob/930f709e1d78f133e8cbd717ba4c7b9f761244ee
+//            /src/aria2p/api.py#L284
+// aria2.tellActive(secret)
+// aria2.tellWaiting(secret, 0, 1000)
+// aria2.tellStopped(secret, 0, 1000)
 
 int SimpleDemoEntry()
 {
@@ -177,18 +179,10 @@ int SimpleDemoEntry()
         ProcessHandle,
         OutputPipeHandle);
 
-    //::MessageBoxW(nullptr, winrt::to_hstring(::PickUnusedTcpPort()).data(), L"sucks", 0);
+    winrt::Uri ServerUri = winrt::Uri(
+        L"http://localhost:" + winrt::to_hstring(ServerPort) + L"/jsonrpc");
 
-    
-
-    /*try
-    {
-        ::MessageBoxW(nullptr, ::GetBaseSettingsFolderPath().data(), L"sucks", 0);
-    }
-    catch (...)
-    {
-        ::MessageBoxW(nullptr, L"unpackaged sucks", L"Fucking Error Window", 0);
-    }*/
+    Aria2Client Client(ServerUri, ServerToken);
 
     try
     {
@@ -198,26 +192,26 @@ int SimpleDemoEntry()
         winrt::JsonArray Parameters;
         Parameters.Append(TokenValue);
 
-        //winrt::JsonObject ResponseJson = ::ExecuteJsonRpcCall(
-        //    winrt::Uri(L"http://localhost:6800/jsonrpc"),
+        //winrt::JsonObject ResponseJson = Client.ExecuteJsonRpcCall(
         //    L"aria2.getVersion", //L"aria2.tellActive",
         //    Parameters).GetObject();
 
-        winrt::JsonArray ResponseJson = Aria2Client().ExecuteJsonRpcCall(
-            winrt::Uri(L"http://localhost:" + winrt::to_hstring(ServerPort) + L"/jsonrpc"),
+        winrt::JsonArray ResponseJson = Client.ExecuteJsonRpcCall(
             L"system.listMethods",
             Parameters).GetArray();
 
-        ::MessageBoxW(nullptr, ResponseJson.Stringify().data(), L"Sucks", 0);
+        winrt::hstring ResponseJsonString = ResponseJson.Stringify();
+
+        ::MessageBoxW(nullptr, ResponseJsonString.data(), L"NanaGet", 0);
     }
     catch (winrt::hresult_error const& ex)
     {
-        ::MessageBoxW(nullptr, ex.message().data(), L"Fucking Error Window", 0);
+        ::MessageBoxW(nullptr, ex.message().data(), L"NanaGet", 0);
     }
 
     ::TerminateProcess(ProcessHandle.get(), 0);
 
-    DWORD TotalBytesAvailable = 0;
+    /*DWORD TotalBytesAvailable = 0;
     if (::PeekNamedPipe(
         OutputPipeHandle.get(),
         nullptr,
@@ -242,174 +236,7 @@ int SimpleDemoEntry()
                 L"NanaGet",
                 MB_ICONINFORMATION);
         }
-    }
+    }*/
 
     return 0;
 }
-
-//#include <iphlpapi.h>
-//#pragma comment(lib, "iphlpapi.lib")
-//
-//void test()
-//{
-//    std::set<std::uint16_t> UsedLocalTcpPorts;
-//
-//    {
-//        ULONG TcpTableLength = 0;
-//        DWORD Error = ::GetExtendedTcpTable(
-//            nullptr,
-//            &TcpTableLength,
-//            FALSE,
-//            AF_INET,
-//            TCP_TABLE_OWNER_PID_ALL,
-//            0);
-//        if (Error == ERROR_INSUFFICIENT_BUFFER)
-//        {
-//            PMIB_TCPTABLE_OWNER_PID TcpTable =
-//                reinterpret_cast<PMIB_TCPTABLE_OWNER_PID>(
-//                    Mile::HeapMemory::Allocate(TcpTableLength));
-//            if (TcpTable)
-//            {
-//                Error = ::GetExtendedTcpTable(
-//                    TcpTable,
-//                    &TcpTableLength,
-//                    FALSE,
-//                    AF_INET,
-//                    TCP_TABLE_OWNER_PID_ALL,
-//                    0);
-//                if (Error == NO_ERROR)
-//                {
-//                    for (DWORD i = 0; i < TcpTable->dwNumEntries; ++i)
-//                    {
-//                        UsedLocalTcpPorts.insert(::ntohs(static_cast<u_short>(
-//                            TcpTable->table[i].dwLocalPort)));
-//                    }
-//                }
-//
-//                Mile::HeapMemory::Free(TcpTable);
-//            }
-//        }
-//    }
-//
-//    {
-//        ULONG TcpTableLength = 0;
-//        DWORD Error = ::GetExtendedTcpTable(
-//            nullptr,
-//            &TcpTableLength,
-//            FALSE,
-//            AF_INET6,
-//            TCP_TABLE_OWNER_PID_ALL,
-//            0);
-//        if (Error == ERROR_INSUFFICIENT_BUFFER)
-//        {
-//            PMIB_TCP6TABLE_OWNER_PID TcpTable =
-//                reinterpret_cast<PMIB_TCP6TABLE_OWNER_PID>(
-//                    Mile::HeapMemory::Allocate(TcpTableLength));
-//            if (TcpTable)
-//            {
-//                Error = ::GetExtendedTcpTable(
-//                    TcpTable,
-//                    &TcpTableLength,
-//                    FALSE,
-//                    AF_INET6,
-//                    TCP_TABLE_OWNER_PID_ALL,
-//                    0);
-//                if (Error == NO_ERROR)
-//                {
-//                    for (DWORD i = 0; i < TcpTable->dwNumEntries; ++i)
-//                    {
-//                        UsedLocalTcpPorts.insert(::ntohs(static_cast<u_short>(
-//                            TcpTable->table[i].dwLocalPort)));
-//                    }
-//                }
-//
-//                Mile::HeapMemory::Free(TcpTable);
-//            }
-//        }
-//    }
-//
-//    {
-//        ULONG TcpTableLength = 0;
-//        DWORD Error = ::GetExtendedUdpTable(
-//            nullptr,
-//            &TcpTableLength,
-//            FALSE,
-//            AF_INET,
-//            UDP_TABLE_OWNER_PID,
-//            0);
-//        if (Error == ERROR_INSUFFICIENT_BUFFER)
-//        {
-//            PMIB_UDPTABLE_OWNER_PID TcpTable =
-//                reinterpret_cast<PMIB_UDPTABLE_OWNER_PID>(
-//                    Mile::HeapMemory::Allocate(TcpTableLength));
-//            if (TcpTable)
-//            {
-//                Error = ::GetExtendedUdpTable(
-//                    TcpTable,
-//                    &TcpTableLength,
-//                    FALSE,
-//                    AF_INET,
-//                    UDP_TABLE_OWNER_PID,
-//                    0);
-//                if (Error == NO_ERROR)
-//                {
-//                    for (DWORD i = 0; i < TcpTable->dwNumEntries; ++i)
-//                    {
-//                        UsedLocalTcpPorts.insert(::ntohs(static_cast<u_short>(
-//                            TcpTable->table[i].dwLocalPort)));
-//                    }
-//                }
-//
-//                Mile::HeapMemory::Free(TcpTable);
-//            }
-//        }
-//    }
-//
-//    {
-//        ULONG TcpTableLength = 0;
-//        DWORD Error = ::GetExtendedUdpTable(
-//            nullptr,
-//            &TcpTableLength,
-//            FALSE,
-//            AF_INET6,
-//            UDP_TABLE_OWNER_PID,
-//            0);
-//        if (Error == ERROR_INSUFFICIENT_BUFFER)
-//        {
-//            PMIB_UDP6TABLE_OWNER_PID TcpTable =
-//                reinterpret_cast<PMIB_UDP6TABLE_OWNER_PID>(
-//                    Mile::HeapMemory::Allocate(TcpTableLength));
-//            if (TcpTable)
-//            {
-//                Error = ::GetExtendedUdpTable(
-//                    TcpTable,
-//                    &TcpTableLength,
-//                    FALSE,
-//                    AF_INET6,
-//                    UDP_TABLE_OWNER_PID,
-//                    0);
-//                if (Error == NO_ERROR)
-//                {
-//                    for (DWORD i = 0; i < TcpTable->dwNumEntries; ++i)
-//                    {
-//                        UsedLocalTcpPorts.insert(::ntohs(static_cast<u_short>(
-//                            TcpTable->table[i].dwLocalPort)));
-//                    }
-//                }
-//
-//                Mile::HeapMemory::Free(TcpTable);
-//            }
-//        }
-//    }
-//}
-
-// Get Download List
-// 
-// Reference: https://aria2.github.io/manual/en
-//            /html/aria2c.html#cmdoption-max-download-result
-//            https://github.com/pawamoy/aria2p
-//            /blob/930f709e1d78f133e8cbd717ba4c7b9f761244ee
-//            /src/aria2p/api.py#L284
-// aria2.tellActive(secret)
-// aria2.tellWaiting(secret, 0, 1000)
-// aria2.tellStopped(secret, 0, 1000)
