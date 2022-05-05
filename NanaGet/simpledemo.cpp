@@ -142,7 +142,7 @@ void Aria2Client::ClearList()
 
 void Aria2Client::Pause(
     winrt::hstring Gid,
-    bool Force = false)
+    bool Force)
 {
     winrt::JsonArray Parameters;
     Parameters.Append(this->m_ServerTokenJsonValue);
@@ -167,7 +167,7 @@ void Aria2Client::Resume(
 
 void Aria2Client::Remove(
     winrt::hstring Gid,
-    bool Force = false)
+    bool Force)
 {
     winrt::JsonArray Parameters;
     Parameters.Append(this->m_ServerTokenJsonValue);
