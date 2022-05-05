@@ -71,9 +71,6 @@ Aria2Client::Aria2Client()
         winrt::JsonValue::CreateStringValue(
             L"token:" + this->m_JsonRpcTokenString))
 {
-    winrt::hstring ExecutablePath =
-        this->ApplicationFolderPath() + L"\\aria2c.exe";
-
     std::vector<std::pair<std::wstring, std::wstring>> Settings;
     Settings.emplace_back(
         L"enable-rpc",
@@ -85,23 +82,40 @@ Aria2Client::Aria2Client()
         L"rpc-secret",
         this->m_JsonRpcTokenString);
 
-    std::wstring Parameters;
+    std::wstring CommandLine = std::wstring(
+        this->ApplicationFolderPath() + L"\\aria2c.exe");
     for (auto const& Setting : Settings)
     {
-        Parameters.append(L"--");
-        Parameters.append(Setting.first);
+        CommandLine.append(L" --");
+        CommandLine.append(Setting.first);
 
         if (!Setting.second.empty())
         {
-            Parameters.append(L"=");
-            Parameters.append(Setting.second);
+            CommandLine.append(L"=");
+            CommandLine.append(Setting.second);
         }
-
-        Parameters.append(L" ");
     }
-    Parameters.resize(Parameters.size() - 1);
 
-    //::CreateProcessW()
+    /*STARTUPINFOW StartupInfo = { 0 };
+    PROCESS_INFORMATION ProcessInformation = { 0 };
+
+    StartupInfo.cb = sizeof(STARTUPINFOW);
+    StartupInfo.dwFlags |= STARTF_USESTDHANDLES;
+    StartupInfo.hStdInput = INVALID_HANDLE_VALUE;
+    StartupInfo.hStdOutput;
+    StartupInfo.hStdError;
+
+    ::CreateProcessW(
+        nullptr,
+        const_cast<LPWSTR>(CommandLine.c_str()),
+        nullptr,
+        nullptr,
+        TRUE,
+        CREATE_UNICODE_ENVIRONMENT | CREATE_NO_WINDOW,
+        nullptr,
+        nullptr,
+        &StartupInfo,
+        &ProcessInformation);*/
 }
 
 Aria2Client::~Aria2Client()
