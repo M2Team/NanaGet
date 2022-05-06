@@ -7,7 +7,7 @@
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   mc:Ignorable="d">
   <Grid>
-    <Grid>
+    <Grid x:Name="TaskManagerGrid">
       <Grid.RowDefinitions>
         <RowDefinition Height="auto" />
         <RowDefinition Height="*" />
@@ -22,39 +22,53 @@
         IsDynamicOverflowEnabled="False"
         IsOpen="False">
         <AppBarButton
+          x:Uid="/TaskManagerGrid/NewTaskButton"
           Width="44"
+          AutomationProperties.Name="[New Task Button]"
           Click="NewTaskButtonClick"
           Icon="Add"
-          ToolTipService.ToolTip="New Task" />
+          ToolTipService.ToolTip="[New Task]" />
         <AppBarButton
+          x:Uid="/TaskManagerGrid/StartAllButton"
           Width="44"
+          AutomationProperties.Name="[Start All Button]"
           Icon="Play"
-          ToolTipService.ToolTip="Start All" />
+          ToolTipService.ToolTip="[Start All]" />
         <AppBarButton
+          x:Uid="/TaskManagerGrid/PauseAllButton"
           Width="44"
+          AutomationProperties.Name="[Pause All Button]"
           Icon="Pause"
-          ToolTipService.ToolTip="Pause All" />
+          ToolTipService.ToolTip="[Pause All]" />
         <AppBarButton
+          x:Uid="/TaskManagerGrid/ClearListButton"
           Width="44"
+          AutomationProperties.Name="[Clear List Button]"
           Icon="Delete"
-          ToolTipService.ToolTip="Clear List" />
+          ToolTipService.ToolTip="[Clear List]" />
         <CommandBar.SecondaryCommands>
-          <AppBarButton Icon="Folder" Label="Open Downloads Folder" />
           <AppBarButton
+            x:Uid="/TaskManagerGrid/OpenDownloadsFolderButton"
+            Icon="Folder"
+            Label="[Open Downloads Folder]" />
+          <AppBarButton
+            x:Uid="/TaskManagerGrid/SettingsButton"
             Click="SettingsButtonClick"
             Icon="Setting"
-            Label="Settings" />
+            Label="[Settings]" />
           <AppBarButton
+            x:Uid="/TaskManagerGrid/AboutButton"
             Click="AboutButtonClick"
             Icon="Help"
-            Label="About" />
+            Label="[About]" />
         </CommandBar.SecondaryCommands>
         <CommandBar.Content>
           <AutoSuggestBox
+            x:Uid="/TaskManagerGrid/SearchBox"
             Margin="4,0"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Center"
-            PlaceholderText="Search Downloads"
+            PlaceholderText="[Search Downloads]"
             QueryIcon="Find" />
         </CommandBar.Content>
       </CommandBar>
@@ -74,25 +88,43 @@
           IsDynamicOverflowEnabled="False"
           IsOpen="False">
           <AppBarButton
+            x:Uid="/TaskManagerGrid/TaskItemRetryButton"
             Width="44"
+            AutomationProperties.Name="[Retry Button]"
             Icon="Refresh"
-            ToolTipService.ToolTip="Retry"
+            ToolTipService.ToolTip="[Retry]"
             Visibility="Collapsed" />
           <AppBarButton
+            x:Uid="/TaskManagerGrid/TaskItemResumeButton"
             Width="44"
+            AutomationProperties.Name="[Resume Button]"
             Icon="Play"
-            ToolTipService.ToolTip="Resume"
+            ToolTipService.ToolTip="[Resume]"
             Visibility="Collapsed" />
           <AppBarButton
+            x:Uid="/TaskManagerGrid/TaskItemPauseButton"
             Width="44"
+            AutomationProperties.Name="[Pause Button]"
             Icon="Pause"
-            ToolTipService.ToolTip="Pause" />
+            ToolTipService.ToolTip="[Pause]" />
           <CommandBar.SecondaryCommands>
-            <AppBarButton Icon="Link" Label="Copy Link" />
-            <AppBarButton Icon="OpenLocal" Label="Open Folder" />
+            <AppBarButton
+              x:Uid="/TaskManagerGrid/TaskItemCopyLinkButton"
+              Icon="Link"
+              Label="[Copy Link]" />
+            <AppBarButton
+              x:Uid="/TaskManagerGrid/TaskItemOpenFolderButton"
+              Icon="OpenLocal"
+              Label="[Open Folder]" />
             <AppBarSeparator />
-            <AppBarButton Icon="Cancel" Label="Cancel" />
-            <AppBarButton Icon="Delete" Label="Remove" />
+            <AppBarButton
+              x:Uid="/TaskManagerGrid/TaskItemCancelButton"
+              Icon="Cancel"
+              Label="[Cancel]" />
+            <AppBarButton
+              x:Uid="/TaskManagerGrid/TaskItemRemoveButton"
+              Icon="Delete"
+              Label="[Remove]" />
           </CommandBar.SecondaryCommands>
           <CommandBar.Content>
             <Grid

@@ -26,6 +26,10 @@
       <DeploymentContent>true</DeploymentContent>
       <Link>Assets\%(RecursiveDir)%(FileName)%(Extension)</Link>
     </Content>
+    <!-- Internationalization Support -->
+    <PRIResource Include="Strings\**\*">
+      <Link>Strings\%(RecursiveDir)%(FileName)%(Extension)</Link>
+    </PRIResource>
     <!-- aria2 -->
     <Content Include="..\aria2\aria2c.exe">
       <DeploymentContent>true</DeploymentContent>
