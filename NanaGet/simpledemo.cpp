@@ -27,6 +27,14 @@ namespace winrt
     using Windows::Web::Http::HttpStringContent;
 }
 
+struct Aria2Task
+{
+    winrt::hstring Gid;
+    winrt::hstring Name;
+    winrt::hstring Path;
+    winrt::hstring Status;
+};
+
 class Aria2Client
 {
 public:
@@ -220,18 +228,16 @@ winrt::JsonValue Aria2Client::ExecuteJsonRpcCall(
 
     winrt::JsonObject ResponseJson = winrt::JsonObject::Parse(ResponseString);
 
+    if (L"2.0" != ResponseJson.GetNamedString(L"jsonrpc") ||
+        Identifier != ResponseJson.GetNamedString(L"id"))
     {
-        if (L"2.0" != ResponseJson.GetNamedString(L"jsonrpc") ||
-            Identifier != ResponseJson.GetNamedString(L"id"))
-        {
-            throw winrt::hresult_illegal_method_call();
-        }
+        throw winrt::hresult_illegal_method_call();
+    }
 
-        if (ResponseJson.HasKey(L"error"))
-        {
-            throw winrt::hresult_illegal_method_call(
-                ResponseJson.GetNamedValue(L"error").Stringify());
-        }
+    if (ResponseJson.HasKey(L"error"))
+    {
+        throw winrt::hresult_illegal_method_call(
+            ResponseJson.GetNamedValue(L"error").Stringify());
     }
 
     return ResponseJson.GetNamedValue(L"result");
