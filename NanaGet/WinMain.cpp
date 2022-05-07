@@ -12,6 +12,43 @@
 
 #include "NanaGetResources.h"
 
+#include <dwmapi.h>
+#pragma comment(lib, "dwmapi.lib")
+
+HRESULT SetDwmWindowUseImmersiveDarkModeAttribute(
+    _In_ HWND WindowHandle,
+    _In_ BOOL Value)
+{
+    OSVERSIONINFOEXW OSVersionInfoEx = { 0 };
+    OSVersionInfoEx.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEXW);
+    OSVersionInfoEx.dwMajorVersion = 10;
+    OSVersionInfoEx.dwMinorVersion = 0;
+    OSVersionInfoEx.dwBuildNumber = 19041;
+    bool IsWindows10Version20H1OrLater = ::VerifyVersionInfoW(
+        &OSVersionInfoEx,
+        VER_BUILDNUMBER,
+        ::VerSetConditionMask(
+            ::VerSetConditionMask(
+                ::VerSetConditionMask(
+                    0,
+                    VER_MAJORVERSION,
+                    VER_GREATER_EQUAL),
+                VER_MINORVERSION,
+                VER_GREATER_EQUAL),
+            VER_BUILDNUMBER,
+            VER_GREATER_EQUAL));
+
+    const DWORD DwmWindowUseImmersiveDarkModeBefore20H1Attribute = 19;
+    const DWORD DwmWindowUseImmersiveDarkModeAttribute = 20;
+    return ::DwmSetWindowAttribute(
+        WindowHandle,
+        (IsWindows10Version20H1OrLater
+            ? DwmWindowUseImmersiveDarkModeAttribute
+            : DwmWindowUseImmersiveDarkModeBefore20H1Attribute),
+        &Value,
+        sizeof(BOOL));
+}
+
 namespace winrt
 {
     using winrt::Windows::UI::Xaml::ElementTheme;
@@ -51,7 +88,7 @@ namespace
                 return -1;
             }
 
-            winrt::UIElement Content = nullptr;
+            winrt::FrameworkElement Content = nullptr;
             winrt::copy_from_abi(Content, CreateStruct->lpCreateParams);
             XamlSource.Content(Content);
 
@@ -79,6 +116,12 @@ namespace
 
             // Focus on XAML Island host window for Acrylic brush support.
             ::SetFocus(XamlWindowHandle);
+
+            ::SetDwmWindowUseImmersiveDarkModeAttribute(
+                hWnd,
+                (Content.ActualTheme() == winrt::ElementTheme::Dark
+                    ? TRUE
+                    : FALSE));
 
             UINT DpiValue = ::GetDpiForWindow(hWnd);
 
@@ -161,6 +204,12 @@ namespace
                     winrt::VisualTreeHelper::GetParent(Content))
                 {
                     Content.RequestedTheme(winrt::ElementTheme::Default);
+
+                    ::SetDwmWindowUseImmersiveDarkModeAttribute(
+                        hWnd,
+                        (Content.ActualTheme() == winrt::ElementTheme::Dark
+                            ? TRUE
+                            : FALSE));
                 }
             }
             break;
