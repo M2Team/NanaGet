@@ -19,24 +19,27 @@ HRESULT SetDwmWindowUseImmersiveDarkModeAttribute(
     _In_ HWND WindowHandle,
     _In_ BOOL Value)
 {
-    OSVERSIONINFOEXW OSVersionInfoEx = { 0 };
-    OSVersionInfoEx.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEXW);
-    OSVersionInfoEx.dwMajorVersion = 10;
-    OSVersionInfoEx.dwMinorVersion = 0;
-    OSVersionInfoEx.dwBuildNumber = 19041;
-    bool IsWindows10Version20H1OrLater = ::VerifyVersionInfoW(
-        &OSVersionInfoEx,
-        VER_BUILDNUMBER,
-        ::VerSetConditionMask(
+    static bool IsWindows10Version20H1OrLater = ([]() -> bool
+    {
+        OSVERSIONINFOEXW OSVersionInfoEx = { 0 };
+        OSVersionInfoEx.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEXW);
+        OSVersionInfoEx.dwMajorVersion = 10;
+        OSVersionInfoEx.dwMinorVersion = 0;
+        OSVersionInfoEx.dwBuildNumber = 19041;
+        return ::VerifyVersionInfoW(
+            &OSVersionInfoEx,
+            VER_BUILDNUMBER,
             ::VerSetConditionMask(
                 ::VerSetConditionMask(
-                    0,
-                    VER_MAJORVERSION,
+                    ::VerSetConditionMask(
+                        0,
+                        VER_MAJORVERSION,
+                        VER_GREATER_EQUAL),
+                    VER_MINORVERSION,
                     VER_GREATER_EQUAL),
-                VER_MINORVERSION,
-                VER_GREATER_EQUAL),
-            VER_BUILDNUMBER,
-            VER_GREATER_EQUAL));
+                VER_BUILDNUMBER,
+                VER_GREATER_EQUAL));
+    }());
 
     const DWORD DwmWindowUseImmersiveDarkModeBefore20H1Attribute = 19;
     const DWORD DwmWindowUseImmersiveDarkModeAttribute = 20;
@@ -192,26 +195,32 @@ namespace
         }
         case WM_SETTINGCHANGE:
         {
-            winrt::DesktopWindowXamlSource XamlSource = nullptr;
-            winrt::copy_from_abi(
-                XamlSource,
-                ::GetPropW(hWnd, L"XamlWindowSource"));
-            if (XamlSource)
+            if (0 == std::wcscmp(
+                reinterpret_cast<LPWSTR>(lParam),
+                L"ImmersiveColorSet"))
             {
-                winrt::FrameworkElement Content =
-                    XamlSource.Content().try_as<winrt::FrameworkElement>();
-                if (Content &&
-                    winrt::VisualTreeHelper::GetParent(Content))
+                winrt::DesktopWindowXamlSource XamlSource = nullptr;
+                winrt::copy_from_abi(
+                    XamlSource,
+                    ::GetPropW(hWnd, L"XamlWindowSource"));
+                if (XamlSource)
                 {
-                    Content.RequestedTheme(winrt::ElementTheme::Default);
+                    winrt::FrameworkElement Content =
+                        XamlSource.Content().try_as<winrt::FrameworkElement>();
+                    if (Content &&
+                        winrt::VisualTreeHelper::GetParent(Content))
+                    {
+                        Content.RequestedTheme(winrt::ElementTheme::Default);
 
-                    ::SetDwmWindowUseImmersiveDarkModeAttribute(
-                        hWnd,
-                        (Content.ActualTheme() == winrt::ElementTheme::Dark
-                            ? TRUE
-                            : FALSE));
+                        ::SetDwmWindowUseImmersiveDarkModeAttribute(
+                            hWnd,
+                            (Content.ActualTheme() == winrt::ElementTheme::Dark
+                                ? TRUE
+                                : FALSE));
+                    }
                 }
             }
+       
             break;
         }
         case WM_DESTROY:
