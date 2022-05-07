@@ -202,10 +202,20 @@
             Orientation="Vertical">
             <StackPanel Orientation="Vertical">
               <TextBlock FontSize="16" Text="Download Source" />
-              <TextBox
-                Margin="0,4,0,0"
-                BorderThickness="1"
-                PlaceholderText="Please input the download source here." />
+              <Grid Margin="0,4,0,0" HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                  <ColumnDefinition />
+                  <ColumnDefinition Width="32" />
+                </Grid.ColumnDefinitions>
+                <TextBox BorderThickness="1" PlaceholderText="Please input the download source here." />
+                <Button
+                  Grid.Column="1"
+                  Width="32"
+                  Height="32"
+                  Content="&#xED25;"
+                  FontFamily="Segoe MDL2 Assets"
+                  FontSize="11" />
+              </Grid>
             </StackPanel>
             <StackPanel Margin="0,8,0,0" Orientation="Vertical">
               <TextBlock FontSize="16" Text="File Name" />
@@ -222,7 +232,6 @@
                   <ColumnDefinition Width="32" />
                 </Grid.ColumnDefinitions>
                 <TextBox
-                  HorizontalAlignment="Stretch"
                   BorderThickness="1"
                   IsReadOnly="True"
                   PlaceholderText="N/A" />
