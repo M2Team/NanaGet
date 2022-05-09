@@ -9,27 +9,17 @@
     <RootNamespace>NanaGet</RootNamespace>
     <MileProjectType>WindowsApplication</MileProjectType>
     <MileProjectManifestFile>NanaGet.manifest</MileProjectManifestFile>
-    <CppWinRTOptimized>true</CppWinRTOptimized>
-    <CppWinRTRootNamespaceAutoMerge>true</CppWinRTRootNamespaceAutoMerge>
-    <CppWinRTGenerateWindowsMetadata>true</CppWinRTGenerateWindowsMetadata>
     <MinimalCoreWin>false</MinimalCoreWin>
     <DefaultLanguage>en</DefaultLanguage>
-    <MinimumVisualStudioVersion>15.0</MinimumVisualStudioVersion>
     <AppContainerApplication>false</AppContainerApplication>
     <AppxPackage>false</AppxPackage>
     <ApplicationType>Windows Store</ApplicationType>
     <ApplicationTypeRevision>10.0</ApplicationTypeRevision>
     <WindowsTargetPlatformMinVersion>10.0.17763.0</WindowsTargetPlatformMinVersion>
+    <MileProjectEnableVCLTLSupport>true</MileProjectEnableVCLTLSupport>
+    <MileProjectEnableCppWinRTSupport>true</MileProjectEnableCppWinRTSupport>
   </PropertyGroup>
   <PropertyGroup Label="Globals">
-    <!-- Import all Windows Runtime metadata in Windows SDK -->
-    <CppWinRTImplicitlyExpandTargetPlatform>true</CppWinRTImplicitlyExpandTargetPlatform>
-    <!-- Disable Microsoft.VCLibs reference -->
-    <UseCrtSDKReference>false</UseCrtSDKReference>
-    <!-- https://github.com/microsoft/terminal/blob/9dc922fc37a479dd560675ac4ea1ce3713ae0ada/src/cppwinrt.build.pre.props#L39 -->
-    <_NoWinAPIFamilyApp>true</_NoWinAPIFamilyApp>
-    <!-- https://github.com/microsoft/terminal/blob/9dc922fc37a479dd560675ac4ea1ce3713ae0ada/src/cppwinrt.build.pre.props#L40 -->
-    <_VC_Target_Library_Platform>Desktop</_VC_Target_Library_Platform>
     <!--
       This is an override that, puzzlingly, _forces XBF (XAML binary) embedding_.
       We have to do this to overcome a layout issue in the WAP packaging project.
@@ -37,27 +27,15 @@
     -->
     <DisableEmbeddedXbf>false</DisableEmbeddedXbf>
     <_SupportXbfAsEmbedFileResources>true</_SupportXbfAsEmbedFileResources>
-    <!-- Enable VC-LTL Clean Import Mode -->
-    <CleanImport>true</CleanImport>
   </PropertyGroup>
   <Import Project="..\Mile.Project.ModernWindows\Mile.Project.Cpp.props" />
-  <Import Project="..\Mile.Project.ModernWindows\Mile.Project.Cpp.CppWinRT.props" />
-  <Import Project="..\Mile.Project.ModernWindows\Mile.Project.Cpp.VC-LTL.props" />
   <ImportGroup Label="PropertySheets">
     <Import Project="PropertySheet.props" />
   </ImportGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
-      <AdditionalOptions>%(AdditionalOptions) /bigobj</AdditionalOptions>
-      <!--Temporarily disable cppwinrt heap enforcement to work around xaml compiler generated std::shared_ptr use -->
-      <AdditionalOptions Condition="'$(CppWinRTHeapEnforcement)'==''">/DWINRT_NO_MAKE_DETECTION %(AdditionalOptions)</AdditionalOptions>
-      <PreprocessorDefinitions>DISABLE_XAML_GENERATED_MAIN;WIN32_LEAN_AND_MEAN;WINRT_LEAN_AND_MEAN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>DISABLE_XAML_GENERATED_MAIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
-    <Link>
-      <GenerateWindowsMetadata>false</GenerateWindowsMetadata>
-      <AdditionalDependencies>kernel32.lib;ole32.lib;oleaut32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Mile.Project.Properties.h" />
