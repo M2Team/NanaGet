@@ -52,6 +52,22 @@ HRESULT SetDwmWindowUseImmersiveDarkModeAttribute(
         sizeof(BOOL));
 }
 
+bool ShouldAppsUseImmersiveDarkMode()
+{
+    DWORD Type = REG_DWORD;
+    DWORD Value = 0;
+    DWORD ValueLength = sizeof(DWORD);
+    ::RegGetValueW(
+        HKEY_CURRENT_USER,
+        L"Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize",
+        L"AppsUseLightTheme",
+        RRF_RT_REG_DWORD | RRF_SUBKEY_WOW6464KEY,
+        &Type,
+        &Value,
+        &ValueLength);
+    return (Type == REG_DWORD && ValueLength == sizeof(DWORD) && Value == 0);
+}
+
 namespace winrt
 {
     using winrt::Windows::UI::Xaml::ElementTheme;
@@ -195,7 +211,7 @@ namespace
         }
         case WM_SETTINGCHANGE:
         {
-            if (0 == std::wcscmp(
+            if (lParam && 0 == std::wcscmp(
                 reinterpret_cast<LPWSTR>(lParam),
                 L"ImmersiveColorSet"))
             {
