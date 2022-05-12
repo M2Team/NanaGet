@@ -34,6 +34,8 @@ struct Aria2Task
     winrt::hstring Path;
     winrt::hstring Status;
 };
+// AddTask
+// GetTasks
 
 class Aria2Client
 {
@@ -290,6 +292,9 @@ std::wstring FromConsoleString(
 
 int SimpleDemoEntry()
 {
+    /*winrt::Uri fuck = winrt::Uri(L"nanaget-attachment://D:\\file.svg");
+    ::MessageBoxW(nullptr, fuck.SchemeName().data(), L"NanaGet", 0);*/
+
     std::uint16_t ServerPort = 0;
     winrt::hstring ServerToken;
     winrt::handle ProcessHandle;
@@ -300,6 +305,8 @@ int SimpleDemoEntry()
         ServerToken,
         ProcessHandle,
         OutputPipeHandle);
+
+    //Sleep(500);
 
     winrt::Uri ServerUri = winrt::Uri(
         L"http://localhost:" + winrt::to_hstring(ServerPort) + L"/jsonrpc");
@@ -337,9 +344,8 @@ int SimpleDemoEntry()
 
     Client.Shutdown();
 
-    ::WaitForSingleObjectEx(ProcessHandle.get(), INFINITE, FALSE);
-
-    //::TerminateProcess(ProcessHandle.get(), 0);
+    ::WaitForSingleObjectEx(ProcessHandle.get(), 60 * 1000, FALSE);
+    ::TerminateProcess(ProcessHandle.get(), 0);
 
     /*DWORD TotalBytesAvailable = 0;
     if (::PeekNamedPipe(
