@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\Mile.Project.ModernWindows\Mile.Project.Platform.x86.props" />
-  <Import Project="..\Mile.Project.ModernWindows\Mile.Project.Platform.x64.props" />
-  <Import Project="..\Mile.Project.ModernWindows\Mile.Project.Platform.ARM64.props" />
+  <Import Project="..\Mile.Project.Windows\Mile.Project.Platform.x86.props" />
+  <Import Project="..\Mile.Project.Windows\Mile.Project.Platform.x64.props" />
+  <Import Project="..\Mile.Project.Windows\Mile.Project.Platform.ARM64.props" />
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4c5da281-1fdd-41b7-9d3f-94132227ca0e}</ProjectGuid>
     <ProjectName>Mile.Xaml</ProjectName>
@@ -17,7 +17,7 @@
     <MileProjectEnableVCLTLSupport>true</MileProjectEnableVCLTLSupport>
     <MileProjectEnableCppWinRTSupport>true</MileProjectEnableCppWinRTSupport>
   </PropertyGroup>
-  <Import Project="..\Mile.Project.ModernWindows\Mile.Project.Cpp.props" />
+  <Import Project="..\Mile.Project.Windows\Mile.Project.Cpp.props" />
   <ImportGroup Label="PropertySheets">
     <Import Project="PropertySheet.props" />
   </ImportGroup>
@@ -50,5 +50,5 @@
   <ItemGroup>
     <None Include="PropertySheet.props" />
   </ItemGroup>
-  <Import Project="..\Mile.Project.ModernWindows\Mile.Project.Cpp.targets" />
+  <Import Project="..\Mile.Project.Windows\Mile.Project.Cpp.targets" />
 </Project>
