@@ -47,6 +47,9 @@
     <ClInclude Include="MainPage.h">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </ClInclude>
+    <ClInclude Include="TaskItem.h">
+      <DependentUpon>TaskItem.idl</DependentUpon>
+    </ClInclude>
     <ClInclude Include="NanaGetResources.h" />
   </ItemGroup>
   <ItemGroup>
@@ -68,6 +71,9 @@
     <ClCompile Include="MainPage.cpp">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </ClCompile>
+    <ClCompile Include="TaskItem.cpp">
+      <DependentUpon>TaskItem.idl</DependentUpon>
+    </ClCompile>
     <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
     <ClCompile Include="SimpleDemo.cpp" />
     <ClCompile Include="WinMain.cpp" />
@@ -79,6 +85,7 @@
     <Midl Include="MainPage.idl">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Midl>
+    <Midl Include="TaskItem.idl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="PropertySheet.props" />

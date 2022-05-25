@@ -72,7 +72,7 @@
             QueryIcon="Find" />
         </CommandBar.Content>
       </CommandBar>
-      <ListView Grid.Row="1">
+      <ListView x:Name="TaskList" Grid.Row="1">
         <ListView.ItemContainerStyle>
           <Style TargetType="ListViewItem">
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -83,79 +83,83 @@
             <Setter Property="BorderThickness" Value="1" />
           </Style>
         </ListView.ItemContainerStyle>
-        <CommandBar
-          Margin="-1,0"
-          HorizontalContentAlignment="Stretch"
-          VerticalContentAlignment="Center"
-          Background="Transparent"
-          DefaultLabelPosition="Collapsed"
-          IsDynamicOverflowEnabled="False"
-          IsOpen="False">
-          <AppBarButton
-            x:Uid="/TaskManagerGrid/TaskItemRetryButton"
-            Width="44"
-            AutomationProperties.Name="[Retry Button]"
-            Icon="Refresh"
-            ToolTipService.ToolTip="[Retry]"
-            Visibility="Collapsed" />
-          <AppBarButton
-            x:Uid="/TaskManagerGrid/TaskItemResumeButton"
-            Width="44"
-            AutomationProperties.Name="[Resume Button]"
-            Icon="Play"
-            ToolTipService.ToolTip="[Resume]"
-            Visibility="Collapsed" />
-          <AppBarButton
-            x:Uid="/TaskManagerGrid/TaskItemPauseButton"
-            Width="44"
-            AutomationProperties.Name="[Pause Button]"
-            Icon="Pause"
-            ToolTipService.ToolTip="[Pause]" />
-          <CommandBar.SecondaryCommands>
-            <AppBarButton
-              x:Uid="/TaskManagerGrid/TaskItemCopyLinkButton"
-              Icon="Link"
-              Label="[Copy Link]" />
-            <AppBarButton
-              x:Uid="/TaskManagerGrid/TaskItemOpenFolderButton"
-              Icon="OpenLocal"
-              Label="[Open Folder]" />
-            <AppBarSeparator />
-            <AppBarButton
-              x:Uid="/TaskManagerGrid/TaskItemCancelButton"
-              Icon="Cancel"
-              Label="[Cancel]" />
-            <AppBarButton
-              x:Uid="/TaskManagerGrid/TaskItemRemoveButton"
-              Icon="Delete"
-              Label="[Remove]" />
-          </CommandBar.SecondaryCommands>
-          <CommandBar.Content>
-            <Grid
-              Margin="4,0"
-              HorizontalAlignment="Stretch"
-              VerticalAlignment="Center">
-              <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="2*" />
-              </Grid.ColumnDefinitions>
-              <TextBlock
-                Grid.Column="0"
-                Margin="12,0"
-                VerticalAlignment="Center"
-                Text="QQ9.0.9.exe" />
-              <StackPanel Grid.Column="1">
-                <TextBlock Text="31 MiB/s &#x2193; 0 KiB/s &#x2191; 47 MiB / 72.78 MiB 0:00:01" />
-                <ProgressBar
-                  Height="4"
-                  BorderThickness="0"
-                  Foreground="Green"
-                  Maximum="100"
-                  Value="60" />
-              </StackPanel>
-            </Grid>
-          </CommandBar.Content>
-        </CommandBar>
+        <ListView.ItemTemplate>
+          <DataTemplate x:DataType="local:TaskItem">
+            <CommandBar
+              Margin="-1,0"
+              HorizontalContentAlignment="Stretch"
+              VerticalContentAlignment="Center"
+              Background="Transparent"
+              DefaultLabelPosition="Collapsed"
+              IsDynamicOverflowEnabled="False"
+              IsOpen="False">
+              <AppBarButton
+                x:Uid="/TaskManagerGrid/TaskItemRetryButton"
+                Width="44"
+                AutomationProperties.Name="[Retry Button]"
+                Icon="Refresh"
+                ToolTipService.ToolTip="[Retry]"
+                Visibility="Collapsed" />
+              <AppBarButton
+                x:Uid="/TaskManagerGrid/TaskItemResumeButton"
+                Width="44"
+                AutomationProperties.Name="[Resume Button]"
+                Icon="Play"
+                ToolTipService.ToolTip="[Resume]"
+                Visibility="Collapsed" />
+              <AppBarButton
+                x:Uid="/TaskManagerGrid/TaskItemPauseButton"
+                Width="44"
+                AutomationProperties.Name="[Pause Button]"
+                Icon="Pause"
+                ToolTipService.ToolTip="[Pause]" />
+              <CommandBar.SecondaryCommands>
+                <AppBarButton
+                  x:Uid="/TaskManagerGrid/TaskItemCopyLinkButton"
+                  Icon="Link"
+                  Label="[Copy Link]" />
+                <AppBarButton
+                  x:Uid="/TaskManagerGrid/TaskItemOpenFolderButton"
+                  Icon="OpenLocal"
+                  Label="[Open Folder]" />
+                <AppBarSeparator />
+                <AppBarButton
+                  x:Uid="/TaskManagerGrid/TaskItemCancelButton"
+                  Icon="Cancel"
+                  Label="[Cancel]" />
+                <AppBarButton
+                  x:Uid="/TaskManagerGrid/TaskItemRemoveButton"
+                  Icon="Delete"
+                  Label="[Remove]" />
+              </CommandBar.SecondaryCommands>
+              <CommandBar.Content>
+                <Grid
+                  Margin="4,0"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Center">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="2*" />
+                  </Grid.ColumnDefinitions>
+                  <TextBlock
+                    Grid.Column="0"
+                    Margin="12,0"
+                    VerticalAlignment="Center"
+                    Text="{x:Bind Name, Mode=OneWay}" />
+                  <StackPanel Grid.Column="1">
+                    <TextBlock Text="31 MiB/s &#x2193; 0 KiB/s &#x2191; 47 MiB / 72.78 MiB 0:00:01" />
+                    <ProgressBar
+                      Height="4"
+                      BorderThickness="0"
+                      Foreground="Green"
+                      Maximum="100"
+                      Value="60" />
+                  </StackPanel>
+                </Grid>
+              </CommandBar.Content>
+            </CommandBar>
+          </DataTemplate>
+        </ListView.ItemTemplate>
       </ListView>
       <StackPanel
         Grid.Row="2"

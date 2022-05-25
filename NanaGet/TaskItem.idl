@@ -1,0 +1,26 @@
+﻿namespace NanaGet
+{
+    enum TaskStatus
+    {
+        Active,
+        Waiting,
+        Paused,
+        Error,
+        Complete,
+        Removed
+    };
+
+    runtimeclass TaskItem
+    {
+        String Gid { get; };
+        String Name { get; };
+        Windows.Foundation.Uri Source{ get; };
+        String Path { get; };
+        TaskStatus Status { get; };
+        UInt64 DownloadSpeed { get; };
+        UInt64 UploadSpeed { get; };
+        UInt64 BytesReceived { get; };
+        UInt64 TotalBytesToReceive { get; };
+        UInt64 RemainTime { get; };
+    }
+}

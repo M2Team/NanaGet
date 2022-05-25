@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "MainPage.h"
 #include "MainPage.g.cpp"
+#include "TaskItem.h"
 
 #include <winrt/Windows.Foundation.h>
 #include <winrt/Windows.System.h>
@@ -13,6 +14,14 @@ namespace winrt::NanaGet::implementation
     MainPage::MainPage()
     {
         InitializeComponent();
+
+        using Windows::Foundation::Collections::IObservableVector;
+
+        std::vector<NanaGet::TaskItem> contacts;
+        contacts.push_back(winrt::make<NanaGet::implementation::TaskItem>());
+        IObservableVector<NanaGet::TaskItem> suck =
+            winrt::single_threaded_observable_vector(std::move(contacts));
+        this->TaskList().ItemsSource(suck);
     }
 
     void MainPage::NewTaskButtonClick(
