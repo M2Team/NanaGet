@@ -77,10 +77,14 @@
           <Style TargetType="ListViewItem">
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
             <Setter Property="VerticalContentAlignment" Value="Stretch" />
-            <Setter Property="Padding" Value="0" />
+            <Setter Property="Padding" Value="1,0" />
+            <Setter Property="Margin" Value="-1,0,-1,-1" />
+            <Setter Property="BorderBrush" Value="Gray" />
+            <Setter Property="BorderThickness" Value="1" />
           </Style>
         </ListView.ItemContainerStyle>
         <CommandBar
+          Margin="-1,0"
           HorizontalContentAlignment="Stretch"
           VerticalContentAlignment="Center"
           Background="Transparent"
