@@ -31,8 +31,17 @@ struct Aria2Task
 {
     winrt::hstring Gid;
     winrt::hstring Name;
+    winrt::hstring Uri;
     winrt::hstring Path;
     winrt::hstring Status;
+
+    std::uint64_t DownloadSpeed;
+    std::uint64_t UploadSpeed;
+
+    std::uint64_t BytesReceived;
+    std::uint64_t TotalBytesToReceive;
+
+    std::uint64_t RemainTime; 
 };
 // AddTask
 // GetTasks
@@ -195,6 +204,37 @@ void Aria2Client::Remove(
     }
 }
 
+std::wstring ToWideString(
+    std::uint32_t CodePage,
+    std::string_view const& InputString)
+{
+    std::wstring OutputString;
+
+    int OutputStringLength = ::MultiByteToWideChar(
+        CodePage,
+        0,
+        InputString.data(),
+        static_cast<int>(InputString.size()),
+        nullptr,
+        0);
+    if (OutputStringLength > 0)
+    {
+        OutputString.resize(OutputStringLength);
+        OutputStringLength = ::MultiByteToWideChar(
+            CodePage,
+            0,
+            InputString.data(),
+            static_cast<int>(InputString.size()),
+            &OutputString[0],
+            OutputStringLength);
+        OutputString.resize(OutputStringLength);
+    }
+
+    return OutputString;
+}
+
+#include <winrt\Windows.Storage.Streams.h>
+
 winrt::JsonValue Aria2Client::ExecuteJsonRpcCall(
     winrt::hstring const& MethodName,
     winrt::IJsonValue const& Parameters)
@@ -220,8 +260,16 @@ winrt::JsonValue Aria2Client::ExecuteJsonRpcCall(
         this->m_ServerUri,
         winrt::HttpStringContent(RequestJson.Stringify())).get();
 
-    winrt::hstring ResponseString =
-        ResponseMessage.Content().ReadAsStringAsync().get();
+    auto Buffer = ResponseMessage.Content().ReadAsBufferAsync().get();
+
+    auto fuck = ::ToWideString(
+        CP_UTF8,
+        std::string_view(reinterpret_cast<char*>(Buffer.data()), Buffer.Length()));
+
+    winrt::hstring ResponseString = fuck.c_str();
+
+
+        //ResponseMessage.Content().ReadAsStringAsync().get();
 
     if (!ResponseMessage.IsSuccessStatusCode() && ResponseString.empty())
     {
@@ -295,7 +343,7 @@ int SimpleDemoEntry()
     /*winrt::Uri fuck = winrt::Uri(L"nanaget-attachment://D:\\file.svg");
     ::MessageBoxW(nullptr, fuck.SchemeName().data(), L"NanaGet", 0);*/
 
-    std::uint16_t ServerPort = 0;
+    /*std::uint16_t ServerPort = 0;
     winrt::hstring ServerToken;
     winrt::handle ProcessHandle;
     winrt::file_handle OutputPipeHandle;
@@ -304,9 +352,12 @@ int SimpleDemoEntry()
         ServerPort,
         ServerToken,
         ProcessHandle,
-        OutputPipeHandle);
+        OutputPipeHandle);*/
 
     //Sleep(500);
+
+    std::uint16_t ServerPort = 6800;
+    winrt::hstring ServerToken;
 
     winrt::Uri ServerUri = winrt::Uri(
         L"http://localhost:" + winrt::to_hstring(ServerPort) + L"/jsonrpc");
@@ -329,9 +380,20 @@ int SimpleDemoEntry()
             L"system.listMethods",
             Parameters).GetArray();*/
 
-        winrt::JsonObject ResponseJson = Client.ExecuteJsonRpcCall(
+        /*winrt::JsonObject ResponseJson = Client.ExecuteJsonRpcCall(
             L"aria2.getGlobalOption",
-            Parameters).GetObject();
+            Parameters).GetObject();*/
+
+        /*winrt::JsonObject ResponseJson = Client.ExecuteJsonRpcCall(
+            L"aria2.getGlobalStat",
+            Parameters).GetObject();*/
+
+        //Parameters.Append(winrt::JsonValue::CreateNumberValue(0));
+        //Parameters.Append(winrt::JsonValue::CreateNumberValue(1000));
+
+        winrt::JsonArray ResponseJson = Client.ExecuteJsonRpcCall(
+            /*L"aria2.tellStopped",*/ L"aria2.tellActive",// L"aria2.tellWaiting",
+            Parameters).GetArray();
 
         winrt::hstring ResponseJsonString = ResponseJson.Stringify();
 
@@ -342,10 +404,10 @@ int SimpleDemoEntry()
         ::MessageBoxW(nullptr, ex.message().data(), L"NanaGet", 0);
     }
 
-    Client.Shutdown();
+    /*Client.Shutdown();
 
     ::WaitForSingleObjectEx(ProcessHandle.get(), 60 * 1000, FALSE);
-    ::TerminateProcess(ProcessHandle.get(), 0);
+    ::TerminateProcess(ProcessHandle.get(), 0);*/
 
     /*DWORD TotalBytesAvailable = 0;
     if (::PeekNamedPipe(
