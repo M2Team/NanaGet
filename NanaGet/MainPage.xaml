@@ -6,6 +6,9 @@
   xmlns:local="using:NanaGet"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   mc:Ignorable="d">
+  <Page.Resources>
+    <local:TaskItemConverter x:Name="TaskItemConverter" />
+  </Page.Resources>
   <Grid>
     <Grid x:Name="TaskManagerGrid">
       <Grid.RowDefinitions>
@@ -99,20 +102,21 @@
                 AutomationProperties.Name="[Retry Button]"
                 Icon="Refresh"
                 ToolTipService.ToolTip="[Retry]"
-                Visibility="Collapsed" />
+                Visibility="{x:Bind Status, Converter={StaticResource TaskItemConverter}, ConverterParameter=TaskStatusToRetryButtonVisible, Mode=OneWay}" />
               <AppBarButton
                 x:Uid="/TaskManagerGrid/TaskItemResumeButton"
                 Width="44"
                 AutomationProperties.Name="[Resume Button]"
                 Icon="Play"
                 ToolTipService.ToolTip="[Resume]"
-                Visibility="Collapsed" />
+                Visibility="{x:Bind Status, Converter={StaticResource TaskItemConverter}, ConverterParameter=TaskStatusToResumeButtonVisible, Mode=OneWay}" />
               <AppBarButton
                 x:Uid="/TaskManagerGrid/TaskItemPauseButton"
                 Width="44"
                 AutomationProperties.Name="[Pause Button]"
                 Icon="Pause"
-                ToolTipService.ToolTip="[Pause]" />
+                ToolTipService.ToolTip="[Pause]"
+                Visibility="{x:Bind Status, Converter={StaticResource TaskItemConverter}, ConverterParameter=TaskStatusToPauseButtonVisible, Mode=OneWay}" />
               <CommandBar.SecondaryCommands>
                 <AppBarButton
                   x:Uid="/TaskManagerGrid/TaskItemCopyLinkButton"
@@ -147,13 +151,13 @@
                     VerticalAlignment="Center"
                     Text="{x:Bind Name, Mode=OneWay}" />
                   <StackPanel Grid.Column="1">
-                    <TextBlock Text="31 MiB/s &#x2193; 0 KiB/s &#x2191; 47 MiB / 72.78 MiB 0:00:01" />
+                    <TextBlock Text="{x:Bind StatusText, Mode=OneWay}" />
                     <ProgressBar
                       Height="4"
                       BorderThickness="0"
-                      Foreground="Green"
-                      Maximum="100"
-                      Value="60" />
+                      Foreground="{x:Bind Status, Converter={StaticResource TaskItemConverter}, ConverterParameter=TaskStatusToProgressBarForegroundColor, Mode=OneWay}"
+                      Maximum="{x:Bind TotalBytesToReceive, Converter={StaticResource TaskItemConverter}, ConverterParameter=UInt64ToDouble, Mode=OneWay}"
+                      Value="{x:Bind BytesReceived, Converter={StaticResource TaskItemConverter}, ConverterParameter=UInt64ToDouble, Mode=OneWay}" />
                   </StackPanel>
                 </Grid>
               </CommandBar.Content>

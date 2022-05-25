@@ -22,5 +22,15 @@
         UInt64 BytesReceived { get; };
         UInt64 TotalBytesToReceive { get; };
         UInt64 RemainTime { get; };
+
+        String StatusText{ get; };
+    }
+
+    [Windows.UI.Xaml.Data.Bindable]
+    [Windows.Foundation.Metadata.WebHostHidden]
+    runtimeclass TaskItemConverter :
+        [default] Windows.UI.Xaml.Data.IValueConverter
+    {
+        TaskItemConverter();
     }
 }
