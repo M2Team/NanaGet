@@ -28,7 +28,7 @@
           x:Uid="/TaskManagerGrid/NewTaskButton"
           Width="44"
           AutomationProperties.Name="[New Task Button]"
-          Click="NewTaskButtonClick"
+          Click="TaskManagerGridNewTaskButtonClick"
           Icon="Add"
           ToolTipService.ToolTip="[New Task]" />
         <AppBarButton
@@ -56,12 +56,12 @@
             Label="[Open Downloads Folder]" />
           <AppBarButton
             x:Uid="/TaskManagerGrid/SettingsButton"
-            Click="SettingsButtonClick"
+            Click="TaskManagerGridSettingsButtonClick"
             Icon="Setting"
             Label="[Settings]" />
           <AppBarButton
             x:Uid="/TaskManagerGrid/AboutButton"
-            Click="AboutButtonClick"
+            Click="TaskManagerGridAboutButtonClick"
             Icon="Help"
             Label="[About]" />
         </CommandBar.SecondaryCommands>
@@ -75,7 +75,10 @@
             QueryIcon="Find" />
         </CommandBar.Content>
       </CommandBar>
-      <ListView x:Name="TaskList" Grid.Row="1">
+      <ListView
+        x:Name="TaskManagerGridTaskList"
+        Grid.Row="1"
+        ContainerContentChanging="TaskManagerGridTaskListContainerContentChanging">
         <ListView.ItemContainerStyle>
           <Style TargetType="ListViewItem">
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -165,6 +168,13 @@
           </DataTemplate>
         </ListView.ItemTemplate>
       </ListView>
+      <TextBlock
+        x:Name="TaskManagerGridTaskListNoItemsTextBlock"
+        x:Uid="/TaskManagerGrid/TaskListNoItemsTextBlock"
+        Grid.Row="1"
+        Margin="16"
+        Text="[No Downloads]"
+        TextAlignment="Center" />
       <StackPanel
         Grid.Row="2"
         Height="32"
@@ -205,39 +215,56 @@
         BorderThickness="2">
         <StackPanel>
           <TextBlock
+            x:Uid="/NewTaskGrid/GridTitleTextBlock"
             Margin="0,0,0,12"
             FontSize="20"
-            Text="New Task" />
+            Text="[New Task]" />
           <StackPanel
             MinWidth="300"
             MaxHeight="200"
             Orientation="Vertical">
             <StackPanel Orientation="Vertical">
-              <TextBlock FontSize="16" Text="Download Source" />
+              <TextBlock
+                x:Uid="/NewTaskGrid/DownloadSourceTitle"
+                FontSize="16"
+                Text="[Download Source]" />
               <Grid Margin="0,4,0,0" HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
                   <ColumnDefinition />
                   <ColumnDefinition Width="32" />
                 </Grid.ColumnDefinitions>
-                <TextBox BorderThickness="1" PlaceholderText="Please input the download source here." />
+                <TextBox
+                  x:Uid="/NewTaskGrid/DownloadSourceTextBox"
+                  BorderThickness="1"
+                  PlaceholderText="[Please input the download source here]" />
                 <Button
+                  x:Uid="/NewTaskGrid/DownloadSourceBrowseButton"
                   Grid.Column="1"
                   Width="32"
                   Height="32"
+                  AutomationProperties.Name="[Browse BitTorrent or Metalink file button]"
                   Content="&#xED25;"
                   FontFamily="Segoe MDL2 Assets"
-                  FontSize="11" />
+                  FontSize="11"
+                  ToolTipService.ToolTip="[Browse BitTorrent or Metalink file]" />
               </Grid>
             </StackPanel>
             <StackPanel Margin="0,8,0,0" Orientation="Vertical">
-              <TextBlock FontSize="16" Text="File Name" />
+              <TextBlock
+                x:Uid="/NewTaskGrid/FileNameTitle"
+                FontSize="16"
+                Text="[File Name]" />
               <TextBox
+                x:Uid="/NewTaskGrid/FileNameTextBox"
                 Margin="0,4,0,0"
                 BorderThickness="1"
-                PlaceholderText="Please input the file name here." />
+                PlaceholderText="[Please input the file name here]" />
             </StackPanel>
             <StackPanel Margin="0,8,0,0" Orientation="Vertical">
-              <TextBlock FontSize="16" Text="Save Folder" />
+              <TextBlock
+                x:Uid="/NewTaskGrid/SaveFolderTitle"
+                FontSize="16"
+                Text="[Save Folder]" />
               <Grid Margin="0,4,0,0" HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
                   <ColumnDefinition />
@@ -248,12 +275,15 @@
                   IsReadOnly="True"
                   PlaceholderText="N/A" />
                 <Button
+                  x:Uid="/NewTaskGrid/SaveFolderBrowseButton"
                   Grid.Column="1"
                   Width="32"
                   Height="32"
+                  AutomationProperties.Name="[Browse save folder Button]"
                   Content="&#xED25;"
                   FontFamily="Segoe MDL2 Assets"
-                  FontSize="11" />
+                  FontSize="11"
+                  ToolTipService.ToolTip="[Browse save folder]" />
               </Grid>
             </StackPanel>
           </StackPanel>
@@ -262,13 +292,15 @@
             HorizontalAlignment="Right"
             Orientation="Horizontal">
             <Button
+              x:Uid="/NewTaskGrid/DownloadButton"
               Margin="0,0,6,0"
               Click="NewTaskGridDownloadButtonClick"
-              Content="Download" />
+              Content="[Download]" />
             <Button
+              x:Uid="/NewTaskGrid/CancelButton"
               Margin="6,0,0,0"
               Click="NewTaskGridCancelButtonClick"
-              Content="Cancel" />
+              Content="[Cancel]" />
           </StackPanel>
         </StackPanel>
       </Border>
@@ -286,22 +318,27 @@
         BorderThickness="2">
         <StackPanel>
           <TextBlock
+            x:Uid="/SettingsGrid/GridTitleTextBlock"
             Margin="0,0,0,12"
             FontSize="20"
-            Text="Settings" />
+            Text="[Settings]" />
           <ScrollViewer
             MinWidth="300"
             MaxHeight="200"
             Margin="-12,0"
             Padding="12,0">
             <StackPanel Orientation="Vertical">
-              <TextBlock FontSize="16" Text="Default download folder" />
-              <CheckBox Content="Use custom folder instead of last used folder" />
+              <TextBlock
+                x:Uid="/SettingsGrid/DefaultDownloadFolderTitle"
+                FontSize="16"
+                Text="[Default download folder]" />
+              <CheckBox x:Uid="/SettingsGrid/UseCustomFolderCheckBox" Content="[Use custom folder instead of last used folder]" />
               <TextBox IsReadOnly="True" PlaceholderText="N/A" />
               <Button
+                x:Uid="/SettingsGrid/CustomDownloadFolderBrowseButton"
                 Margin="0,4"
                 HorizontalAlignment="Right"
-                Content="Browse to modify"
+                Content="[Browse to modify]"
                 IsEnabled="False" />
             </StackPanel>
           </ScrollViewer>
@@ -310,13 +347,15 @@
             HorizontalAlignment="Right"
             Orientation="Horizontal">
             <Button
+              x:Uid="/SettingsGrid/ApplyButton"
               Margin="0,0,6,0"
               Click="SettingsGridApplyButtonClick"
-              Content="Apply" />
+              Content="[Apply]" />
             <Button
+              x:Uid="/SettingsGrid/CancelButton"
               Margin="6,0,0,0"
               Click="SettingsGridCancelButtonClick"
-              Content="Cancel" />
+              Content="[Cancel]" />
           </StackPanel>
         </StackPanel>
       </Border>
@@ -334,12 +373,13 @@
         BorderThickness="2">
         <StackPanel>
           <TextBlock
+            x:Uid="/AboutGrid/GridTitleTextBlock"
             Margin="0,0,0,12"
             FontSize="20"
-            Text="About" />
+            Text="[About]" />
           <TextBlock>
             <Run Text="NanaGet" />
-            <Run Text="1.0 Preview 1 (1.0.3.0) (x64)" />
+            <Run Text="1.0 Preview 1 (1.0.12.0) (x64)" />
             <LineBreak />
             <Run Text="© M2-Team and Contributors. All rights reserved." />
           </TextBlock>
@@ -352,9 +392,10 @@
               Click="AboutGridGitHubButtonClick"
               Content="GitHub" />
             <Button
+              x:Uid="/AboutGrid/CancelButton"
               Margin="6,0,0,0"
               Click="AboutGridCancelButtonClick"
-              Content="Cancel" />
+              Content="[Cancel]" />
           </StackPanel>
         </StackPanel>
       </Border>

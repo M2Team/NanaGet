@@ -2,26 +2,34 @@
 
 #include "MainPage.g.h"
 
+#include <winrt\Windows.UI.Xaml.Controls.h>
+
 namespace winrt::NanaGet::implementation
 {
     using Windows::Foundation::IInspectable;
     using Windows::UI::Xaml::RoutedEventArgs;
+    using Windows::UI::Xaml::Controls::ContainerContentChangingEventArgs;
+    using Windows::UI::Xaml::Controls::ListViewBase;
 
     struct MainPage : MainPageT<MainPage>
     {
         MainPage();
 
-        void NewTaskButtonClick(
+        void TaskManagerGridNewTaskButtonClick(
             IInspectable const& sender,
             RoutedEventArgs const& e);
 
-        void SettingsButtonClick(
+        void TaskManagerGridSettingsButtonClick(
             IInspectable const& sender,
             RoutedEventArgs const& e);
 
-        void AboutButtonClick(
+        void TaskManagerGridAboutButtonClick(
             IInspectable const& sender,
             RoutedEventArgs const& e);
+
+        void TaskManagerGridTaskListContainerContentChanging(
+            ListViewBase const& sender,
+            ContainerContentChangingEventArgs const& e);
 
         void NewTaskGridDownloadButtonClick(
             IInspectable const& sender,

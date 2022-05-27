@@ -117,96 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AboutButton.Label" xml:space="preserve">
-    <value>About</value>
-    <comment>About</comment>
-  </data>
-  <data name="ClearListButton.AutomationProperties.Name" xml:space="preserve">
-    <value>Clear List Button</value>
-    <comment>Clear List Button</comment>
-  </data>
-  <data name="ClearListButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Clear List</value>
-    <comment>Clear List</comment>
-  </data>
-  <data name="NewTaskButton.AutomationProperties.Name" xml:space="preserve">
-    <value>New Task Button</value>
-    <comment>New Task Button</comment>
-  </data>
-  <data name="NewTaskButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>New Task</value>
-    <comment>New Task</comment>
-  </data>
-  <data name="OpenDownloadsFolderButton.Label" xml:space="preserve">
-    <value>Open Downloads Folder</value>
-    <comment>Open Downloads Folder</comment>
-  </data>
-  <data name="PauseAllButton.AutomationProperties.Name" xml:space="preserve">
-    <value>Pause All Button</value>
-    <comment>Pause All Button</comment>
-  </data>
-  <data name="PauseAllButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Pause All</value>
-    <comment>Pause All</comment>
-  </data>
-  <data name="SearchBox.PlaceholderText" xml:space="preserve">
-    <value>Search Downloads</value>
-    <comment>Search Downloads</comment>
-  </data>
-  <data name="SettingsButton.Label" xml:space="preserve">
-    <value>Settings</value>
-    <comment>Settings</comment>
-  </data>
-  <data name="StartAllButton.AutomationProperties.Name" xml:space="preserve">
-    <value>Start All Button</value>
-    <comment>Start All Button</comment>
-  </data>
-  <data name="StartAllButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Start All</value>
-    <comment>Start All</comment>
-  </data>
-  <data name="TaskItemCancelButton.Label" xml:space="preserve">
-    <value>Cancel</value>
+  <data name="CancelButton.Content" xml:space="preserve">
+    <value>取消</value>
     <comment>Cancel</comment>
   </data>
-  <data name="TaskItemCopyLinkButton.Label" xml:space="preserve">
-    <value>Copy Link</value>
-    <comment>Copy Link</comment>
-  </data>
-  <data name="TaskItemOpenFolderButton.Label" xml:space="preserve">
-    <value>Open Folder</value>
-    <comment>Open Folder</comment>
-  </data>
-  <data name="TaskItemPauseButton.AutomationProperties.Name" xml:space="preserve">
-    <value>Pause Button</value>
-    <comment>Pause Button</comment>
-  </data>
-  <data name="TaskItemPauseButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Pause</value>
-    <comment>Pause</comment>
-  </data>
-  <data name="TaskItemRemoveButton.Label" xml:space="preserve">
-    <value>Remove</value>
-    <comment>Remove</comment>
-  </data>
-  <data name="TaskItemResumeButton.AutomationProperties.Name" xml:space="preserve">
-    <value>Resume Button</value>
-    <comment>Resume Button</comment>
-  </data>
-  <data name="TaskItemResumeButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Resume</value>
-    <comment>Resume</comment>
-  </data>
-  <data name="TaskItemRetryButton.AutomationProperties.Name" xml:space="preserve">
-    <value>Retry Button</value>
-    <comment>Retry Button</comment>
-  </data>
-  <data name="TaskItemRetryButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Retry</value>
-    <comment>Retry</comment>
-  </data>
-  <data name="TaskListNoItemsTextBlock.Text" xml:space="preserve">
-    <value>No Downloads</value>
-    <comment>No Downloads</comment>
+  <data name="GridTitleTextBlock.Text" xml:space="preserve">
+    <value>关于</value>
+    <comment>About</comment>
   </data>
 </root>

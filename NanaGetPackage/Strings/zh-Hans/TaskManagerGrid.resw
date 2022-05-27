@@ -205,4 +205,8 @@
     <value>重试</value>
     <comment>Retry</comment>
   </data>
+  <data name="TaskListNoItemsTextBlock.Text" xml:space="preserve">
+    <value>没有下载项</value>
+    <comment>No Downloads</comment>
+  </data>
 </root>

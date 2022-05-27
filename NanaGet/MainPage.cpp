@@ -21,10 +21,10 @@ namespace winrt::NanaGet::implementation
         contacts.push_back(winrt::make<NanaGet::implementation::TaskItem>());
         IObservableVector<NanaGet::TaskItem> suck =
             winrt::single_threaded_observable_vector(std::move(contacts));
-        this->TaskList().ItemsSource(suck);
+        this->TaskManagerGridTaskList().ItemsSource(suck);
     }
 
-    void MainPage::NewTaskButtonClick(
+    void MainPage::TaskManagerGridNewTaskButtonClick(
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
@@ -36,7 +36,7 @@ namespace winrt::NanaGet::implementation
         this->NewTaskGrid().Visibility(Visibility::Visible);
     }
 
-    void MainPage::SettingsButtonClick(
+    void MainPage::TaskManagerGridSettingsButtonClick(
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
@@ -48,7 +48,7 @@ namespace winrt::NanaGet::implementation
         this->SettingsGrid().Visibility(Visibility::Visible);
     }
 
-    void MainPage::AboutButtonClick(
+    void MainPage::TaskManagerGridAboutButtonClick(
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
@@ -58,6 +58,19 @@ namespace winrt::NanaGet::implementation
         using winrt::Windows::UI::Xaml::Visibility;
 
         this->AboutGrid().Visibility(Visibility::Visible);
+    }
+
+    void MainPage::TaskManagerGridTaskListContainerContentChanging(
+        ListViewBase const& sender,
+        ContainerContentChangingEventArgs const& e)
+    {
+        UNREFERENCED_PARAMETER(sender);  // Unused parameter.
+        UNREFERENCED_PARAMETER(e);   // Unused parameter.
+
+        this->TaskManagerGridTaskListNoItemsTextBlock().Visibility(
+            !sender.ItemsSource()
+            ? Visibility::Visible
+            : Visibility::Collapsed);
     }
 
     void  MainPage::NewTaskGridDownloadButtonClick(
