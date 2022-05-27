@@ -15,7 +15,7 @@
 #include <dwmapi.h>
 #pragma comment(lib, "dwmapi.lib")
 
-HRESULT SetDwmWindowUseImmersiveDarkModeAttribute(
+HRESULT DwmWindowSetUseImmersiveDarkModeAttribute(
     _In_ HWND WindowHandle,
     _In_ BOOL Value)
 {
@@ -50,6 +50,31 @@ HRESULT SetDwmWindowUseImmersiveDarkModeAttribute(
             : DwmWindowUseImmersiveDarkModeBefore20H1Attribute),
         &Value,
         sizeof(BOOL));
+}
+
+HRESULT DwmWindowSetCaptionColorAttribute(
+    _In_ HWND WindowHandle,
+    _In_ COLORREF Value)
+{
+    const DWORD DwmWindowCaptionColorAttribute = 35;
+    return ::DwmSetWindowAttribute(
+        WindowHandle,
+        DwmWindowCaptionColorAttribute,
+        &Value,
+        sizeof(COLORREF));
+}
+
+HRESULT DwmWindowDisableSystemBackdrop(
+    _In_ HWND WindowHandle)
+{
+    const DWORD DwmWindowSystemBackdropTypeAttribute = 38;
+    const DWORD DwmWindowSystemBackdropTypeNone = 1;
+    DWORD Value = DwmWindowSystemBackdropTypeNone;
+    return ::DwmSetWindowAttribute(
+        WindowHandle,
+        DwmWindowSystemBackdropTypeAttribute,
+        &Value,
+        sizeof(DWORD));
 }
 
 bool ShouldAppsUseImmersiveDarkMode()
@@ -136,11 +161,19 @@ namespace
             // Focus on XAML Island host window for Acrylic brush support.
             ::SetFocus(XamlWindowHandle);
 
-            ::SetDwmWindowUseImmersiveDarkModeAttribute(
+            ::DwmWindowDisableSystemBackdrop(hWnd);
+
+            ::DwmWindowSetUseImmersiveDarkModeAttribute(
                 hWnd,
                 (Content.ActualTheme() == winrt::ElementTheme::Dark
                     ? TRUE
                     : FALSE));
+
+            ::DwmWindowSetCaptionColorAttribute(
+                hWnd,
+                (Content.ActualTheme() == winrt::ElementTheme::Dark
+                    ? RGB(0, 0, 0)
+                    : RGB(255, 255, 255)));
 
             UINT DpiValue = ::GetDpiForWindow(hWnd);
 
@@ -228,11 +261,17 @@ namespace
                     {
                         Content.RequestedTheme(winrt::ElementTheme::Default);
 
-                        ::SetDwmWindowUseImmersiveDarkModeAttribute(
+                        ::DwmWindowSetUseImmersiveDarkModeAttribute(
                             hWnd,
                             (Content.ActualTheme() == winrt::ElementTheme::Dark
                                 ? TRUE
                                 : FALSE));
+
+                        ::DwmWindowSetCaptionColorAttribute(
+                            hWnd,
+                            (Content.ActualTheme() == winrt::ElementTheme::Dark
+                                ? RGB(0, 0, 0)
+                                : RGB(255, 255, 255)));
                     }
                 }
             }
@@ -331,7 +370,7 @@ int WINAPI wWinMain(
 
     winrt::init_apartment(winrt::apartment_type::single_threaded);
 
-    ::SimpleDemoEntry();
+    //::SimpleDemoEntry();
 
     winrt::NanaGet::App app =
         winrt::make<winrt::NanaGet::implementation::App>();
