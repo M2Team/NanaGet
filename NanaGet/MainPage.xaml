@@ -35,23 +35,27 @@
           x:Uid="/TaskManagerGrid/StartAllButton"
           Width="44"
           AutomationProperties.Name="[Start All Button]"
+          Click="TaskManagerGridStartAllButtonClick"
           Icon="Play"
           ToolTipService.ToolTip="[Start All]" />
         <AppBarButton
           x:Uid="/TaskManagerGrid/PauseAllButton"
           Width="44"
           AutomationProperties.Name="[Pause All Button]"
+          Click="TaskManagerGridPauseAllButtonClick"
           Icon="Pause"
           ToolTipService.ToolTip="[Pause All]" />
         <AppBarButton
           x:Uid="/TaskManagerGrid/ClearListButton"
           Width="44"
           AutomationProperties.Name="[Clear List Button]"
+          Click="TaskManagerGridClearListButtonClick"
           Icon="Delete"
           ToolTipService.ToolTip="[Clear List]" />
         <CommandBar.SecondaryCommands>
           <AppBarButton
             x:Uid="/TaskManagerGrid/OpenDownloadsFolderButton"
+            Click="TaskManagerGridOpenDownloadsFolderButtonClick"
             Icon="Folder"
             Label="[Open Downloads Folder]" />
           <AppBarButton
@@ -72,7 +76,8 @@
             HorizontalAlignment="Stretch"
             VerticalAlignment="Center"
             PlaceholderText="[Search Downloads]"
-            QueryIcon="Find" />
+            QueryIcon="Find"
+            QuerySubmitted="TaskManagerGridSearchBoxQuerySubmitted" />
         </CommandBar.Content>
       </CommandBar>
       <ListView
@@ -103,6 +108,7 @@
                 x:Uid="/TaskManagerGrid/TaskItemRetryButton"
                 Width="44"
                 AutomationProperties.Name="[Retry Button]"
+                Click="TaskManagerGridTaskItemRetryButtonClick"
                 Icon="Refresh"
                 ToolTipService.ToolTip="[Retry]"
                 Visibility="{x:Bind Status, Converter={StaticResource TaskItemConverter}, ConverterParameter=TaskStatusToRetryButtonVisible, Mode=OneWay}" />
@@ -110,6 +116,7 @@
                 x:Uid="/TaskManagerGrid/TaskItemResumeButton"
                 Width="44"
                 AutomationProperties.Name="[Resume Button]"
+                Click="TaskManagerGridTaskItemResumeButtonClick"
                 Icon="Play"
                 ToolTipService.ToolTip="[Resume]"
                 Visibility="{x:Bind Status, Converter={StaticResource TaskItemConverter}, ConverterParameter=TaskStatusToResumeButtonVisible, Mode=OneWay}" />
@@ -117,25 +124,30 @@
                 x:Uid="/TaskManagerGrid/TaskItemPauseButton"
                 Width="44"
                 AutomationProperties.Name="[Pause Button]"
+                Click="TaskManagerGridTaskItemPauseButtonClick"
                 Icon="Pause"
                 ToolTipService.ToolTip="[Pause]"
                 Visibility="{x:Bind Status, Converter={StaticResource TaskItemConverter}, ConverterParameter=TaskStatusToPauseButtonVisible, Mode=OneWay}" />
               <CommandBar.SecondaryCommands>
                 <AppBarButton
                   x:Uid="/TaskManagerGrid/TaskItemCopyLinkButton"
+                  Click="TaskManagerGridTaskItemCopyLinkButtonClick"
                   Icon="Link"
                   Label="[Copy Link]" />
                 <AppBarButton
                   x:Uid="/TaskManagerGrid/TaskItemOpenFolderButton"
+                  Click="TaskManagerGridTaskItemOpenFolderButtonClick"
                   Icon="OpenLocal"
                   Label="[Open Folder]" />
                 <AppBarSeparator />
                 <AppBarButton
                   x:Uid="/TaskManagerGrid/TaskItemCancelButton"
+                  Click="TaskManagerGridTaskItemCancelButtonClick"
                   Icon="Cancel"
                   Label="[Cancel]" />
                 <AppBarButton
                   x:Uid="/TaskManagerGrid/TaskItemRemoveButton"
+                  Click="TaskManagerGridTaskItemRemoveButtonClick"
                   Icon="Delete"
                   Label="[Remove]" />
               </CommandBar.SecondaryCommands>
@@ -175,32 +187,14 @@
         Margin="16"
         Text="[No Downloads]"
         TextAlignment="Center" />
-      <StackPanel
+      <TextBlock
+        x:Name="TaskManagerGridGlobalStatusTextBlock"
         Grid.Row="2"
         Height="32"
         Padding="4"
         VerticalAlignment="Bottom"
-        Background="Transparent"
-        Orientation="Horizontal">
-        <FontIcon
-          VerticalAlignment="Center"
-          FontSize="15"
-          Glyph="&#xE74B;" />
-        <TextBlock
-          Margin="4,0,8,0"
-          VerticalAlignment="Center"
-          FontSize="15"
-          Text="500 KiB/s" />
-        <FontIcon
-          VerticalAlignment="Center"
-          FontSize="15"
-          Glyph="&#xE74A;" />
-        <TextBlock
-          Margin="4,0,8,0"
-          VerticalAlignment="Center"
-          FontSize="15"
-          Text="100 KiB/s" />
-      </StackPanel>
+        FontSize="15"
+        Text="&#x2193; 500 KiB/s &#x2191; 100 KiB/s" />
     </Grid>
     <Grid
       x:Name="NewTaskGrid"
@@ -234,6 +228,7 @@
                   <ColumnDefinition Width="32" />
                 </Grid.ColumnDefinitions>
                 <TextBox
+                  x:Name="NewTaskGridDownloadSourceTextBox"
                   x:Uid="/NewTaskGrid/DownloadSourceTextBox"
                   BorderThickness="1"
                   PlaceholderText="[Please input the download source here]" />
@@ -243,6 +238,7 @@
                   Width="32"
                   Height="32"
                   AutomationProperties.Name="[Browse BitTorrent or Metalink file button]"
+                  Click="NewTaskGridDownloadSourceBrowseButtonClick"
                   Content="&#xED25;"
                   FontFamily="Segoe MDL2 Assets"
                   FontSize="11"
@@ -255,6 +251,7 @@
                 FontSize="16"
                 Text="[File Name]" />
               <TextBox
+                x:Name="NewTaskGridFileNameTextBox"
                 x:Uid="/NewTaskGrid/FileNameTextBox"
                 Margin="0,4,0,0"
                 BorderThickness="1"
@@ -271,6 +268,7 @@
                   <ColumnDefinition Width="32" />
                 </Grid.ColumnDefinitions>
                 <TextBox
+                  x:Name="NewTaskGridSaveFolderTextBox"
                   BorderThickness="1"
                   IsReadOnly="True"
                   PlaceholderText="N/A" />
@@ -280,6 +278,7 @@
                   Width="32"
                   Height="32"
                   AutomationProperties.Name="[Browse save folder Button]"
+                  Click="NewTaskGridSaveFolderBrowseButtonClick"
                   Content="&#xED25;"
                   FontFamily="Segoe MDL2 Assets"
                   FontSize="11"
@@ -332,12 +331,19 @@
                 x:Uid="/SettingsGrid/DefaultDownloadFolderTitle"
                 FontSize="16"
                 Text="[Default download folder]" />
-              <CheckBox x:Uid="/SettingsGrid/UseCustomFolderCheckBox" Content="[Use custom folder instead of last used folder]" />
-              <TextBox IsReadOnly="True" PlaceholderText="N/A" />
+              <CheckBox
+                x:Name="SettingsGridUseCustomFolderCheckBox"
+                x:Uid="/SettingsGrid/UseCustomFolderCheckBox"
+                Content="[Use custom folder instead of last used folder]" />
+              <TextBox
+                x:Name="SettingsGridCustomDownloadFolderCheckBox"
+                IsReadOnly="True"
+                PlaceholderText="N/A" />
               <Button
                 x:Uid="/SettingsGrid/CustomDownloadFolderBrowseButton"
                 Margin="0,4"
                 HorizontalAlignment="Right"
+                Click="SettingsGridCustomDownloadFolderBrowseButtonClick"
                 Content="[Browse to modify]"
                 IsEnabled="False" />
             </StackPanel>

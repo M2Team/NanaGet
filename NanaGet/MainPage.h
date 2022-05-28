@@ -8,6 +8,7 @@ namespace winrt::NanaGet::implementation
 {
     using Windows::Foundation::IInspectable;
     using Windows::UI::Xaml::RoutedEventArgs;
+    using Windows::UI::Xaml::Controls::AutoSuggestBoxQuerySubmittedEventArgs;
     using Windows::UI::Xaml::Controls::ContainerContentChangingEventArgs;
     using Windows::UI::Xaml::Controls::ListViewBase;
 
@@ -19,6 +20,22 @@ namespace winrt::NanaGet::implementation
             IInspectable const& sender,
             RoutedEventArgs const& e);
 
+        void TaskManagerGridStartAllButtonClick(
+            IInspectable const& sender,
+            RoutedEventArgs const& e);
+
+        void TaskManagerGridPauseAllButtonClick(
+            IInspectable const& sender,
+            RoutedEventArgs const& e);
+
+        void TaskManagerGridClearListButtonClick(
+            IInspectable const& sender,
+            RoutedEventArgs const& e);
+
+        void TaskManagerGridOpenDownloadsFolderButtonClick(
+            IInspectable const& sender,
+            RoutedEventArgs const& e);
+
         void TaskManagerGridSettingsButtonClick(
             IInspectable const& sender,
             RoutedEventArgs const& e);
@@ -27,15 +44,59 @@ namespace winrt::NanaGet::implementation
             IInspectable const& sender,
             RoutedEventArgs const& e);
 
+        void TaskManagerGridSearchBoxQuerySubmitted(
+            IInspectable const& sender,
+            AutoSuggestBoxQuerySubmittedEventArgs const& e);
+
         void TaskManagerGridTaskListContainerContentChanging(
             ListViewBase const& sender,
             ContainerContentChangingEventArgs const& e);
+
+        void TaskManagerGridTaskItemRetryButtonClick(
+            IInspectable const& sender,
+            RoutedEventArgs const& e);
+
+        void TaskManagerGridTaskItemResumeButtonClick(
+            IInspectable const& sender,
+            RoutedEventArgs const& e);
+
+        void TaskManagerGridTaskItemPauseButtonClick(
+            IInspectable const& sender,
+            RoutedEventArgs const& e);
+
+        void TaskManagerGridTaskItemCopyLinkButtonClick(
+            IInspectable const& sender,
+            RoutedEventArgs const& e);
+
+        void TaskManagerGridTaskItemOpenFolderButtonClick(
+            IInspectable const& sender,
+            RoutedEventArgs const& e);
+
+        void TaskManagerGridTaskItemCancelButtonClick(
+            IInspectable const& sender,
+            RoutedEventArgs const& e);
+
+        void TaskManagerGridTaskItemRemoveButtonClick(
+            IInspectable const& sender,
+            RoutedEventArgs const& e);
+
+        void NewTaskGridDownloadSourceBrowseButtonClick(
+            IInspectable const& sender,
+            RoutedEventArgs const& e);
+
+        void NewTaskGridSaveFolderBrowseButtonClick(
+            IInspectable const& sender,
+            RoutedEventArgs const& e);
 
         void NewTaskGridDownloadButtonClick(
             IInspectable const& sender,
             RoutedEventArgs const& e);
 
         void NewTaskGridCancelButtonClick(
+            IInspectable const& sender,
+            RoutedEventArgs const& e);
+
+        void SettingsGridCustomDownloadFolderBrowseButtonClick(
             IInspectable const& sender,
             RoutedEventArgs const& e);
 
