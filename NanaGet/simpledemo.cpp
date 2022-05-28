@@ -204,35 +204,6 @@ void Aria2Client::Remove(
     }
 }
 
-std::wstring ToWideString(
-    std::uint32_t CodePage,
-    std::string_view const& InputString)
-{
-    std::wstring OutputString;
-
-    int OutputStringLength = ::MultiByteToWideChar(
-        CodePage,
-        0,
-        InputString.data(),
-        static_cast<int>(InputString.size()),
-        nullptr,
-        0);
-    if (OutputStringLength > 0)
-    {
-        OutputString.resize(OutputStringLength);
-        OutputStringLength = ::MultiByteToWideChar(
-            CodePage,
-            0,
-            InputString.data(),
-            static_cast<int>(InputString.size()),
-            &OutputString[0],
-            OutputStringLength);
-        OutputString.resize(OutputStringLength);
-    }
-
-    return OutputString;
-}
-
 #include <winrt\Windows.Storage.Streams.h>
 
 winrt::JsonValue Aria2Client::ExecuteJsonRpcCall(
@@ -262,14 +233,9 @@ winrt::JsonValue Aria2Client::ExecuteJsonRpcCall(
 
     auto Buffer = ResponseMessage.Content().ReadAsBufferAsync().get();
 
-    auto fuck = ::ToWideString(
-        CP_UTF8,
-        std::string_view(reinterpret_cast<char*>(Buffer.data()), Buffer.Length()));
-
-    winrt::hstring ResponseString = fuck.c_str();
-
-
-        //ResponseMessage.Content().ReadAsStringAsync().get();
+    winrt::hstring ResponseString = winrt::to_hstring(std::string_view(
+        reinterpret_cast<char*>(Buffer.data()),
+        Buffer.Length()));
 
     if (!ResponseMessage.IsSuccessStatusCode() && ResponseString.empty())
     {
@@ -297,36 +263,6 @@ winrt::JsonValue Aria2Client::ExecuteJsonRpcCall(
 #include <string>
 #include <vector>
 
-std::wstring FromConsoleString(
-    std::string const& Utf8String)
-{
-    std::wstring Utf16String;
-
-    UINT CurrentCodePage = ::GetConsoleOutputCP();
-
-    int Utf16StringLength = ::MultiByteToWideChar(
-        CurrentCodePage,
-        0,
-        Utf8String.c_str(),
-        static_cast<int>(Utf8String.size()),
-        nullptr,
-        0);
-    if (Utf16StringLength > 0)
-    {
-        Utf16String.resize(Utf16StringLength);
-        Utf16StringLength = ::MultiByteToWideChar(
-            CurrentCodePage,
-            0,
-            Utf8String.c_str(),
-            static_cast<int>(Utf8String.size()),
-            &Utf16String[0],
-            Utf16StringLength);
-        Utf16String.resize(Utf16StringLength);
-    }
-
-    return Utf16String;
-}
-
 // Get Download List
 // 
 // Reference: https://aria2.github.io/manual/en
@@ -343,38 +279,29 @@ int SimpleDemoEntry()
     /*winrt::Uri fuck = winrt::Uri(L"nanaget-attachment://D:\\file.svg");
     ::MessageBoxW(nullptr, fuck.SchemeName().data(), L"NanaGet", 0);*/
 
-    /*std::uint16_t ServerPort = 0;
-    winrt::hstring ServerToken;
-    winrt::handle ProcessHandle;
-    winrt::file_handle OutputPipeHandle;
-
-    NanaGet::StartLocalAria2Instance(
-        ServerPort,
-        ServerToken,
-        ProcessHandle,
-        OutputPipeHandle);*/
+    NanaGet::LocalAria2Instance Instance;
 
     //Sleep(500);
 
-    std::uint16_t ServerPort = 6800;
-    winrt::hstring ServerToken;
+    /*std::uint16_t ServerPort = 6800;
+    winrt::hstring ServerToken;*/
 
     winrt::Uri ServerUri = winrt::Uri(
-        L"http://localhost:" + winrt::to_hstring(ServerPort) + L"/jsonrpc");
+        L"http://localhost:" + winrt::to_hstring(Instance.ServerPort()) + L"/jsonrpc");
 
-    Aria2Client Client(ServerUri, ServerToken);
+    Aria2Client Client(ServerUri, Instance.ServerToken());
 
     try
     {
         winrt::JsonValue TokenValue = winrt::JsonValue::CreateStringValue(
-            L"token:" + ServerToken);
+            L"token:" + Instance.ServerToken());
 
         winrt::JsonArray Parameters;
         Parameters.Append(TokenValue);
 
-        //winrt::JsonObject ResponseJson = Client.ExecuteJsonRpcCall(
-        //    L"aria2.getVersion", //L"aria2.tellActive",
-        //    Parameters).GetObject();
+        winrt::JsonObject ResponseJson = Client.ExecuteJsonRpcCall(
+            L"aria2.getVersion", //L"aria2.tellActive",
+            Parameters).GetObject();
 
         /*winrt::JsonArray ResponseJson = Client.ExecuteJsonRpcCall(
             L"system.listMethods",
@@ -391,50 +318,26 @@ int SimpleDemoEntry()
         //Parameters.Append(winrt::JsonValue::CreateNumberValue(0));
         //Parameters.Append(winrt::JsonValue::CreateNumberValue(1000));
 
-        winrt::JsonArray ResponseJson = Client.ExecuteJsonRpcCall(
-            /*L"aria2.tellStopped",*/ L"aria2.tellActive",// L"aria2.tellWaiting",
-            Parameters).GetArray();
+        //winrt::JsonArray ResponseJson = Client.ExecuteJsonRpcCall(
+        //    /*L"aria2.tellStopped",*/ L"aria2.tellActive",// L"aria2.tellWaiting",
+        //    Parameters).GetArray();
 
         winrt::hstring ResponseJsonString = ResponseJson.Stringify();
 
         ::MessageBoxW(nullptr, ResponseJsonString.data(), L"NanaGet", 0);
+
+        Client.Shutdown();
     }
     catch (winrt::hresult_error const& ex)
     {
         ::MessageBoxW(nullptr, ex.message().data(), L"NanaGet", 0);
-    }
+    }  
 
-    /*Client.Shutdown();
-
-    ::WaitForSingleObjectEx(ProcessHandle.get(), 60 * 1000, FALSE);
-    ::TerminateProcess(ProcessHandle.get(), 0);*/
-
-    /*DWORD TotalBytesAvailable = 0;
-    if (::PeekNamedPipe(
-        OutputPipeHandle.get(),
+    ::MessageBoxW(
         nullptr,
-        0,
-        nullptr,
-        &TotalBytesAvailable,
-        nullptr))
-    {
-        std::string Buffer;
-        Buffer.resize(TotalBytesAvailable);
-        DWORD NumberOfBytesRead = 0;
-        if (::ReadFile(
-            OutputPipeHandle.get(),
-            &Buffer[0],
-            TotalBytesAvailable,
-            &NumberOfBytesRead,
-            nullptr))
-        {
-            ::MessageBoxW(
-                nullptr,
-                ::FromConsoleString(Buffer).c_str(),
-                L"NanaGet",
-                MB_ICONINFORMATION);
-        }
-    }*/
+        Instance.ConsoleOutput().c_str(),
+        L"NanaGet",
+        MB_ICONINFORMATION);
 
     return 0;
 }

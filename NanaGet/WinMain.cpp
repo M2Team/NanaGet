@@ -15,6 +15,8 @@
 #include <dwmapi.h>
 #pragma comment(lib, "dwmapi.lib")
 
+#include "NanaGetCore.h"
+
 HRESULT DwmWindowSetUseImmersiveDarkModeAttribute(
     _In_ HWND WindowHandle,
     _In_ BOOL Value)
@@ -370,7 +372,13 @@ int WINAPI wWinMain(
 
     winrt::init_apartment(winrt::apartment_type::single_threaded);
 
-    //::SimpleDemoEntry();
+    ::MessageBoxW(
+        nullptr,
+        NanaGet::GetSettingsFolderPath().c_str(),
+        L"NanaGet",
+        MB_ICONINFORMATION);
+
+    ::SimpleDemoEntry();
 
     winrt::NanaGet::App app =
         winrt::make<winrt::NanaGet::implementation::App>();

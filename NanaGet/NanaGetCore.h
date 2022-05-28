@@ -21,21 +21,17 @@
 
 #include <winrt/Windows.Foundation.h>
 
+#include <filesystem>
+
 namespace NanaGet
 {
-    winrt::hstring GetApplicationFolderPath();
+    std::filesystem::path GetApplicationFolderPath();
 
-    winrt::hstring GetSettingsFolderPath();
+    bool IsPackagedMode();
+
+    std::filesystem::path GetSettingsFolderPath();
 
     winrt::hstring CreateGuidString();
-
-    std::uint16_t PickUnusedTcpPort();
-
-    void StartLocalAria2Instance(
-        std::uint16_t& ServerPort,
-        winrt::hstring& ServerToken,
-        winrt::handle& ProcessHandle,
-        winrt::file_handle& OutputPipeHandle);
 
     winrt::hstring VFormatWindowsRuntimeString(
         _In_z_ _Printf_format_string_ wchar_t const* const Format,
@@ -50,6 +46,41 @@ namespace NanaGet
 
     winrt::hstring ConvertSecondsToTimeString(
         std::uint64_t Seconds);
+
+    class LocalAria2Instance
+    {
+    public:
+
+        LocalAria2Instance();
+
+        ~LocalAria2Instance();
+
+        void Startup();
+
+        void ForceShutdown();
+
+        void Shutdown();
+
+        bool Available();
+
+        std::uint16_t ServerPort();
+
+        winrt::hstring ServerToken();
+
+        winrt::hstring ConsoleOutput();
+
+    private:
+
+        std::uint16_t PickUnusedTcpPort();
+
+    private:
+
+        bool m_Available = false;
+        std::uint16_t m_ServerPort;
+        winrt::hstring m_ServerToken;
+        winrt::handle m_ProcessHandle;
+        winrt::file_handle m_OutputPipeHandle;
+    };
 }
 
 namespace winrt::NanaGet
