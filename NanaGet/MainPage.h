@@ -2,11 +2,14 @@
 
 #include "MainPage.g.h"
 
-#include <winrt\Windows.UI.Xaml.Controls.h>
+#include <winrt/Windows.Foundation.h>
+#include <winrt/Windows.System.Threading.h>
+#include <winrt/Windows.UI.Xaml.Controls.h>
 
 namespace winrt::NanaGet::implementation
 {
     using Windows::Foundation::IInspectable;
+    using Windows::System::Threading::ThreadPoolTimer;
     using Windows::UI::Xaml::RoutedEventArgs;
     using Windows::UI::Xaml::Controls::AutoSuggestBoxQuerySubmittedEventArgs;
     using Windows::UI::Xaml::Controls::ContainerContentChangingEventArgs;
@@ -14,6 +17,8 @@ namespace winrt::NanaGet::implementation
 
     struct MainPage : MainPageT<MainPage>
     {
+    public:
+
         MainPage();
 
         void TaskManagerGridNewTaskButtonClick(
@@ -115,6 +120,14 @@ namespace winrt::NanaGet::implementation
         void AboutGridCancelButtonClick(
             IInspectable const& sender,
             RoutedEventArgs const& e);
+
+    private:
+
+        ThreadPoolTimer m_RefreshTimer = nullptr;
+
+        winrt::fire_and_forget RefreshTimerHandler(
+            ThreadPoolTimer const& timer);
+
     };
 }
 

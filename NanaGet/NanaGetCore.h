@@ -36,6 +36,25 @@ namespace NanaGet
         winrt::hstring& ServerToken,
         winrt::handle& ProcessHandle,
         winrt::file_handle& OutputPipeHandle);
+
+    winrt::hstring VFormatWindowsRuntimeString(
+        _In_z_ _Printf_format_string_ wchar_t const* const Format,
+        _In_z_ _Printf_format_string_ va_list ArgList);
+
+    winrt::hstring FormatWindowsRuntimeString(
+        _In_z_ _Printf_format_string_ wchar_t const* const Format,
+        ...);
+
+    winrt::hstring ConvertByteSizeToString(
+        std::uint64_t ByteSize);
+
+    winrt::hstring ConvertSecondsToTimeString(
+        std::uint64_t Seconds);
+}
+
+namespace winrt::NanaGet
+{
+    using namespace ::NanaGet;
 }
 
 #endif // !NANA_GET_CORE

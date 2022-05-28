@@ -9,6 +9,7 @@
   <ItemGroup>
     <Midl Include="App.idl" />
     <Midl Include="MainPage.idl" />
+    <Midl Include="TaskItem.idl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -17,13 +18,19 @@
     <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
     <ClCompile Include="WinMain.cpp" />
     <ClCompile Include="SimpleDemo.cpp" />
-    <ClCompile Include="NanaGetCore.cpp" />
+    <ClCompile Include="NanaGetCore.cpp">
+      <Filter>NanaGetCore</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="Mile.Project.Properties.h" />
-    <ClInclude Include="NanaGetResources.h" />
-    <ClInclude Include="NanaGetCore.h" />
+    <ClInclude Include="NanaGetCore.h">
+      <Filter>NanaGetCore</Filter>
+    </ClInclude>
+    <ClInclude Include="NanaGetResources.h">
+      <Filter>NanaGetResources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="PropertySheet.props" />
@@ -32,6 +39,16 @@
     <Manifest Include="NanaGet.manifest" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="NanaGetResources.rc" />
+    <Filter Include="NanaGetCore">
+      <UniqueIdentifier>{2bbeeeb9-4951-4932-8e61-8f2a9f0ce9c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NanaGetResources">
+      <UniqueIdentifier>{127202e5-0ebb-47cb-bf8b-34f8cc717ba1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="NanaGetResources.rc">
+      <Filter>NanaGetResources</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

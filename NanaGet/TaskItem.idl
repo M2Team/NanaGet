@@ -10,7 +10,7 @@
         Removed
     };
 
-    runtimeclass TaskItem
+    runtimeclass TaskItem : Windows.UI.Xaml.Data.INotifyPropertyChanged
     {
         String Gid { get; };
         String Name { get; };

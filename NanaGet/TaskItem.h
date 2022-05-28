@@ -3,18 +3,23 @@
 #include "TaskItem.g.h"
 #include "TaskItemConverter.g.h"
 
-#include <winrt\Windows.Foundation.h>
-#include <winrt\Windows.UI.Xaml.Interop.h>
+#include <winrt/Windows.Foundation.h>
+#include <winrt/Windows.UI.Xaml.Data.h>
+#include <winrt/Windows.UI.Xaml.Interop.h>
 
 namespace winrt::NanaGet::implementation
 {
     using NanaGet::TaskStatus;
     using Windows::Foundation::IInspectable;
-    using Windows::Foundation::Uri; 
+    using Windows::Foundation::Uri;
+    using Windows::UI::Xaml::Data::PropertyChangedEventArgs;
+    using Windows::UI::Xaml::Data::PropertyChangedEventHandler;   
     using Windows::UI::Xaml::Interop::TypeName;
 
     struct TaskItem : TaskItemT<TaskItem>
     {
+    public:
+
         TaskItem() = default;
 
         hstring Gid();
@@ -29,6 +34,21 @@ namespace winrt::NanaGet::implementation
         std::uint64_t RemainTime();
 
         hstring StatusText();
+
+        event_token PropertyChanged(
+            PropertyChangedEventHandler const& value);
+
+        void PropertyChanged(
+            event_token const& token);
+
+    protected:
+
+        void RaisePropertyChanged(
+            std::wstring_view const& PropertyName);
+
+    private:
+
+        event<PropertyChangedEventHandler> m_PropertyChanged; 
     };
 
     struct TaskItemConverter :

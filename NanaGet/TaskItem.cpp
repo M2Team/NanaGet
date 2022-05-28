@@ -3,109 +3,9 @@
 #include "TaskItem.g.cpp"
 #include "TaskItemConverter.g.cpp"
 
+#include "NanaGetCore.h"
+
 #include <winrt/Windows.UI.Xaml.Media.h>
-
-namespace
-{
-    winrt::hstring VFormatWindowsRuntimeString(
-        _In_z_ _Printf_format_string_ wchar_t const* const Format,
-        _In_z_ _Printf_format_string_ va_list ArgList)
-    {
-        // Check the argument list.
-        if (Format)
-        {
-            // Get the length of the format result.
-            size_t nLength =
-                static_cast<size_t>(::_vscwprintf(Format, ArgList)) + 1;
-
-            // Allocate for the format result.
-            std::wstring Buffer(nLength + 1, L'\0');
-
-            // Format the string.
-            int nWritten = ::_vsnwprintf_s(
-                &Buffer[0],
-                Buffer.size(),
-                nLength,
-                Format,
-                ArgList);
-
-            if (nWritten > 0)
-            {
-                // If succeed, resize to fit and return result.
-                Buffer.resize(nWritten);
-                return winrt::hstring(Buffer);
-            }
-        }
-
-        // If failed, return an empty string.
-        return winrt::hstring();
-    }
-
-    winrt::hstring FormatWindowsRuntimeString(
-        _In_z_ _Printf_format_string_ wchar_t const* const Format,
-        ...)
-    {
-        va_list ArgList;
-        va_start(ArgList, Format);
-        winrt::hstring Result = ::VFormatWindowsRuntimeString(Format, ArgList);
-        va_end(ArgList);
-        return Result;
-    }
-
-    static winrt::hstring ConvertByteSizeToString(
-        std::uint64_t ByteSize)
-    {
-        const wchar_t* Systems[] =
-        {
-            L"Byte",
-            L"Bytes",
-            L"KiB",
-            L"MiB",
-            L"GiB",
-            L"TiB",
-            L"PiB",
-            L"EiB"
-        };
-
-        size_t nSystem = 0;
-        double result = static_cast<double>(ByteSize);
-
-        if (ByteSize > 1)
-        {
-            for (
-                nSystem = 1;
-                nSystem < sizeof(Systems) / sizeof(*Systems);
-                ++nSystem)
-            {
-                if (1024.0 > result)
-                    break;
-
-                result /= 1024.0;
-            }
-
-            result = static_cast<uint64_t>(result * 100) / 100.0;
-        }
-
-        return ::FormatWindowsRuntimeString(
-            L"%.2f %s",
-            result,
-            Systems[nSystem]);
-    }
-
-    static winrt::hstring ConvertSecondsToTimeString(
-        std::uint64_t Seconds)
-    {
-        int Hour = static_cast<int>(Seconds / 3600);
-        int Minute = static_cast<int>(Seconds / 60 % 60);
-        int Second = static_cast<int>(Seconds % 60);
-
-        return ::FormatWindowsRuntimeString(
-            L"%d:%02d:%02d",
-            Hour,
-            Minute,
-            Second);
-    }
-}
 
 namespace winrt::NanaGet::implementation
 {
@@ -166,16 +66,41 @@ namespace winrt::NanaGet::implementation
         if (TaskStatus::Active == this->Status() ||
             TaskStatus::Paused == this->Status())
         {
-            return ::FormatWindowsRuntimeString(
+            return NanaGet::FormatWindowsRuntimeString(
                 L"%s/s \x2193 %s/s \x2191 %s / %s %s",
-                ::ConvertByteSizeToString(this->DownloadSpeed()).data(),
-                ::ConvertByteSizeToString(this->UploadSpeed()).data(),
-                ::ConvertByteSizeToString(this->BytesReceived()).data(),
-                ::ConvertByteSizeToString(this->TotalBytesToReceive()).data(),
-                ::ConvertSecondsToTimeString(this->RemainTime()).data());
+                NanaGet::ConvertByteSizeToString(
+                    this->DownloadSpeed()).data(),
+                NanaGet::ConvertByteSizeToString(
+                    this->UploadSpeed()).data(),
+                NanaGet::ConvertByteSizeToString(
+                    this->BytesReceived()).data(),
+                NanaGet::ConvertByteSizeToString(
+                    this->TotalBytesToReceive()).data(),
+                NanaGet::ConvertSecondsToTimeString(
+                    this->RemainTime()).data());
         }
 
-        return ::ConvertByteSizeToString(this->TotalBytesToReceive());
+        return NanaGet::ConvertByteSizeToString(
+            this->TotalBytesToReceive());
+    }
+
+    event_token TaskItem::PropertyChanged(
+        PropertyChangedEventHandler const& value)
+    {
+        return this->m_PropertyChanged.add(value);
+    }
+
+    void TaskItem::PropertyChanged(
+        event_token const& token)
+    {
+        this->m_PropertyChanged.remove(token);
+    }
+
+    void TaskItem::RaisePropertyChanged(
+        std::wstring_view const& PropertyName)
+    {
+        this->m_PropertyChanged(
+            *this, PropertyChangedEventArgs(PropertyName));
     }
 
     IInspectable ConvertUInt64ToDouble(

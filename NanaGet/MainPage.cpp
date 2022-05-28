@@ -3,25 +3,20 @@
 #include "MainPage.g.cpp"
 #include "TaskItem.h"
 
-#include <winrt/Windows.Foundation.h>
 #include <winrt/Windows.System.h>
-
-using namespace winrt;
-using namespace Windows::UI::Xaml;
+#include <winrt/Windows.UI.Core.h>
 
 namespace winrt::NanaGet::implementation
 {
+    using Windows::UI::Xaml::Visibility;
+
     MainPage::MainPage()
     {
-        InitializeComponent();
+        this->InitializeComponent();
 
-        using Windows::Foundation::Collections::IObservableVector;
-
-        std::vector<NanaGet::TaskItem> contacts;
-        contacts.push_back(winrt::make<NanaGet::implementation::TaskItem>());
-        IObservableVector<NanaGet::TaskItem> suck =
-            winrt::single_threaded_observable_vector(std::move(contacts));
-        this->TaskManagerGridTaskList().ItemsSource(suck);
+        this->m_RefreshTimer = ThreadPoolTimer::CreatePeriodicTimer(
+            { this, &MainPage::RefreshTimerHandler },
+            std::chrono::milliseconds(500));
     }
 
     void MainPage::TaskManagerGridNewTaskButtonClick(
@@ -30,8 +25,6 @@ namespace winrt::NanaGet::implementation
     {
         UNREFERENCED_PARAMETER(sender);
         UNREFERENCED_PARAMETER(e);
-
-        using winrt::Windows::UI::Xaml::Visibility;
 
         this->NewTaskGrid().Visibility(Visibility::Visible);
     }
@@ -75,8 +68,6 @@ namespace winrt::NanaGet::implementation
         UNREFERENCED_PARAMETER(sender);
         UNREFERENCED_PARAMETER(e);
 
-        using winrt::Windows::UI::Xaml::Visibility;
-
         this->SettingsGrid().Visibility(Visibility::Visible);
     }
 
@@ -86,8 +77,6 @@ namespace winrt::NanaGet::implementation
     {
         UNREFERENCED_PARAMETER(sender);
         UNREFERENCED_PARAMETER(e);
-
-        using winrt::Windows::UI::Xaml::Visibility;
 
         this->AboutGrid().Visibility(Visibility::Visible);
     }
@@ -192,8 +181,6 @@ namespace winrt::NanaGet::implementation
         UNREFERENCED_PARAMETER(sender);
         UNREFERENCED_PARAMETER(e);
 
-        using winrt::Windows::UI::Xaml::Visibility;
-
         this->NewTaskGrid().Visibility(Visibility::Collapsed);
     }
 
@@ -203,8 +190,6 @@ namespace winrt::NanaGet::implementation
     {
         UNREFERENCED_PARAMETER(sender);
         UNREFERENCED_PARAMETER(e);
-
-        using winrt::Windows::UI::Xaml::Visibility;
 
         this->NewTaskGrid().Visibility(Visibility::Collapsed);
     }
@@ -224,8 +209,6 @@ namespace winrt::NanaGet::implementation
         UNREFERENCED_PARAMETER(sender);
         UNREFERENCED_PARAMETER(e);
 
-        using winrt::Windows::UI::Xaml::Visibility;
-
         this->SettingsGrid().Visibility(Visibility::Collapsed);
     }
 
@@ -235,8 +218,6 @@ namespace winrt::NanaGet::implementation
     {
         UNREFERENCED_PARAMETER(sender);
         UNREFERENCED_PARAMETER(e);
-
-        using winrt::Windows::UI::Xaml::Visibility;
 
         this->SettingsGrid().Visibility(Visibility::Collapsed);
     }
@@ -248,8 +229,8 @@ namespace winrt::NanaGet::implementation
         UNREFERENCED_PARAMETER(sender);
         UNREFERENCED_PARAMETER(e);
 
-        using winrt::Windows::Foundation::Uri;
-        using winrt::Windows::System::Launcher;
+        using Windows::Foundation::Uri;
+        using Windows::System::Launcher;
 
         Launcher::LaunchUriAsync(Uri(L"https://github.com/M2Team/NanaGet"));
     }
@@ -261,8 +242,22 @@ namespace winrt::NanaGet::implementation
         UNREFERENCED_PARAMETER(sender);
         UNREFERENCED_PARAMETER(e);
 
-        using winrt::Windows::UI::Xaml::Visibility;
-
         this->AboutGrid().Visibility(Visibility::Collapsed);
+    }
+
+    winrt::fire_and_forget MainPage::RefreshTimerHandler(
+        ThreadPoolTimer const& timer)
+    {
+        UNREFERENCED_PARAMETER(timer);
+
+        co_await winrt::resume_foreground(this->Dispatcher());
+
+        /*using Windows::Foundation::Collections::IObservableVector;
+
+        std::vector<NanaGet::TaskItem> contacts;
+        contacts.push_back(winrt::make<NanaGet::implementation::TaskItem>());
+        IObservableVector<NanaGet::TaskItem> suck =
+            winrt::single_threaded_observable_vector(std::move(contacts));
+        this->TaskManagerGridTaskList().ItemsSource(suck);*/
     }
 }
