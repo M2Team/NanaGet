@@ -6,6 +6,8 @@
 #include <winrt/Windows.System.Threading.h>
 #include <winrt/Windows.UI.Xaml.Controls.h>
 
+#include "NanaGetCore.h"
+
 namespace winrt::NanaGet::implementation
 {
     using Windows::Foundation::IInspectable;
@@ -20,6 +22,8 @@ namespace winrt::NanaGet::implementation
     public:
 
         MainPage();
+
+        ~MainPage();
 
         void TaskManagerGridNewTaskButtonClick(
             IInspectable const& sender,
@@ -123,10 +127,13 @@ namespace winrt::NanaGet::implementation
 
     private:
 
+        NanaGet::LocalAria2Instance m_Instance;
         ThreadPoolTimer m_RefreshTimer = nullptr;
 
         winrt::fire_and_forget RefreshTimerHandler(
             ThreadPoolTimer const& timer);
+
+        int SimpleDemoEntry();
 
     };
 }

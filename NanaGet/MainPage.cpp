@@ -3,6 +3,7 @@
 #include "MainPage.g.cpp"
 #include "TaskItem.h"
 
+#include <winrt/Windows.Foundation.Collections.h>
 #include <winrt/Windows.System.h>
 #include <winrt/Windows.UI.Core.h>
 
@@ -13,10 +14,18 @@ namespace winrt::NanaGet::implementation
     MainPage::MainPage()
     {
         this->InitializeComponent();
-
+        this->SimpleDemoEntry();
         this->m_RefreshTimer = ThreadPoolTimer::CreatePeriodicTimer(
             { this, &MainPage::RefreshTimerHandler },
             std::chrono::milliseconds(500));
+    }
+
+    MainPage::~MainPage()
+    {
+        if (this->m_RefreshTimer)
+        {
+            this->m_RefreshTimer.Cancel();
+        }
     }
 
     void MainPage::TaskManagerGridNewTaskButtonClick(
@@ -252,12 +261,106 @@ namespace winrt::NanaGet::implementation
 
         co_await winrt::resume_foreground(this->Dispatcher());
 
-        /*using Windows::Foundation::Collections::IObservableVector;
+        using Windows::Foundation::Collections::IObservableVector;
 
         std::vector<NanaGet::TaskItem> contacts;
         contacts.push_back(winrt::make<NanaGet::implementation::TaskItem>());
         IObservableVector<NanaGet::TaskItem> suck =
             winrt::single_threaded_observable_vector(std::move(contacts));
-        this->TaskManagerGridTaskList().ItemsSource(suck);*/
+        this->TaskManagerGridTaskList().ItemsSource(suck);
+    }
+
+
+
+    struct Aria2Task
+    {
+        winrt::hstring Gid;
+        winrt::hstring Name;
+        winrt::hstring Uri;
+        winrt::hstring Path;
+        winrt::hstring Status;
+
+        std::uint64_t DownloadSpeed;
+        std::uint64_t UploadSpeed;
+
+        std::uint64_t BytesReceived;
+        std::uint64_t TotalBytesToReceive;
+
+        std::uint64_t RemainTime;
+    };
+    // AddTask
+    // GetTasks
+
+    // Get Download List
+    // 
+    // Reference: https://aria2.github.io/manual/en
+    //            /html/aria2c.html#cmdoption-max-download-result
+    //            https://github.com/pawamoy/aria2p
+    //            /blob/930f709e1d78f133e8cbd717ba4c7b9f761244ee
+    //            /src/aria2p/api.py#L284
+    // aria2.tellActive(secret)
+    // aria2.tellWaiting(secret, 0, 1000)
+    // aria2.tellStopped(secret, 0, 1000)
+
+    using Windows::Data::Json::JsonArray;
+    using Windows::Data::Json::JsonObject;
+
+    int MainPage::SimpleDemoEntry()
+    {
+        /*winrt::Uri fuck = winrt::Uri(L"nanaget-attachment://D:\\file.svg");
+    ::MessageBoxW(nullptr, fuck.SchemeName().data(), L"NanaGet", 0);*/
+
+    //Sleep(500);
+
+    /*std::uint16_t ServerPort = 6800;
+    winrt::hstring ServerToken;*/
+
+        try
+        {
+            JsonValue TokenValue = JsonValue::CreateStringValue(
+                L"token:" + this->m_Instance.ServerToken());
+
+            JsonArray Parameters;
+            Parameters.Append(TokenValue);
+
+            JsonObject ResponseJson = this->m_Instance.ExecuteJsonRpcCall(
+                L"aria2.getVersion", //L"aria2.tellActive",
+                Parameters).GetObject();
+
+            //JsonArray ResponseJson = this->m_Instance.ExecuteJsonRpcCall(
+            //    L"system.listMethods",
+            //    Parameters).GetArray();
+
+            //JsonObject ResponseJson = this->m_Instance.ExecuteJsonRpcCall(
+            //    L"aria2.getGlobalOption",
+            //    Parameters).GetObject();
+
+            //JsonObject ResponseJson = this->m_Instance.ExecuteJsonRpcCall(
+            //    L"aria2.getGlobalStat",
+            //    Parameters).GetObject();
+
+            //Parameters.Append(JsonValue::CreateNumberValue(0));
+            //Parameters.Append(JsonValue::CreateNumberValue(1000));
+
+            //JsonArray ResponseJson = this->m_Instance.ExecuteJsonRpcCall(
+            //    /*L"aria2.tellStopped",*/ L"aria2.tellActive",// L"aria2.tellWaiting",
+            //    Parameters).GetArray();
+
+            winrt::hstring ResponseJsonString = ResponseJson.Stringify();
+
+            ::MessageBoxW(nullptr, ResponseJsonString.data(), L"NanaGet", 0);
+        }
+        catch (winrt::hresult_error const& ex)
+        {
+            ::MessageBoxW(nullptr, ex.message().data(), L"NanaGet", 0);
+        }
+
+        ::MessageBoxW(
+            nullptr,
+            this->m_Instance.ConsoleOutput().c_str(),
+            L"NanaGet",
+            MB_ICONINFORMATION);
+
+        return 0;
     }
 }

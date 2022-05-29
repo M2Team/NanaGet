@@ -17,7 +17,6 @@
     <ClCompile Include="MainPage.cpp" />
     <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
     <ClCompile Include="WinMain.cpp" />
-    <ClCompile Include="SimpleDemo.cpp" />
     <ClCompile Include="NanaGetCore.cpp">
       <Filter>NanaGetCore</Filter>
     </ClCompile>

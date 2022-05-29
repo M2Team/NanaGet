@@ -20,8 +20,18 @@
 #endif
 
 #include <winrt/Windows.Foundation.h>
+#include <winrt/Windows.Data.Json.h>
+#include <winrt/Windows.Web.Http.h>
 
 #include <filesystem>
+
+namespace winrt
+{
+    using Windows::Foundation::Uri;
+    using Windows::Data::Json::IJsonValue;
+    using Windows::Data::Json::JsonValue;
+    using Windows::Web::Http::HttpClient;
+}
 
 namespace NanaGet
 {
@@ -47,7 +57,62 @@ namespace NanaGet
     winrt::hstring ConvertSecondsToTimeString(
         std::uint64_t Seconds);
 
-    class LocalAria2Instance
+    class Aria2Instance
+    {
+    public:
+        Aria2Instance(
+            winrt::Uri const& ServerUri,
+            winrt::hstring const& ServerToken);
+
+        ~Aria2Instance();
+
+        winrt::Uri ServerUri();
+
+        winrt::hstring ServerToken();
+
+        void Shutdown(
+            bool Force = false);
+
+        void PauseAll(
+            bool Force = false);
+
+        void ResumeAll();
+
+        void ClearList();
+
+        void Pause(
+            winrt::hstring Gid,
+            bool Force = false);
+
+        void Resume(
+            winrt::hstring Gid);
+
+        void Remove(
+            winrt::hstring Gid,
+            bool Force = false);
+
+        winrt::JsonValue ExecuteJsonRpcCall(
+            winrt::hstring const& MethodName,
+            winrt::IJsonValue const& Parameters);
+
+    protected:
+
+        Aria2Instance();
+
+        void UpdateInstance(
+            winrt::Uri const& ServerUri,
+            winrt::hstring const& ServerToken);
+
+    private:
+
+        winrt::Uri m_ServerUri = nullptr;
+        winrt::hstring m_ServerToken;
+        winrt::JsonValue m_ServerTokenJsonValue = nullptr;
+
+        winrt::HttpClient m_HttpClient;
+    };
+
+    class LocalAria2Instance : public Aria2Instance
     {
     public:
 
@@ -55,17 +120,9 @@ namespace NanaGet
 
         ~LocalAria2Instance();
 
-        void Startup();
-
-        void ForceShutdown();
-
-        void Shutdown();
+        void Restart();
 
         bool Available();
-
-        std::uint16_t ServerPort();
-
-        winrt::hstring ServerToken();
 
         winrt::hstring ConsoleOutput();
 
@@ -73,11 +130,15 @@ namespace NanaGet
 
         std::uint16_t PickUnusedTcpPort();
 
+        void Startup();
+
+        void ForceTerminate();
+
+        void Terminate();
+
     private:
 
         bool m_Available = false;
-        std::uint16_t m_ServerPort;
-        winrt::hstring m_ServerToken;
         winrt::handle m_ProcessHandle;
         winrt::file_handle m_OutputPipeHandle;
     };
