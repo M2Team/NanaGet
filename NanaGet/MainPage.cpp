@@ -26,6 +26,17 @@ namespace winrt::NanaGet::implementation
             std::chrono::milliseconds(200));
     }
 
+    winrt::hstring MainPage::SearchFilter()
+    {
+        return this->m_SearchFilter;
+    }
+
+    void MainPage::SearchFilter(
+        winrt::hstring const& Value)
+    {
+        this->m_SearchFilter = Value;
+    }
+
     MainPage::~MainPage()
     {
         if (this->m_RefreshTimer)
@@ -130,14 +141,6 @@ namespace winrt::NanaGet::implementation
         this->AboutGrid().Visibility(Visibility::Visible);
     }
 
-    /*void MainPage::TaskManagerGridSearchBoxQuerySubmitted(
-        IInspectable const& sender,
-        AutoSuggestBoxQuerySubmittedEventArgs const& e)
-    {
-        UNREFERENCED_PARAMETER(sender);
-        UNREFERENCED_PARAMETER(e);
-    }*/
-
     void MainPage::TaskManagerGridTaskListContainerContentChanging(
         ListViewBase const& sender,
         ContainerContentChangingEventArgs const& e)
@@ -151,7 +154,7 @@ namespace winrt::NanaGet::implementation
             : Visibility::Collapsed);
     }
 
-    /*void MainPage::TaskManagerGridTaskItemRetryButtonClick(
+    void MainPage::TaskManagerGridTaskItemRetryButtonClick(
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
@@ -163,22 +166,18 @@ namespace winrt::NanaGet::implementation
             NanaGet::TaskItem Current =
                 this->GetTaskItemFromEventSender(sender);
             this->m_Instance.Remove(Current.Gid());
-
-            // TODO
-            //Current.Source();
-            //Current.Path();
+            this->m_Instance.AddTask(Uri(Current.Source()));
         }
         catch (...)
         {
 
         }
-    }*/
+    }
 
     void MainPage::TaskManagerGridTaskItemResumeButtonClick(
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
-        UNREFERENCED_PARAMETER(sender);
         UNREFERENCED_PARAMETER(e);
 
         try
@@ -197,7 +196,6 @@ namespace winrt::NanaGet::implementation
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
-        UNREFERENCED_PARAMETER(sender);
         UNREFERENCED_PARAMETER(e);
 
         try
@@ -216,7 +214,6 @@ namespace winrt::NanaGet::implementation
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
-        UNREFERENCED_PARAMETER(sender);
         UNREFERENCED_PARAMETER(e);
 
         try
@@ -251,7 +248,6 @@ namespace winrt::NanaGet::implementation
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
-        UNREFERENCED_PARAMETER(sender);
         UNREFERENCED_PARAMETER(e);
 
         try
@@ -270,7 +266,6 @@ namespace winrt::NanaGet::implementation
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
-        UNREFERENCED_PARAMETER(sender);
         UNREFERENCED_PARAMETER(e);
 
         try
@@ -393,10 +388,9 @@ namespace winrt::NanaGet::implementation
     {
         UNREFERENCED_PARAMETER(timer);
 
-        this->m_Instance.RefreshInformation();
+        winrt::slim_lock_guard LockGuard(this->m_Instance.InstanceLock());
 
-        winrt::slim_shared_lock_guard LockGuard(
-            this->m_Instance.InstanceLock());
+        this->m_Instance.RefreshInformation();
 
         winrt::hstring GlobalStatusText = NanaGet::FormatWindowsRuntimeString(
             L"\x2193 %s/s \x2191 %s/s",
@@ -405,9 +399,19 @@ namespace winrt::NanaGet::implementation
             NanaGet::ConvertByteSizeToString(
                 this->m_Instance.TotalUploadSpeed()).data());   
 
+        winrt::hstring CurrentSearchFilter = this->m_SearchFilter;
+
         std::set<winrt::hstring> Gids;
         for (Aria2TaskInformation const& Task : this->m_Instance.Tasks())
         {
+            if (!NanaGet::FindSubString(
+                Task.FriendlyName,
+                CurrentSearchFilter,
+                true))
+            {
+                continue;
+            }
+
             Gids.emplace(Task.Gid);
         }
 
@@ -424,6 +428,14 @@ namespace winrt::NanaGet::implementation
             std::vector<NanaGet::TaskItem> RawTasks;
             for (Aria2TaskInformation const& Task : this->m_Instance.Tasks())
             {
+                if (!NanaGet::FindSubString(
+                    Task.FriendlyName,
+                    CurrentSearchFilter,
+                    true))
+                {
+                    continue;
+                }
+
                 RawTasks.push_back(
                     winrt::make<NanaGet::implementation::TaskItem>(Task));
             }

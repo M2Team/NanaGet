@@ -182,8 +182,8 @@ namespace
                 nullptr,
                 0,
                 0,
-                ::MulDiv(560, DpiValue, USER_DEFAULT_SCREEN_DPI),
-                ::MulDiv(420, DpiValue, USER_DEFAULT_SCREEN_DPI),
+                ::MulDiv(720, DpiValue, USER_DEFAULT_SCREEN_DPI),
+                ::MulDiv(540, DpiValue, USER_DEFAULT_SCREEN_DPI),
                 SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
 
             return 0;

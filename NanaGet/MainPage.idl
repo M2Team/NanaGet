@@ -4,5 +4,7 @@
     runtimeclass MainPage : Windows.UI.Xaml.Controls.Page
     {
         MainPage();
+
+        String SearchFilter{ get; set; };
     }
 }

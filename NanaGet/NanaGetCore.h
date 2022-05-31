@@ -61,6 +61,11 @@ namespace NanaGet
     winrt::hstring ConvertSecondsToTimeString(
         std::uint64_t Seconds);
 
+    bool FindSubString(
+        winrt::hstring const& SourceString,
+        winrt::hstring const& SubString,
+        bool IgnoreCase);
+
     struct Aria2GlobalStatus
     {
         std::uint64_t DownloadSpeed;
@@ -114,7 +119,7 @@ namespace NanaGet
         winrt::hstring InfoHash;
         winrt::hstring Dir;
         std::vector<Aria2FileInformation> Files;
-        winrt::hstring BittorrentName;
+        winrt::hstring FriendlyName;
     };
 
     class Aria2Instance
@@ -152,8 +157,7 @@ namespace NanaGet
             bool Force = false);
 
         void Remove(
-            winrt::hstring Gid,
-            bool Force = false);
+            winrt::hstring Gid);
 
         winrt::hstring AddTask(
             winrt::Uri const& Source);

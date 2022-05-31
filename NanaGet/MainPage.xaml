@@ -69,16 +69,15 @@
             Icon="Help"
             Label="[About]" />
         </CommandBar.SecondaryCommands>
-        <!--<CommandBar.Content>
+        <CommandBar.Content>
           <AutoSuggestBox
             x:Uid="/TaskManagerGrid/SearchBox"
             Margin="4,0"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Center"
             PlaceholderText="[Search Downloads]"
-            QueryIcon="Find"
-            QuerySubmitted="TaskManagerGridSearchBoxQuerySubmitted" />
-        </CommandBar.Content>-->
+            Text="{x:Bind SearchFilter, Mode=TwoWay}" />
+        </CommandBar.Content>
       </CommandBar>
       <ListView
         x:Name="TaskManagerGridTaskList"
@@ -104,14 +103,14 @@
               DefaultLabelPosition="Collapsed"
               IsDynamicOverflowEnabled="False"
               IsOpen="False">
-              <!--<AppBarButton
+              <AppBarButton
                 x:Uid="/TaskManagerGrid/TaskItemRetryButton"
                 Width="44"
                 AutomationProperties.Name="[Retry Button]"
                 Click="TaskManagerGridTaskItemRetryButtonClick"
                 Icon="Refresh"
                 ToolTipService.ToolTip="[Retry]"
-                Visibility="{x:Bind Status, Converter={StaticResource TaskItemConverter}, ConverterParameter=TaskStatusToRetryButtonVisible, Mode=OneWay}" />-->
+                Visibility="{x:Bind Status, Converter={StaticResource TaskItemConverter}, ConverterParameter=TaskStatusToRetryButtonVisible, Mode=OneWay}" />
               <AppBarButton
                 x:Uid="/TaskManagerGrid/TaskItemResumeButton"
                 Width="44"
@@ -139,17 +138,18 @@
                   Click="TaskManagerGridTaskItemOpenFolderButtonClick"
                   Icon="OpenLocal"
                   Label="[Open Folder]" />-->
-                <AppBarSeparator />
                 <AppBarButton
                   x:Uid="/TaskManagerGrid/TaskItemCancelButton"
                   Click="TaskManagerGridTaskItemCancelButtonClick"
                   Icon="Cancel"
-                  Label="[Cancel]" />
+                  Label="[Cancel]"
+                  Visibility="{x:Bind Status, Converter={StaticResource TaskItemConverter}, ConverterParameter=TaskStatusToCancelButtonVisible, Mode=OneWay}" />
                 <AppBarButton
                   x:Uid="/TaskManagerGrid/TaskItemRemoveButton"
                   Click="TaskManagerGridTaskItemRemoveButtonClick"
                   Icon="Delete"
-                  Label="[Remove]" />
+                  Label="[Remove]"
+                  Visibility="{x:Bind Status, Converter={StaticResource TaskItemConverter}, ConverterParameter=TaskStatusToRemoveButtonVisible, Mode=OneWay}" />
               </CommandBar.SecondaryCommands>
               <CommandBar.Content>
                 <Grid
@@ -157,8 +157,8 @@
                   HorizontalAlignment="Stretch"
                   VerticalAlignment="Center">
                   <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="4*" />
+                    <ColumnDefinition Width="6*" />
                   </Grid.ColumnDefinitions>
                   <TextBlock
                     Grid.Column="0"

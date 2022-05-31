@@ -14,7 +14,6 @@ namespace winrt::NanaGet::implementation
     using Windows::Foundation::IInspectable;  
     using Windows::System::Threading::ThreadPoolTimer;
     using Windows::UI::Xaml::RoutedEventArgs;
-    using Windows::UI::Xaml::Controls::AutoSuggestBoxQuerySubmittedEventArgs;
     using Windows::UI::Xaml::Controls::ContainerContentChangingEventArgs;
     using Windows::UI::Xaml::Controls::ListViewBase;
 
@@ -23,6 +22,11 @@ namespace winrt::NanaGet::implementation
     public:
 
         MainPage();
+
+        winrt::hstring SearchFilter();
+
+        void SearchFilter(
+            winrt::hstring const& Value);
 
         ~MainPage();
 
@@ -54,17 +58,13 @@ namespace winrt::NanaGet::implementation
             IInspectable const& sender,
             RoutedEventArgs const& e);
 
-        /*void TaskManagerGridSearchBoxQuerySubmitted(
-            IInspectable const& sender,
-            AutoSuggestBoxQuerySubmittedEventArgs const& e);*/
-
         void TaskManagerGridTaskListContainerContentChanging(
             ListViewBase const& sender,
             ContainerContentChangingEventArgs const& e);
 
-        /*void TaskManagerGridTaskItemRetryButtonClick(
+        void TaskManagerGridTaskItemRetryButtonClick(
             IInspectable const& sender,
-            RoutedEventArgs const& e);*/
+            RoutedEventArgs const& e);
 
         void TaskManagerGridTaskItemResumeButtonClick(
             IInspectable const& sender,
@@ -133,6 +133,7 @@ namespace winrt::NanaGet::implementation
 
         std::set<winrt::hstring> m_Gids;
         IObservableVector<NanaGet::TaskItem> m_Tasks = nullptr;
+        winrt::hstring m_SearchFilter;
 
         winrt::fire_and_forget RefreshTimerHandler(
             ThreadPoolTimer const& timer);

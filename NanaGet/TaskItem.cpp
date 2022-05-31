@@ -34,19 +34,7 @@ namespace winrt::NanaGet::implementation
 
     hstring TaskItem::Name()
     {
-        if (!this->m_Information.BittorrentName.empty())
-        {
-            return this->m_Information.BittorrentName;
-        }
-        else if (!this->m_Information.Files[0].Path.empty())
-        {
-            return hstring(&std::wcsrchr(
-                this->m_Information.Files[0].Path.c_str(), L'/')[1]);
-        }
-        else
-        {
-            return this->Gid();
-        }
+        return this->m_Information.FriendlyName;
     }
 
     hstring TaskItem::Source()
@@ -154,17 +142,17 @@ namespace winrt::NanaGet::implementation
             TaskStatus::Paused == this->Status())
         {
             return NanaGet::FormatWindowsRuntimeString(
-                L"%s/s \x2193 %s/s \x2191 %s / %s %s",
-                NanaGet::ConvertByteSizeToString(
-                    this->DownloadSpeed()).data(),
-                NanaGet::ConvertByteSizeToString(
-                    this->UploadSpeed()).data(),
+                L"%s %s / %s %s/s \x2193 %s/s \x2191",
+                NanaGet::ConvertSecondsToTimeString(
+                    this->RemainTime()).data(),
                 NanaGet::ConvertByteSizeToString(
                     this->BytesReceived()).data(),
                 NanaGet::ConvertByteSizeToString(
                     this->TotalBytesToReceive()).data(),
-                NanaGet::ConvertSecondsToTimeString(
-                    this->RemainTime()).data());
+                NanaGet::ConvertByteSizeToString(
+                    this->DownloadSpeed()).data(),
+                NanaGet::ConvertByteSizeToString(
+                    this->UploadSpeed()).data());
         }
 
         return NanaGet::ConvertByteSizeToString(
@@ -272,6 +260,46 @@ namespace winrt::NanaGet::implementation
             : Visibility::Collapsed);
     }
 
+    IInspectable ConvertTaskStatusToCancelButtonVisible(
+        IInspectable const& value)
+    {
+        Visibility ButtonVisible = Visibility::Collapsed;
+
+        switch (unbox_value_or<TaskStatus>(
+            value, TaskStatus::Error))
+        {
+        case TaskStatus::Active:
+        case TaskStatus::Waiting:
+        case TaskStatus::Paused:
+            ButtonVisible = Visibility::Visible;
+            break;
+        default:
+            break;
+        }
+
+        return box_value(ButtonVisible);
+    }
+
+    IInspectable ConvertTaskStatusToRemoveButtonVisible(
+        IInspectable const& value)
+    {
+        Visibility ButtonVisible = Visibility::Collapsed;
+
+        switch (unbox_value_or<TaskStatus>(
+            value, TaskStatus::Error))
+        {
+        case TaskStatus::Error:
+        case TaskStatus::Complete:
+        case TaskStatus::Removed:
+            ButtonVisible = Visibility::Visible;
+            break;
+        default:
+            break;
+        }
+
+        return box_value(ButtonVisible);
+    }
+
     IInspectable TaskItemConverter::Convert(
         IInspectable const& value,
         TypeName const& targetType,
@@ -290,32 +318,46 @@ namespace winrt::NanaGet::implementation
             return ConvertUInt64ToDouble(value);
         }
 
-        if (0 == wcscmp(
+        if (0 == std::wcscmp(
             Parameter,
             L"TaskStatusToProgressBarForegroundColor"))
         {
             return ConvertTaskStatusToProgressBarForegroundColor(value);
         }
 
-        if (0 == wcscmp(
+        if (0 == std::wcscmp(
             Parameter,
             L"TaskStatusToRetryButtonVisible"))
         {
             return ConvertTaskStatusToRetryButtonVisible(value);
         }
 
-        if (0 == wcscmp(
+        if (0 == std::wcscmp(
             Parameter,
             L"TaskStatusToResumeButtonVisible"))
         {
             return ConvertTaskStatusToResumeButtonVisible(value);
         }
 
-        if (0 == wcscmp(
+        if (0 == std::wcscmp(
             Parameter,
             L"TaskStatusToPauseButtonVisible"))
         {
             return ConvertTaskStatusToPauseButtonVisible(value);
+        }
+
+        if (0 == std::wcscmp(
+            Parameter,
+            L"TaskStatusToCancelButtonVisible"))
+        {
+            return ConvertTaskStatusToCancelButtonVisible(value);
+        }
+
+        if (0 == std::wcscmp(
+            Parameter,
+            L"TaskStatusToRemoveButtonVisible"))
+        {
+            return ConvertTaskStatusToRemoveButtonVisible(value);
         }
 
         throw_hresult(E_NOTIMPL);

@@ -303,8 +303,13 @@ winrt::hstring NanaGet::ConvertByteSizeToString(
         result = static_cast<uint64_t>(result * 100) / 100.0;
     }
 
+    if (true)
+    {
+
+    }
+
     return NanaGet::FormatWindowsRuntimeString(
-        L"%.2f %s",
+        nSystem ? L"%.2f %s" : L"%.0f %s",
         result,
         Systems[nSystem]);
 }
@@ -312,6 +317,11 @@ winrt::hstring NanaGet::ConvertByteSizeToString(
 winrt::hstring NanaGet::ConvertSecondsToTimeString(
     std::uint64_t Seconds)
 {
+    if (static_cast<uint64_t>(-1) == Seconds)
+    {
+        return L"N/A";
+    }
+
     int Hour = static_cast<int>(Seconds / 3600);
     int Minute = static_cast<int>(Seconds / 60 % 60);
     int Second = static_cast<int>(Seconds % 60);
@@ -321,6 +331,24 @@ winrt::hstring NanaGet::ConvertSecondsToTimeString(
         Hour,
         Minute,
         Second);
+}
+
+bool NanaGet::FindSubString(
+    winrt::hstring const& SourceString,
+    winrt::hstring const& SubString,
+    bool IgnoreCase)
+{
+    return (::FindNLSStringEx(
+        nullptr,
+        (IgnoreCase ? NORM_IGNORECASE : 0) | FIND_FROMSTART,
+        SourceString.c_str(),
+        SourceString.size(),
+        SubString.c_str(),
+        SubString.size(),
+        nullptr,
+        nullptr,
+        nullptr,
+        0) >= 0);
 }
 
 NanaGet::Aria2Instance::Aria2Instance(
@@ -442,11 +470,8 @@ void NanaGet::Aria2Instance::Cancel(
 }
 
 void NanaGet::Aria2Instance::Remove(
-    winrt::hstring Gid,
-    bool Force)
+    winrt::hstring Gid)
 {
-    this->Cancel(Gid, Force);
-
     winrt::JsonArray Parameters;
     Parameters.Append(this->m_ServerTokenJsonValue);
     Parameters.Append(winrt::JsonValue::CreateStringValue(Gid));
@@ -496,8 +521,6 @@ std::vector<NanaGet::Aria2TaskInformation> NanaGet::Aria2Instance::Tasks()
 
 void NanaGet::Aria2Instance::RefreshInformation()
 {
-    winrt::slim_lock_guard LockGuard(this->m_InstanceLock);
-
     this->m_TotalDownloadSpeed = 0;
     this->m_TotalUploadSpeed = 0;
     this->m_Tasks.clear();
@@ -824,13 +847,40 @@ NanaGet::Aria2TaskInformation NanaGet::Aria2Instance::ParseTaskInformation(
             this->ParseFileInformation(File.GetObject()));
     }
 
-    Result.BittorrentName = Value.GetNamedObject(
+    Result.FriendlyName = Value.GetNamedObject(
         L"bittorrent",
         winrt::JsonObject()).GetNamedObject(
             L"info",
             winrt::JsonObject()).GetNamedString(
                 L"name",
                 winrt::hstring());
+
+    if (Result.FriendlyName.empty())
+    {
+        if (!Result.Files.empty())
+        {
+            const wchar_t* Candidate = nullptr;
+
+            if (!Result.Files[0].Path.empty())
+            {
+                Candidate = Result.Files[0].Path.c_str();
+            }
+            else if (!Result.Files[0].Uris.empty())
+            {
+                Candidate = Result.Files[0].Uris[0].Uri.c_str();
+            }
+
+            const wchar_t* RawName = std::wcsrchr(Candidate, L'/');
+            Result.FriendlyName = winrt::hstring(
+                (RawName && RawName != Candidate)
+                ? &RawName[1]
+                : Candidate);
+        }
+    }
+    if (Result.FriendlyName.empty())
+    {
+        Result.FriendlyName = Result.Gid;
+    }
 
     return Result;
 }
@@ -923,6 +973,87 @@ std::uint16_t NanaGet::LocalAria2Instance::PickUnusedTcpPort()
     return Result;
 }
 
+constexpr std::string_view BitTorrentTrackers =
+    "http://1337.abcvg.info:80/announce,"
+    "http://milanesitracker.tekcities.com:80/announce,"
+    "http://nyaa.tracker.wf:7777/announce,"
+    "http://open-v6.demonoid.ch:6969/announce,"
+    "http://open.acgnxtracker.com:80/announce,"
+    "http://opentracker.xyz:80/announce,"
+    "http://share.camoe.cn:8080/announce,"
+    "http://t.overflow.biz:6969/announce,"
+    "http://tr.cili001.com:8070/announce,"
+    "http://tracker.bt4g.com:2095/announce,"
+    "http://tracker.files.fm:6969/announce,"
+    "http://tracker.gbitt.info:80/announce,"
+    "http://tracker.ipv6tracker.ru:80/announce,"
+    "http://tracker.mywaifu.best:6969/announce,"
+    "http://tracker.noobsubs.net:80/announce,"
+    "http://uraniumhexafluori.de:1919/announce,"
+    "https://carbon-bonsai-621.appspot.com:443/announce,"
+    "https://opentracker.i2p.rocks:443/announce,"
+    "https://tr.abiir.top:443/announce,"
+    "https://tr.burnabyhighstar.com:443/announce,"
+    "https://tr.ready4.icu:443/announce,"
+    "https://tracker.babico.name.tr:443/announce,"
+    "https://tracker.baka.ink:443/announce,"
+    "https://tracker.imgoingto.icu:443/announce,"
+    "https://tracker.lilithraws.cf:443/announce,"
+    "https://tracker.nanoha.org:443/announce,"
+    "https://tracker.tamersunion.org:443/announce,"
+    "https://trackme.theom.nz:443/announce,"
+    "udp://9.rarbg.com:2810/announce,"
+    "udp://960303.xyz:6969/announce,"
+    "udp://bt1.archive.org:6969/announce,"
+    "udp://exodus.desync.com:6969/announce,"
+    "udp://fe.dealclub.de:6969/announce,"
+    "udp://ipv4.tracker.harry.lu:80/announce,"
+    "udp://mirror.aptus.co.tz:6969/announce,"
+    "udp://movies.zsw.ca:6969/announce,"
+    "udp://open.demonii.com:1337/announce,"
+    "udp://open.dstud.io:6969/announce,"
+    "udp://open.stealth.si:80/announce,"
+    "udp://open.tracker.ink:6969/announce,"
+    "udp://open.xxtor.com:3074/announce,"
+    "udp://opentor.org:2710/announce,"
+    "udp://opentracker.i2p.rocks:6969/announce,"
+    "udp://p4p.arenabg.com:1337/announce,"
+    "udp://public.publictracker.xyz:6969/announce,"
+    "udp://run.publictracker.xyz:6969/announce,"
+    "udp://thetracker.org:80/announce,"
+    "udp://torrentclub.space:6969/announce,"
+    "udp://tracker.0x.tf:6969/announce,"
+    "udp://tracker.altrosky.nl:6969/announce,"
+    "udp://tracker.auctor.tv:6969/announce,"
+    "udp://tracker.beeimg.com:6969/announce,"
+    "udp://tracker.birkenwald.de:6969/announce,"
+    "udp://tracker.bitsearch.to:1337/announce,"
+    "udp://tracker.cyberia.is:6969/announce,"
+    "udp://tracker.dler.org:6969/announce,"
+    "udp://tracker.dump.cl:6969/announce,"
+    "udp://tracker.jordan.im:6969/announce,"
+    "udp://tracker.leech.ie:1337/announce,"
+    "udp://tracker.lelux.fi:6969/announce,"
+    "udp://tracker.moeking.me:6969/announce,"
+    "udp://tracker.monitorit4.me:6969/announce,"
+    "udp://tracker.openbittorrent.com:6969/announce,"
+    "udp://tracker.opentrackr.org:1337/announce,"
+    "udp://tracker.pomf.se:80/announce,"
+    "udp://tracker.publictracker.xyz:6969/announce,"
+    "udp://tracker.srv00.com:6969/announce,"
+    "udp://tracker.theoks.net:6969/announce,"
+    "udp://tracker.tiny-vps.com:6969/announce,"
+    "udp://tracker.torrent.eu.org:451/announce,"
+    "udp://tracker1.bt.moack.co.kr:80/announce,"
+    "udp://tracker2.dler.com:80/announce,"
+    "udp://tracker4.itzmx.com:2710/announce,"
+    "udp://tracker6.lelux.fi:6969/announce,"
+    "udp://v2.iperson.xyz:6969/announce,"
+    "udp://vibe.sleepyinternetfun.xyz:1738/announce,"
+    "udp://www.torrent.eu.org:451/announce,"
+    "ws://hub.bugout.link:80/announce,"
+    "wss://tracker.openwebtorrent.com:443/announce";
+
 void NanaGet::LocalAria2Instance::Startup()
 {
     if (this->m_Available)
@@ -960,7 +1091,7 @@ void NanaGet::LocalAria2Instance::Startup()
         Aria2LogFile.c_str());
     Settings.emplace_back(
         L"log-level",
-        L"info");
+        L"notice");
     Settings.emplace_back(
         L"enable-rpc",
         L"true");
@@ -986,11 +1117,17 @@ void NanaGet::LocalAria2Instance::Startup()
         L"save-session",
         SessionFile);
     Settings.emplace_back(
+        L"auto-save-interval",
+        L"10");
+    Settings.emplace_back(
         L"dht-file-path",
         DhtDataFile);
     Settings.emplace_back(
         L"dht-file-path6",
         Dht6DataFile);
+    Settings.emplace_back(
+        L"bt-tracker",
+        winrt::to_hstring(BitTorrentTrackers).c_str());
 
     std::wstring CommandLine = Aria2Executable;
     for (auto const& Setting : Settings)
