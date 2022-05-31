@@ -14,7 +14,7 @@
     {
         String Gid { get; };
         String Name { get; };
-        Windows.Foundation.Uri Source{ get; };
+        String Source{ get; };
         String Path { get; };
         TaskStatus Status { get; };
         UInt64 DownloadSpeed { get; };

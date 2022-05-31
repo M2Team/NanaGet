@@ -10,7 +10,8 @@
 
 namespace winrt::NanaGet::implementation
 {
-    using Windows::Foundation::IInspectable;
+    using Windows::Foundation::Collections::IObservableVector;
+    using Windows::Foundation::IInspectable;  
     using Windows::System::Threading::ThreadPoolTimer;
     using Windows::UI::Xaml::RoutedEventArgs;
     using Windows::UI::Xaml::Controls::AutoSuggestBoxQuerySubmittedEventArgs;
@@ -45,25 +46,25 @@ namespace winrt::NanaGet::implementation
             IInspectable const& sender,
             RoutedEventArgs const& e);
 
-        void TaskManagerGridSettingsButtonClick(
+        /*void TaskManagerGridSettingsButtonClick(
             IInspectable const& sender,
-            RoutedEventArgs const& e);
+            RoutedEventArgs const& e);*/
 
         void TaskManagerGridAboutButtonClick(
             IInspectable const& sender,
             RoutedEventArgs const& e);
 
-        void TaskManagerGridSearchBoxQuerySubmitted(
+        /*void TaskManagerGridSearchBoxQuerySubmitted(
             IInspectable const& sender,
-            AutoSuggestBoxQuerySubmittedEventArgs const& e);
+            AutoSuggestBoxQuerySubmittedEventArgs const& e);*/
 
         void TaskManagerGridTaskListContainerContentChanging(
             ListViewBase const& sender,
             ContainerContentChangingEventArgs const& e);
 
-        void TaskManagerGridTaskItemRetryButtonClick(
+        /*void TaskManagerGridTaskItemRetryButtonClick(
             IInspectable const& sender,
-            RoutedEventArgs const& e);
+            RoutedEventArgs const& e);*/
 
         void TaskManagerGridTaskItemResumeButtonClick(
             IInspectable const& sender,
@@ -77,9 +78,9 @@ namespace winrt::NanaGet::implementation
             IInspectable const& sender,
             RoutedEventArgs const& e);
 
-        void TaskManagerGridTaskItemOpenFolderButtonClick(
+        /*void TaskManagerGridTaskItemOpenFolderButtonClick(
             IInspectable const& sender,
-            RoutedEventArgs const& e);
+            RoutedEventArgs const& e);*/
 
         void TaskManagerGridTaskItemCancelButtonClick(
             IInspectable const& sender,
@@ -89,13 +90,13 @@ namespace winrt::NanaGet::implementation
             IInspectable const& sender,
             RoutedEventArgs const& e);
 
-        void NewTaskGridDownloadSourceBrowseButtonClick(
+        /*void NewTaskGridDownloadSourceBrowseButtonClick(
             IInspectable const& sender,
             RoutedEventArgs const& e);
 
         void NewTaskGridSaveFolderBrowseButtonClick(
             IInspectable const& sender,
-            RoutedEventArgs const& e);
+            RoutedEventArgs const& e);*/
 
         void NewTaskGridDownloadButtonClick(
             IInspectable const& sender,
@@ -105,7 +106,7 @@ namespace winrt::NanaGet::implementation
             IInspectable const& sender,
             RoutedEventArgs const& e);
 
-        void SettingsGridCustomDownloadFolderBrowseButtonClick(
+        /*void SettingsGridCustomDownloadFolderBrowseButtonClick(
             IInspectable const& sender,
             RoutedEventArgs const& e);
 
@@ -115,7 +116,7 @@ namespace winrt::NanaGet::implementation
 
         void SettingsGridCancelButtonClick(
             IInspectable const& sender,
-            RoutedEventArgs const& e);
+            RoutedEventArgs const& e);*/
 
         void AboutGridGitHubButtonClick(
             IInspectable const& sender,
@@ -130,10 +131,16 @@ namespace winrt::NanaGet::implementation
         NanaGet::LocalAria2Instance m_Instance;
         ThreadPoolTimer m_RefreshTimer = nullptr;
 
+        std::set<winrt::hstring> m_Gids;
+        IObservableVector<NanaGet::TaskItem> m_Tasks = nullptr;
+
         winrt::fire_and_forget RefreshTimerHandler(
             ThreadPoolTimer const& timer);
 
         int SimpleDemoEntry();
+
+        NanaGet::TaskItem GetTaskItemFromEventSender(
+            IInspectable const& sender);
 
     };
 }

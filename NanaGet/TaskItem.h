@@ -7,11 +7,12 @@
 #include <winrt/Windows.UI.Xaml.Data.h>
 #include <winrt/Windows.UI.Xaml.Interop.h>
 
+#include "NanaGetCore.h"
+
 namespace winrt::NanaGet::implementation
 {
     using NanaGet::TaskStatus;
     using Windows::Foundation::IInspectable;
-    using Windows::Foundation::Uri;
     using Windows::UI::Xaml::Data::PropertyChangedEventArgs;
     using Windows::UI::Xaml::Data::PropertyChangedEventHandler;   
     using Windows::UI::Xaml::Interop::TypeName;
@@ -20,11 +21,15 @@ namespace winrt::NanaGet::implementation
     {
     public:
 
-        TaskItem() = default;
+        TaskItem(
+            Aria2TaskInformation const& Information);
+
+        void Update(
+            Aria2TaskInformation const& Information);
 
         hstring Gid();
         hstring Name();
-        Uri Source();
+        hstring Source();
         hstring Path();
         TaskStatus Status();
         std::uint64_t DownloadSpeed();
@@ -48,7 +53,9 @@ namespace winrt::NanaGet::implementation
 
     private:
 
-        event<PropertyChangedEventHandler> m_PropertyChanged; 
+        event<PropertyChangedEventHandler> m_PropertyChanged;
+
+        Aria2TaskInformation m_Information;
     };
 
     struct TaskItemConverter :

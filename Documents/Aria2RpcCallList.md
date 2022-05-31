@@ -1,6 +1,6 @@
 ﻿# Aria2 RPC Call List
 
-- [ ] aria2.addUri
+- [x] aria2.addUri
 - [ ] aria2.addTorrent
 - [ ] aria2.getPeers
 - [ ] aria2.addMetalink
@@ -17,9 +17,9 @@
 - [ ] aria2.getUris
 - [ ] aria2.getFiles
 - [ ] aria2.getServers
-- [ ] aria2.tellActive
-- [ ] aria2.tellWaiting
-- [ ] aria2.tellStopped
+- [x] aria2.tellActive
+- [x] aria2.tellWaiting
+- [x] aria2.tellStopped
 - [ ] aria2.getOption
 - [ ] aria2.changeUri
 - [ ] aria2.changeOption
@@ -31,7 +31,7 @@
 - [ ] aria2.getSessionInfo
 - [x] aria2.shutdown
 - [x] aria2.forceShutdown
-- [ ] aria2.getGlobalStat
+- [x] aria2.getGlobalStat
 - [ ] aria2.saveSession
 - [ ] system.multicall
 - [ ] system.listMethods

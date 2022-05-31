@@ -24,11 +24,13 @@
 #include <winrt/Windows.Web.Http.h>
 
 #include <filesystem>
+#include <set>
 
 namespace winrt
 {
     using Windows::Foundation::Uri;
     using Windows::Data::Json::IJsonValue;
+    using Windows::Data::Json::JsonObject;
     using Windows::Data::Json::JsonValue;
     using Windows::Web::Http::HttpClient;
 }
@@ -40,6 +42,8 @@ namespace NanaGet
     bool IsPackagedMode();
 
     std::filesystem::path GetSettingsFolderPath();
+
+    std::filesystem::path GetDownloadsFolderPath();
 
     winrt::hstring CreateGuidString();
 
@@ -56,6 +60,62 @@ namespace NanaGet
 
     winrt::hstring ConvertSecondsToTimeString(
         std::uint64_t Seconds);
+
+    struct Aria2GlobalStatus
+    {
+        std::uint64_t DownloadSpeed;
+        std::uint64_t UploadSpeed;
+        std::uint64_t NumActive;
+        std::uint64_t NumWaiting;
+        std::uint64_t NumStopped;
+        std::uint64_t NumStoppedTotal;
+    };
+
+    enum class Aria2UriStatus : std::int32_t
+    {
+        Used = 0,
+        Waiting = 1,
+    };
+
+    struct Aria2UriInformation
+    {
+        winrt::hstring Uri;
+        Aria2UriStatus Status;
+    };
+
+    struct Aria2FileInformation
+    {
+        std::uint64_t Index;
+        winrt::hstring Path;
+        std::uint64_t Length;
+        std::uint64_t CompletedLength;
+        bool Selected;
+        std::vector<Aria2UriInformation> Uris;
+    };
+
+    enum class Aria2TaskStatus : std::int32_t
+    {
+        Active = 0,
+        Waiting = 1,
+        Paused = 2,
+        Error = 3,
+        Complete = 4,
+        Removed = 5,
+    };
+
+    struct Aria2TaskInformation
+    {
+        winrt::hstring Gid;
+        Aria2TaskStatus Status;
+        std::uint64_t TotalLength;
+        std::uint64_t CompletedLength;
+        std::uint64_t DownloadSpeed;
+        std::uint64_t UploadSpeed;
+        winrt::hstring InfoHash;
+        winrt::hstring Dir;
+        std::vector<Aria2FileInformation> Files;
+        winrt::hstring BittorrentName;
+    };
 
     class Aria2Instance
     {
@@ -87,9 +147,26 @@ namespace NanaGet
         void Resume(
             winrt::hstring Gid);
 
+        void Cancel(
+            winrt::hstring Gid,
+            bool Force = false);
+
         void Remove(
             winrt::hstring Gid,
             bool Force = false);
+
+        winrt::hstring AddTask(
+            winrt::Uri const& Source);
+
+        winrt::slim_mutex& InstanceLock();
+
+        std::uint64_t TotalDownloadSpeed();
+
+        std::uint64_t TotalUploadSpeed();
+
+        std::vector<Aria2TaskInformation> Tasks();
+
+        void RefreshInformation();
 
         winrt::JsonValue ExecuteJsonRpcCall(
             winrt::hstring const& MethodName,
@@ -110,6 +187,23 @@ namespace NanaGet
         winrt::JsonValue m_ServerTokenJsonValue = nullptr;
 
         winrt::HttpClient m_HttpClient;
+
+        winrt::slim_mutex m_InstanceLock;
+        std::uint64_t m_TotalDownloadSpeed = 0;
+        std::uint64_t m_TotalUploadSpeed = 0;
+        std::vector<Aria2TaskInformation> m_Tasks;
+
+        Aria2GlobalStatus ParseGlobalStatus(
+            winrt::JsonObject Value);
+
+        Aria2UriInformation ParseUriInformation(
+            winrt::JsonObject Value);
+
+        Aria2FileInformation ParseFileInformation(
+            winrt::JsonObject Value);
+
+        Aria2TaskInformation ParseTaskInformation(
+            winrt::JsonObject Value);
     };
 
     class LocalAria2Instance : public Aria2Instance
@@ -123,8 +217,6 @@ namespace NanaGet
         void Restart();
 
         bool Available();
-
-        winrt::hstring ConsoleOutput();
 
     private:
 
@@ -140,7 +232,7 @@ namespace NanaGet
 
         bool m_Available = false;
         winrt::handle m_ProcessHandle;
-        winrt::file_handle m_OutputPipeHandle;
+        winrt::handle m_JobObjectHandle;
     };
 }
 

@@ -23,6 +23,8 @@
 #include <iphlpapi.h>
 #pragma comment(lib, "ws2_32.lib")
 
+#undef GetObject
+
 #include <winrt/Windows.ApplicationModel.h>
 #include <winrt/Windows.Foundation.Collections.h>
 #include <winrt/Windows.Storage.h>
@@ -115,7 +117,6 @@ namespace winrt
 {
     using Windows::ApplicationModel::Package;
     using Windows::Data::Json::JsonArray;
-    using Windows::Data::Json::JsonObject;
     using Windows::Storage::ApplicationData;
     using Windows::Web::Http::HttpResponseMessage;
     using Windows::Web::Http::HttpStringContent;
@@ -183,6 +184,31 @@ std::filesystem::path NanaGet::GetSettingsFolderPath()
         // Create the directory if it doesn't exist.
         std::filesystem::create_directories(FolderPath);
         
+        return FolderPath;
+    }());
+
+    return CachedResult;
+}
+
+std::filesystem::path NanaGet::GetDownloadsFolderPath()
+{
+    static std::filesystem::path CachedResult = ([]() -> std::filesystem::path
+    {
+        std::filesystem::path FolderPath;
+        {
+            LPWSTR RawFolderPath = nullptr;
+            winrt::check_hresult(::SHGetKnownFolderPath(
+                FOLDERID_Downloads,
+                KF_FLAG_DEFAULT,
+                nullptr,
+                &RawFolderPath));
+            FolderPath = std::filesystem::path(RawFolderPath);
+            ::CoTaskMemFree(RawFolderPath);
+        }
+
+        // Create the directory if it doesn't exist.
+        std::filesystem::create_directories(FolderPath);
+
         return FolderPath;
     }());
 
@@ -399,7 +425,7 @@ void NanaGet::Aria2Instance::Resume(
         Parameters);
 }
 
-void NanaGet::Aria2Instance::Remove(
+void NanaGet::Aria2Instance::Cancel(
     winrt::hstring Gid,
     bool Force)
 {
@@ -407,15 +433,146 @@ void NanaGet::Aria2Instance::Remove(
     Parameters.Append(this->m_ServerTokenJsonValue);
     Parameters.Append(winrt::JsonValue::CreateStringValue(Gid));
 
-    this->ExecuteJsonRpcCall(
+    if (Gid != this->ExecuteJsonRpcCall(
         Force ? L"aria2.forceRemove" : L"aria2.remove",
-        Parameters);
+        Parameters).GetString())
+    {
+        throw winrt::hresult_error();
+    }
+}
+
+void NanaGet::Aria2Instance::Remove(
+    winrt::hstring Gid,
+    bool Force)
+{
+    this->Cancel(Gid, Force);
+
+    winrt::JsonArray Parameters;
+    Parameters.Append(this->m_ServerTokenJsonValue);
+    Parameters.Append(winrt::JsonValue::CreateStringValue(Gid));
 
     if (L"OK" != this->ExecuteJsonRpcCall(
         L"aria2.removeDownloadResult",
         Parameters).GetString())
     {
         throw winrt::hresult_error();
+    }
+}
+
+winrt::hstring NanaGet::Aria2Instance::AddTask(
+    winrt::Uri const& Source)
+{
+    winrt::JsonArray Parameters;
+    Parameters.Append(this->m_ServerTokenJsonValue);
+
+    winrt::JsonArray Uris;
+    Uris.Append(winrt::JsonValue::CreateStringValue(Source.RawUri()));
+    Parameters.Append(Uris);
+
+    return this->ExecuteJsonRpcCall(
+        L"aria2.addUri",
+        Parameters).GetString();
+}
+
+winrt::slim_mutex& NanaGet::Aria2Instance::InstanceLock()
+{
+    return this->m_InstanceLock;
+}
+
+std::uint64_t NanaGet::Aria2Instance::TotalDownloadSpeed()
+{
+    return this->m_TotalDownloadSpeed;
+}
+
+std::uint64_t NanaGet::Aria2Instance::TotalUploadSpeed()
+{
+    return this->m_TotalUploadSpeed;
+}
+
+std::vector<NanaGet::Aria2TaskInformation> NanaGet::Aria2Instance::Tasks()
+{
+    return this->m_Tasks;
+}
+
+void NanaGet::Aria2Instance::RefreshInformation()
+{
+    winrt::slim_lock_guard LockGuard(this->m_InstanceLock);
+
+    this->m_TotalDownloadSpeed = 0;
+    this->m_TotalUploadSpeed = 0;
+    this->m_Tasks.clear();
+
+    std::uint64_t NumActive = 0;
+    std::uint64_t NumWaiting = 0;
+    std::uint64_t NumStopped = 0;
+
+    {
+        winrt::JsonArray Parameters;
+        Parameters.Append(this->m_ServerTokenJsonValue);
+
+        winrt::JsonObject ResponseJson = this->ExecuteJsonRpcCall(
+            L"aria2.getGlobalStat",
+            Parameters).GetObject();
+
+        NanaGet::Aria2GlobalStatus GlobalStatus =
+            this->ParseGlobalStatus(ResponseJson);
+
+        this->m_TotalDownloadSpeed = GlobalStatus.DownloadSpeed;
+        this->m_TotalUploadSpeed = GlobalStatus.UploadSpeed;
+        NumActive = GlobalStatus.NumActive;
+        NumWaiting = GlobalStatus.NumWaiting;
+        NumStopped = GlobalStatus.NumStopped;
+    }
+
+    {
+        winrt::JsonArray Parameters;
+        Parameters.Append(this->m_ServerTokenJsonValue);
+
+        winrt::JsonArray ResponseJson = this->ExecuteJsonRpcCall(
+            L"aria2.tellActive",
+            Parameters).GetArray();
+
+        for (winrt::IJsonValue const& Task : ResponseJson)
+        {
+            this->m_Tasks.emplace_back(
+                this->ParseTaskInformation(Task.GetObject()));
+        }
+    }
+
+    {
+        winrt::JsonArray Parameters;
+        Parameters.Append(this->m_ServerTokenJsonValue);
+        Parameters.Append(winrt::JsonValue::CreateNumberValue(0));
+        Parameters.Append(winrt::JsonValue::CreateNumberValue(
+            static_cast<double>(NumWaiting)));
+
+        winrt::JsonArray ResponseJson = this->ExecuteJsonRpcCall(
+            L"aria2.tellWaiting",
+            Parameters).GetArray();
+
+        for (winrt::IJsonValue const& Task : ResponseJson)
+        {
+            this->m_Tasks.emplace_back(
+                this->ParseTaskInformation(Task.GetObject()));
+        }
+    }
+
+    {
+        winrt::JsonArray Parameters;
+        Parameters.Append(this->m_ServerTokenJsonValue);
+        Parameters.Append(winrt::JsonValue::CreateNumberValue(0));
+        Parameters.Append(winrt::JsonValue::CreateNumberValue(
+            static_cast<double>(NumStopped)));
+
+        winrt::JsonArray ResponseJson = this->ExecuteJsonRpcCall(
+            L"aria2.tellStopped",
+            Parameters).GetArray();
+
+        for (winrt::IJsonValue const& Task : ResponseJson)
+        {
+            this->m_Tasks.emplace_back(
+                this->ParseTaskInformation(Task.GetObject()));
+        }
     }
 }
 
@@ -487,8 +644,216 @@ void NanaGet::Aria2Instance::UpdateInstance(
         L"token:" + this->m_ServerToken);
 }
 
+NanaGet::Aria2GlobalStatus NanaGet::Aria2Instance::ParseGlobalStatus(
+    winrt::JsonObject Value)
+{
+    NanaGet::Aria2GlobalStatus Result;
+
+    Result.DownloadSpeed = std::wcstoull(
+        Value.GetNamedString(L"downloadSpeed").c_str(),
+        nullptr,
+        10);
+
+    Result.UploadSpeed = std::wcstoull(
+        Value.GetNamedString(L"uploadSpeed").c_str(),
+        nullptr,
+        10);
+
+    Result.NumActive = std::wcstoull(
+        Value.GetNamedString(L"numActive").c_str(),
+        nullptr,
+        10);
+
+    Result.NumWaiting = std::wcstoull(
+        Value.GetNamedString(L"numWaiting").c_str(),
+        nullptr,
+        10);
+
+    Result.NumStopped = std::wcstoull(
+        Value.GetNamedString(L"numStopped").c_str(),
+        nullptr,
+        10);
+
+    Result.NumStoppedTotal = std::wcstoull(
+        Value.GetNamedString(L"numStoppedTotal").c_str(),
+        nullptr,
+        10);
+
+    return Result;
+}
+
+NanaGet::Aria2UriInformation NanaGet::Aria2Instance::ParseUriInformation(
+    winrt::JsonObject Value)
+{
+    NanaGet::Aria2UriInformation Result;
+
+    Result.Uri = Value.GetNamedString(L"uri");
+
+    winrt::hstring Status = Value.GetNamedString(L"status");
+    if (0 == std::wcscmp(Status.c_str(), L"used"))
+    {
+        Result.Status = NanaGet::Aria2UriStatus::Used;
+    }
+    else if (0 == std::wcscmp(Status.c_str(), L"waiting"))
+    {
+        Result.Status = NanaGet::Aria2UriStatus::Waiting;
+    }
+    else
+    {
+        throw winrt::hresult_out_of_bounds();
+    }
+
+    return Result;
+}
+
+NanaGet::Aria2FileInformation NanaGet::Aria2Instance::ParseFileInformation(
+    winrt::JsonObject Value)
+{
+    NanaGet::Aria2FileInformation Result;
+
+    Result.Index = std::wcstoull(
+        Value.GetNamedString(L"index").c_str(),
+        nullptr,
+        10);
+
+    Result.Path =
+        Value.GetNamedString(L"path");
+
+    Result.Length = std::wcstoull(
+        Value.GetNamedString(L"length").c_str(),
+        nullptr,
+        10);
+
+    Result.CompletedLength= std::wcstoull(
+        Value.GetNamedString(L"completedLength").c_str(),
+        nullptr,
+        10);
+
+    winrt::hstring Selected =
+        Value.GetNamedString(L"selected");
+    if (0 == std::wcscmp(Selected.c_str(), L"true"))
+    {
+        Result.Selected = true;
+    }
+    else if (0 == std::wcscmp(Selected.c_str(), L"false"))
+    {
+        Result.Selected = false;
+    }
+    else
+    {
+        throw winrt::hresult_out_of_bounds();
+    }
+
+    for (winrt::IJsonValue const& Uri : Value.GetNamedArray(L"uris"))
+    {
+        Result.Uris.emplace_back(
+            this->ParseUriInformation(Uri.GetObject()));
+    }
+
+    return Result;
+}
+
+NanaGet::Aria2TaskInformation NanaGet::Aria2Instance::ParseTaskInformation(
+    winrt::JsonObject Value)
+{
+    NanaGet::Aria2TaskInformation Result;
+
+    Result.Gid =
+        Value.GetNamedString(L"gid");
+
+    winrt::hstring Status = Value.GetNamedString(L"status");
+    if (0 == std::wcscmp(Status.c_str(), L"active"))
+    {
+        Result.Status = NanaGet::Aria2TaskStatus::Active;
+    }
+    else if (0 == std::wcscmp(Status.c_str(), L"waiting"))
+    {
+        Result.Status = NanaGet::Aria2TaskStatus::Waiting;
+    }
+    else if (0 == std::wcscmp(Status.c_str(), L"paused"))
+    {
+        Result.Status = NanaGet::Aria2TaskStatus::Paused;
+    }
+    else if (0 == std::wcscmp(Status.c_str(), L"error"))
+    {
+        Result.Status = NanaGet::Aria2TaskStatus::Error;
+    }
+    else if (0 == std::wcscmp(Status.c_str(), L"complete"))
+    {
+        Result.Status = NanaGet::Aria2TaskStatus::Complete;
+    }
+    else if (0 == std::wcscmp(Status.c_str(), L"removed"))
+    {
+        Result.Status = NanaGet::Aria2TaskStatus::Removed;
+    }
+    else
+    {
+        throw winrt::hresult_out_of_bounds();
+    }
+
+    Result.TotalLength = std::wcstoull(
+        Value.GetNamedString(L"totalLength").c_str(),
+        nullptr,
+        10);
+
+    Result.CompletedLength = std::wcstoull(
+        Value.GetNamedString(L"completedLength").c_str(),
+        nullptr,
+        10);
+
+    Result.DownloadSpeed = std::wcstoull(
+        Value.GetNamedString(L"downloadSpeed").c_str(),
+        nullptr,
+        10);
+
+    Result.UploadSpeed = std::wcstoull(
+        Value.GetNamedString(L"uploadSpeed").c_str(),
+        nullptr,
+        10);
+
+    Result.InfoHash = Value.GetNamedString(
+        L"infoHash",
+        winrt::hstring());
+
+    Result.Dir =
+        Value.GetNamedString(L"dir");
+
+    for (winrt::IJsonValue const& File : Value.GetNamedArray(L"files"))
+    {
+        Result.Files.emplace_back(
+            this->ParseFileInformation(File.GetObject()));
+    }
+
+    Result.BittorrentName = Value.GetNamedObject(
+        L"bittorrent",
+        winrt::JsonObject()).GetNamedObject(
+            L"info",
+            winrt::JsonObject()).GetNamedString(
+                L"name",
+                winrt::hstring());
+
+    return Result;
+}
+
 NanaGet::LocalAria2Instance::LocalAria2Instance()
 {
+    this->m_JobObjectHandle.attach(
+        ::CreateJobObjectW(nullptr, nullptr));
+    if (!this->m_JobObjectHandle)
+    {
+        winrt::throw_last_error();
+    }
+
+    JOBOBJECT_EXTENDED_LIMIT_INFORMATION ExtendedLimitInformation = { 0 };
+    ExtendedLimitInformation.BasicLimitInformation.LimitFlags =
+        JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE |
+        JOB_OBJECT_LIMIT_DIE_ON_UNHANDLED_EXCEPTION;
+    winrt::check_bool(::SetInformationJobObject(
+        this->m_JobObjectHandle.get(),
+        JobObjectExtendedLimitInformation,
+        &ExtendedLimitInformation,
+        sizeof(JOBOBJECT_EXTENDED_LIMIT_INFORMATION)));
+
     this->Startup();
 }
 
@@ -511,40 +876,6 @@ bool NanaGet::LocalAria2Instance::Available()
     }
 
     return this->m_Available;
-}
-
-winrt::hstring NanaGet::LocalAria2Instance::ConsoleOutput()
-{
-    if (!this->m_Available)
-    {
-        throw winrt::hresult_illegal_method_call();
-    }
-
-    DWORD TotalBytesAvailable = 0;
-    if (::PeekNamedPipe(
-        this->m_OutputPipeHandle.get(),
-        nullptr,
-        0,
-        nullptr,
-        &TotalBytesAvailable,
-        nullptr))
-    {
-        std::string Buffer;
-        Buffer.resize(TotalBytesAvailable);
-        
-        if (::PeekNamedPipe(
-            this->m_OutputPipeHandle.get(),
-            &Buffer[0],
-            TotalBytesAvailable,
-            nullptr,
-            &TotalBytesAvailable,
-            nullptr))
-        {
-            return winrt::to_hstring(Buffer);
-        }
-    }
-
-    return winrt::hstring();
 }
 
 std::uint16_t NanaGet::LocalAria2Instance::PickUnusedTcpPort()
@@ -614,6 +945,8 @@ void NanaGet::LocalAria2Instance::Startup()
 
     std::filesystem::path Aria2Executable =
         NanaGet::GetApplicationFolderPath() / L"aria2c.exe";
+    std::filesystem::path Aria2LogFile =
+        NanaGet::GetSettingsFolderPath() / L"aria2c.log";
     std::filesystem::path SessionFile =
         NanaGet::GetSettingsFolderPath() / L"download.session";
     std::filesystem::path DhtDataFile =
@@ -623,6 +956,12 @@ void NanaGet::LocalAria2Instance::Startup()
 
     std::vector<std::pair<std::wstring, std::wstring>> Settings;
     Settings.emplace_back(
+        L"log",
+        Aria2LogFile.c_str());
+    Settings.emplace_back(
+        L"log-level",
+        L"info");
+    Settings.emplace_back(
         L"enable-rpc",
         L"true");
     Settings.emplace_back(
@@ -631,6 +970,12 @@ void NanaGet::LocalAria2Instance::Startup()
     Settings.emplace_back(
         L"rpc-secret",
         ServerToken);
+    Settings.emplace_back(
+        L"dir",
+        NanaGet::GetDownloadsFolderPath());
+    Settings.emplace_back(
+        L"continue",
+        L"true");
     if (std::filesystem::exists(SessionFile))
     {
         Settings.emplace_back(
@@ -660,35 +1005,14 @@ void NanaGet::LocalAria2Instance::Startup()
         }
     }
 
-    SECURITY_ATTRIBUTES PipeAttributes;
-    PipeAttributes.nLength = sizeof(SECURITY_ATTRIBUTES);
-    PipeAttributes.bInheritHandle = TRUE;
-    PipeAttributes.lpSecurityDescriptor = nullptr;
-    if (!::CreatePipe(
-        this->m_OutputPipeHandle.put(),
-        Aria2InstanceOutputPipeHandle.put(),
-        &PipeAttributes,
-        0))
-    {
-        winrt::throw_last_error();
-    }
-
-    if (!::SetHandleInformation(
-        this->m_OutputPipeHandle.get(),
-        HANDLE_FLAG_INHERIT,
-        FALSE))
-    {
-        winrt::throw_last_error();
-    }
-
     STARTUPINFOW StartupInfo = { 0 };
     PROCESS_INFORMATION ProcessInformation = { 0 };
 
     StartupInfo.cb = sizeof(STARTUPINFOW);
     StartupInfo.dwFlags |= STARTF_USESTDHANDLES;
     StartupInfo.hStdInput = INVALID_HANDLE_VALUE;
-    StartupInfo.hStdOutput = Aria2InstanceOutputPipeHandle.get();
-    StartupInfo.hStdError = Aria2InstanceOutputPipeHandle.get();
+    StartupInfo.hStdOutput = INVALID_HANDLE_VALUE;
+    StartupInfo.hStdError = INVALID_HANDLE_VALUE;
 
     if (!::CreateProcessW(
         nullptr,
@@ -696,7 +1020,7 @@ void NanaGet::LocalAria2Instance::Startup()
         nullptr,
         nullptr,
         TRUE,
-        CREATE_UNICODE_ENVIRONMENT | CREATE_NO_WINDOW,
+        CREATE_SUSPENDED | CREATE_UNICODE_ENVIRONMENT | CREATE_NO_WINDOW,
         nullptr,
         nullptr,
         &StartupInfo,
@@ -705,7 +1029,11 @@ void NanaGet::LocalAria2Instance::Startup()
         winrt::throw_last_error();
     }
 
+    winrt::check_bool(::AssignProcessToJobObject(
+        this->m_JobObjectHandle.get(),
+        ProcessInformation.hProcess));
     this->m_ProcessHandle.attach(ProcessInformation.hProcess);
+    ::ResumeThread(ProcessInformation.hThread);
     ::CloseHandle(ProcessInformation.hThread);
 
     this->UpdateInstance(
@@ -723,8 +1051,6 @@ void NanaGet::LocalAria2Instance::ForceTerminate()
 
     ::TerminateProcess(this->m_ProcessHandle.get(), 0);
     this->m_ProcessHandle.close();
-
-    this->m_OutputPipeHandle.close();
 }
 
 void NanaGet::LocalAria2Instance::Terminate()

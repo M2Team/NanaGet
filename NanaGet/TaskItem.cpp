@@ -3,27 +3,78 @@
 #include "TaskItem.g.cpp"
 #include "TaskItemConverter.g.cpp"
 
-#include "NanaGetCore.h"
-
 #include <winrt/Windows.UI.Xaml.Media.h>
 
 namespace winrt::NanaGet::implementation
 {
     using Windows::UI::Xaml::Visibility;
 
+    TaskItem::TaskItem(
+        Aria2TaskInformation const& Information)
+        : m_Information(Information)
+    {
+
+    }
+
+    void TaskItem::Update(
+        Aria2TaskInformation const& Information)
+    {
+        this->m_Information = Information;
+        this->RaisePropertyChanged(L"Name");
+        this->RaisePropertyChanged(L"Status");
+        this->RaisePropertyChanged(L"BytesReceived");
+        this->RaisePropertyChanged(L"TotalBytesToReceive");
+        this->RaisePropertyChanged(L"StatusText");
+    }
+
     hstring TaskItem::Gid()
     {
-        return hstring();
+        return this->m_Information.Gid;
     }
 
     hstring TaskItem::Name()
     {
-        return L"QQ9.0.9.exe";
+        if (!this->m_Information.BittorrentName.empty())
+        {
+            return this->m_Information.BittorrentName;
+        }
+        else if (!this->m_Information.Files[0].Path.empty())
+        {
+            return hstring(&std::wcsrchr(
+                this->m_Information.Files[0].Path.c_str(), L'/')[1]);
+        }
+        else
+        {
+            return this->Gid();
+        }
     }
 
-    Uri TaskItem::Source()
+    hstring TaskItem::Source()
     {
-        return nullptr;
+        if (!this->m_Information.InfoHash.empty())
+        {
+            return L"magnet:?xt=urn:btih:" + this->m_Information.InfoHash;
+        }
+        else
+        {
+            hstring Result;
+
+            std::set<hstring> Uris;
+            for (Aria2FileInformation const& File : this->m_Information.Files)
+            {
+                for (Aria2UriInformation const& Item : File.Uris)
+                {
+                    Uris.emplace(Item.Uri);
+                }
+            }
+
+            for (hstring const& Item : Uris)
+            {
+                Result = Result + Item + L"\r\n";
+            }
+
+            return Result;
+        }
     }
 
     hstring TaskItem::Path()
@@ -33,32 +84,68 @@ namespace winrt::NanaGet::implementation
 
     TaskStatus TaskItem::Status()
     {
-        return TaskStatus::Active;
+        TaskStatus Result;
+
+        switch (this->m_Information.Status)
+        {
+        case Aria2TaskStatus::Active:
+            Result = TaskStatus::Active;
+            break;
+        case Aria2TaskStatus::Waiting:
+            Result = TaskStatus::Waiting;
+            break;
+        case Aria2TaskStatus::Paused:
+            Result = TaskStatus::Paused;
+            break;
+        case Aria2TaskStatus::Error:
+            Result = TaskStatus::Error;
+            break;
+        case Aria2TaskStatus::Complete:
+            Result = TaskStatus::Complete;
+            break;
+        case Aria2TaskStatus::Removed:
+            Result = TaskStatus::Removed;
+            break;
+        default:
+            throw winrt::hresult_out_of_bounds();
+        }
+
+        return Result;
     }
 
     std::uint64_t TaskItem::DownloadSpeed()
     {
-        return 20480;
+        return this->m_Information.DownloadSpeed;
     }
 
     std::uint64_t TaskItem::UploadSpeed()
     {
-        return 10240;
+        return this->m_Information.UploadSpeed;
     }
 
     std::uint64_t TaskItem::BytesReceived()
     {
-        return 768000;
+        return this->m_Information.CompletedLength;
     }
 
     std::uint64_t TaskItem::TotalBytesToReceive()
     {
-        return 1048576;
+        return this->m_Information.TotalLength;
     }
 
     std::uint64_t TaskItem::RemainTime()
     {
-        return 3000;
+        if (0 == this->DownloadSpeed() ||
+            0 == this->TotalBytesToReceive())
+        {
+            return static_cast<uint64_t>(-1);
+        }
+        else
+        {
+            std::uint64_t RemainBytesToReceive =
+                this->TotalBytesToReceive() - this->BytesReceived();
+            return (RemainBytesToReceive / this->DownloadSpeed());
+        }
     }
 
     hstring TaskItem::StatusText()

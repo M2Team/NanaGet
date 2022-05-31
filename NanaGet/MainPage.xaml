@@ -58,18 +58,18 @@
             Click="TaskManagerGridOpenDownloadsFolderButtonClick"
             Icon="Folder"
             Label="[Open Downloads Folder]" />
-          <AppBarButton
+          <!--<AppBarButton
             x:Uid="/TaskManagerGrid/SettingsButton"
             Click="TaskManagerGridSettingsButtonClick"
             Icon="Setting"
-            Label="[Settings]" />
+            Label="[Settings]" />-->
           <AppBarButton
             x:Uid="/TaskManagerGrid/AboutButton"
             Click="TaskManagerGridAboutButtonClick"
             Icon="Help"
             Label="[About]" />
         </CommandBar.SecondaryCommands>
-        <CommandBar.Content>
+        <!--<CommandBar.Content>
           <AutoSuggestBox
             x:Uid="/TaskManagerGrid/SearchBox"
             Margin="4,0"
@@ -78,7 +78,7 @@
             PlaceholderText="[Search Downloads]"
             QueryIcon="Find"
             QuerySubmitted="TaskManagerGridSearchBoxQuerySubmitted" />
-        </CommandBar.Content>
+        </CommandBar.Content>-->
       </CommandBar>
       <ListView
         x:Name="TaskManagerGridTaskList"
@@ -104,14 +104,14 @@
               DefaultLabelPosition="Collapsed"
               IsDynamicOverflowEnabled="False"
               IsOpen="False">
-              <AppBarButton
+              <!--<AppBarButton
                 x:Uid="/TaskManagerGrid/TaskItemRetryButton"
                 Width="44"
                 AutomationProperties.Name="[Retry Button]"
                 Click="TaskManagerGridTaskItemRetryButtonClick"
                 Icon="Refresh"
                 ToolTipService.ToolTip="[Retry]"
-                Visibility="{x:Bind Status, Converter={StaticResource TaskItemConverter}, ConverterParameter=TaskStatusToRetryButtonVisible, Mode=OneWay}" />
+                Visibility="{x:Bind Status, Converter={StaticResource TaskItemConverter}, ConverterParameter=TaskStatusToRetryButtonVisible, Mode=OneWay}" />-->
               <AppBarButton
                 x:Uid="/TaskManagerGrid/TaskItemResumeButton"
                 Width="44"
@@ -134,11 +134,11 @@
                   Click="TaskManagerGridTaskItemCopyLinkButtonClick"
                   Icon="Link"
                   Label="[Copy Link]" />
-                <AppBarButton
+                <!--<AppBarButton
                   x:Uid="/TaskManagerGrid/TaskItemOpenFolderButton"
                   Click="TaskManagerGridTaskItemOpenFolderButtonClick"
                   Icon="OpenLocal"
-                  Label="[Open Folder]" />
+                  Label="[Open Folder]" />-->
                 <AppBarSeparator />
                 <AppBarButton
                   x:Uid="/TaskManagerGrid/TaskItemCancelButton"
@@ -194,7 +194,7 @@
         Padding="4"
         VerticalAlignment="Bottom"
         FontSize="15"
-        Text="&#x2193; 500 KiB/s &#x2191; 100 KiB/s" />
+        Text="&#x2193; 0 Byte/s &#x2191; 0 Byte/s" />
     </Grid>
     <Grid
       x:Name="NewTaskGrid"
@@ -225,14 +225,14 @@
               <Grid Margin="0,4,0,0" HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
                   <ColumnDefinition />
-                  <ColumnDefinition Width="32" />
+                  <!--<ColumnDefinition Width="32" />-->
                 </Grid.ColumnDefinitions>
                 <TextBox
                   x:Name="NewTaskGridDownloadSourceTextBox"
                   x:Uid="/NewTaskGrid/DownloadSourceTextBox"
                   BorderThickness="1"
                   PlaceholderText="[Please input the download source here]" />
-                <Button
+                <!--<Button
                   x:Uid="/NewTaskGrid/DownloadSourceBrowseButton"
                   Grid.Column="1"
                   Width="32"
@@ -242,10 +242,10 @@
                   Content="&#xED25;"
                   FontFamily="Segoe MDL2 Assets"
                   FontSize="11"
-                  ToolTipService.ToolTip="[Browse BitTorrent or Metalink file]" />
+                  ToolTipService.ToolTip="[Browse BitTorrent or Metalink file]" />-->
               </Grid>
             </StackPanel>
-            <StackPanel Margin="0,8,0,0" Orientation="Vertical">
+            <!--<StackPanel Margin="0,8,0,0" Orientation="Vertical">
               <TextBlock
                 x:Uid="/NewTaskGrid/FileNameTitle"
                 FontSize="16"
@@ -256,8 +256,8 @@
                 Margin="0,4,0,0"
                 BorderThickness="1"
                 PlaceholderText="[Please input the file name here]" />
-            </StackPanel>
-            <StackPanel Margin="0,8,0,0" Orientation="Vertical">
+            </StackPanel>-->
+            <!--<StackPanel Margin="0,8,0,0" Orientation="Vertical">
               <TextBlock
                 x:Uid="/NewTaskGrid/SaveFolderTitle"
                 FontSize="16"
@@ -284,7 +284,7 @@
                   FontSize="11"
                   ToolTipService.ToolTip="[Browse save folder]" />
               </Grid>
-            </StackPanel>
+            </StackPanel>-->
           </StackPanel>
           <StackPanel
             Margin="0,12,0,0"
@@ -304,7 +304,7 @@
         </StackPanel>
       </Border>
     </Grid>
-    <Grid
+    <!--<Grid
       x:Name="SettingsGrid"
       Background="{ThemeResource SystemControlPageBackgroundMediumAltMediumBrush}"
       Visibility="Collapsed">
@@ -365,7 +365,7 @@
           </StackPanel>
         </StackPanel>
       </Border>
-    </Grid>
+    </Grid>-->
     <Grid
       x:Name="AboutGrid"
       Background="{ThemeResource SystemControlPageBackgroundMediumAltMediumBrush}"
