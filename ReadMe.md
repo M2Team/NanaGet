@@ -67,7 +67,13 @@ N/A.
 
 ## Development Roadmap
 
-- 1.0 (T.B.D.)
+- 1.0 (June 1, 2022)
+  - [x] Use aria2 as transfer engine.
+  - [x] Packaging with MSIX for modern deployment experience.
+  - [x] Modernize the UI with XAML Islands with dark and light mode support. 
+        (Dynamic dark and light mode switching is supported for Windows 11 and 
+        later.)
+  - [x] Add full High DPI and partial Accessibility support.
 - 1.x Series (T.B.D.)
   - [ ] Improve the Mile.Xaml implementations for providing more modern control
         styles and keeping smaller binary size.
@@ -80,6 +86,9 @@ N/A.
   - [ ] Add open task's folder support with File Explorer for local instance.
   - [ ] Add custom download folder support for local instance.
   - [ ] Add speed limit and other useful setting items.
+  - [ ] Implement uri protocol handlers for making people available to make 
+        browser extensions.
+  - [ ] Continue tweaking the task list user interface.
 - 2.x Series (T.B.D.)
   - [ ] Try to create Assassin transfer engine.
 
