@@ -9,6 +9,8 @@
 
 [![Latest Release Downloads](https://img.shields.io/github/downloads/M2Team/NanaGet/latest/total)](https://github.com/M2Team/NanaGet/releases/latest)
 
+![MainWindow](Documents/MainWindow.png)
+
 NanaGet is a lightweight file transfer utility based on aria2 and XAML Islands.
 
 **All kinds of contributions will be appreciated. All suggestions, pull 
@@ -19,6 +21,9 @@ requests and issues are welcome.**
 - Currently based on aria2. (https://github.com/aria2/aria2#features)
 - Multi-language Support: English and Simplified Chinese.
 - Packaging with MSIX for modern deployment experience.
+- Modernize the UI with XAML Islands with dark and light mode support. (Dynamic
+  dark and light mode switching is supported for Windows 11 and later.)
+- Full High DPI and partial Accessibility support.
 
 ## System Requirements
 
