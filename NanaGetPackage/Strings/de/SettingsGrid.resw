@@ -119,26 +119,26 @@
   </resheader>
   <data name="ApplyButton.Content" xml:space="preserve">
     <value>Anwenden</value>
-    <comment>Anwenden</comment>
+    <comment>Apply</comment>
   </data>
   <data name="CancelButton.Content" xml:space="preserve">
     <value>Abbrechen</value>
-    <comment>Abbrechen</comment>
+    <comment>Cancel</comment>
   </data>
   <data name="CustomDownloadFolderBrowseButton.Content" xml:space="preserve">
     <value>Zum Ändern durchsuchen</value>
-    <comment>Zum Ändern durchsuchen</comment>
+    <comment>Browse to modify</comment>
   </data>
   <data name="DefaultDownloadFolderTitle.Text" xml:space="preserve">
     <value>Standard-Downloadverzeichnis</value>
-    <comment>Standard-Downloadverzeichnis</comment>
+    <comment>Default download folder</comment>
   </data>
   <data name="GridTitleTextBlock.Text" xml:space="preserve">
     <value>Einstellungen</value>
-    <comment>Einstellungen</comment>
+    <comment>Settings</comment>
   </data>
   <data name="UseCustomFolderCheckBox.Content" xml:space="preserve">
     <value>Benutzerdefinierten Ordner anstelle des zuletzt verwendeten Ordners verwenden</value>
-    <comment>Benutzerdefinierten Ordner anstelle des zuletzt verwendeten Ordners verwenden</comment>
+    <comment>Use custom folder instead of last used folder</comment>
   </data>
 </root>
