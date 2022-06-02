@@ -119,63 +119,63 @@
   </resheader>
   <data name="AboutButton.Label" xml:space="preserve">
     <value>Über</value>
-    <comment>Über</comment>
+    <comment>About</comment>
   </data>
   <data name="ClearListButton.AutomationProperties.Name" xml:space="preserve">
     <value>CListe leeren Button</value>
-    <comment>Liste leeren Button</comment>
+    <comment>Clear List Button</comment>
   </data>
   <data name="ClearListButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Liste leeren</value>
-    <comment>Liste leeren</comment>
+    <comment>Clear List</comment>
   </data>
   <data name="NewTaskButton.AutomationProperties.Name" xml:space="preserve">
     <value>Neue Aufgabe Button</value>
-    <comment>Neue Aufgabe Button</comment>
+    <comment>New Task Button</comment>
   </data>
   <data name="NewTaskButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Neue Aufgabe</value>
-    <comment>Neue Aufgabe</comment>
+    <comment>New Task</comment>
   </data>
   <data name="OpenDownloadsFolderButton.Label" xml:space="preserve">
     <value>Downloadordner öffnen</value>
-    <comment>Downloadordner öffnen</comment>
+    <comment>Open Downloads Folder</comment>
   </data>
   <data name="PauseAllButton.AutomationProperties.Name" xml:space="preserve">
     <value>Alle pausieren Button</value>
-    <comment>Alle pausieren Button</comment>
+    <comment>Pause All Button</comment>
   </data>
   <data name="PauseAllButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Alle pausieren</value>
-    <comment>Alle pausieren</comment>
+    <comment>Pause All</comment>
   </data>
   <data name="SearchBox.PlaceholderText" xml:space="preserve">
     <value>Downloads suchen</value>
-    <comment>Downloads suchen</comment>
+    <comment>Search Downloads</comment>
   </data>
   <data name="SettingsButton.Label" xml:space="preserve">
     <value>Einstellungen</value>
-    <comment>Einstellungen</comment>
+    <comment>Settings</comment>
   </data>
   <data name="StartAllButton.AutomationProperties.Name" xml:space="preserve">
     <value>Alle starten Button</value>
-    <comment>Alle starten Button</comment>
+   <comment>Start All Button</comment>
   </data>
   <data name="StartAllButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Alle starten</value>
-    <comment>Alle starten</comment>
+    <comment>Start All</comment>
   </data>
   <data name="TaskItemCancelButton.Label" xml:space="preserve">
     <value>Abbrechen</value>
-    <comment>Abbrechen</comment>
+    <comment>Cancel</comment>
   </data>
   <data name="TaskItemCopyLinkButton.Label" xml:space="preserve">
     <value>Link kopieren</value>
-    <comment>Link kopieren</comment>
+    <comment>Copy Link</comment>
   </data>
   <data name="TaskItemOpenFolderButton.Label" xml:space="preserve">
     <value>Ordner öffnen</value>
-    <comment>Ordner öffnen</comment>
+    <comment>Open Folder</comment>
   </data>
   <data name="TaskItemPauseButton.AutomationProperties.Name" xml:space="preserve">
     <value>Pause Button</value>
@@ -187,26 +187,26 @@
   </data>
   <data name="TaskItemRemoveButton.Label" xml:space="preserve">
     <value>Entfernen</value>
-    <comment>Entfernen</comment>
+    <comment>Remove</comment>
   </data>
   <data name="TaskItemResumeButton.AutomationProperties.Name" xml:space="preserve">
     <value>Fortsetzen Button</value>
-    <comment>Fortsetzen Button</comment>
+    <comment>Resume Button</comment>
   </data>
   <data name="TaskItemResumeButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Fortsetzen</value>
-    <comment>Fortsetzen</comment>
+    <comment>Resume</comment>
   </data>
   <data name="TaskItemRetryButton.AutomationProperties.Name" xml:space="preserve">
     <value>Wiederholen Button</value>
-    <comment>Wiederholen Button</comment>
+    <comment>Retry Button</comment>
   </data>
   <data name="TaskItemRetryButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Wiederholen</value>
-    <comment>Wiederholen</comment>
+    <comment>Retry</comment>
   </data>
   <data name="TaskListNoItemsTextBlock.Text" xml:space="preserve">
     <value>Keine Downloads</value>
-    <comment>Keine Downloads</comment>
+    <comment>No Downloads</comment>
   </data>
 </root>
