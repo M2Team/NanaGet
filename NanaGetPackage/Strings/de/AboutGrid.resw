@@ -119,10 +119,10 @@
   </resheader>
   <data name="CancelButton.Content" xml:space="preserve">
     <value>Abbrechen</value>
-    <comment>Abbrechen</comment>
+    <comment>Cancel</comment>
   </data>
   <data name="GridTitleTextBlock.Text" xml:space="preserve">
     <value>Über</value>
-    <comment>Über</comment>
+    <comment>About</comment>
   </data>
 </root>
