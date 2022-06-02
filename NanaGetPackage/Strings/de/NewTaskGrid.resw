@@ -119,7 +119,7 @@
   </resheader>
   <data name="CancelButton.Content" xml:space="preserve">
     <value>Abbrechen</value>
-    <comment>Abbrechen</comment>
+    <comment>Cancel</comment>
   </data>
   <data name="DownloadButton.Content" xml:space="preserve">
     <value>Download</value>
@@ -127,42 +127,42 @@
   </data>
   <data name="DownloadSourceBrowseButton.AutomationProperties.Name" xml:space="preserve">
     <value>Button für BitTorrent oder Metalink-Datei suchen</value>
-    <comment>Button für BitTorrent oder Metalink-Datei suchen</comment>
+    <comment>Browse BitTorrent or Metalink file button</comment>
   </data>
   <data name="DownloadSourceBrowseButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>BitTorrent oder Metalink-Datei suchen</value>
-    <comment>BitTorrent oder Metalink-Datei suchen</comment>
+    <comment>Browse BitTorrent or Metalink file</comment>
   </data>
   <data name="DownloadSourceTextBox.PlaceholderText" xml:space="preserve">
     <value>Bitte hier den Downloadlink eingeben</value>
-    <comment>Bitte hier den Downloadlink eingeben.</comment>
+    <comment>Please input the download source here.</comment>
   </data>
   <data name="DownloadSourceTitle.Text" xml:space="preserve">
     <value>Link zum Download</value>
-    <comment>Link zum Download</comment>
+    <comment>Download Source</comment>
   </data>
   <data name="FileNameTextBox.PlaceholderText" xml:space="preserve">
     <value>Bitte hier den Dateinamen eingeben</value>
-    <comment>Bitte hier den Dateinamen eingeben.</comment>
+    <comment>Please input the file name here.</comment>
   </data>
   <data name="FileNameTitle.Text" xml:space="preserve">
     <value>Dateiname</value>
-    <comment>Dateiname</comment>
+    <comment>File Name</comment>
   </data>
   <data name="GridTitleTextBlock.Text" xml:space="preserve">
     <value>Neue Aufgabe</value>
-    <comment>Neue Aufgabe</comment>
+    <comment>New Task</comment>
   </data>
   <data name="SaveFolderBrowseButton.AutomationProperties.Name" xml:space="preserve">
     <value>Button für Speicherordner durchsuchen</value>
-    <comment>Button für Speicherordner durchsuchen</comment>
+    <comment>Browse save folder button</comment>
   </data>
   <data name="SaveFolderBrowseButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Speicherordner durchsuchen</value>
-    <comment>Speicherordner durchsuchen</comment>
+    <comment>Browse save folder</comment>
   </data>
   <data name="SaveFolderTitle.Text" xml:space="preserve">
     <value>Ordner speichern</value>
-    <comment>Ordner speichern</comment>
+    <comment>Save Folder</comment>
   </data>
 </root>
