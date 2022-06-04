@@ -19,7 +19,8 @@ requests and issues are welcome.**
 ## Features
 
 - Currently based on aria2. (https://github.com/aria2/aria2#features)
-- Multi-language Support: English and Simplified Chinese.
+- Multi-language Support: English, German, Japanese, Traditional Chinese and 
+  Simplified Chinese.
 - Packaging with MSIX for modern deployment experience.
 - Modernize the UI with XAML Islands with dark and light mode support. (Dynamic
   dark and light mode switching is supported for Windows 11 and later.)

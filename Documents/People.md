@@ -13,6 +13,11 @@
 
 - Shomnipotence ([https://github.com/Shomnipotence](https://github.com/Shomnipotence))
 
+## Contributors
+
+- hez2010 ([https://github.com/hez2010](https://github.com/hez2010))
+- uDEV2019 ([https://github.com/uDEV2019](https://github.com/uDEV2019))
+
 ## Special thanks
 
 - mingkuang ([https://github.com/mingkuang-Chuyu](https://github.com/mingkuang-Chuyu))

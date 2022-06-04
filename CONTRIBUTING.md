@@ -38,3 +38,11 @@ Open `NanaGet.sln` in the root of the repository.
 For all languages respect the [.editorconfig](https://editorconfig.org/) file 
 specified in the source tree. Many IDEs natively support this or can with a 
 plugin.
+
+### Translation contribution notice
+
+All `comment` in `resw` files should be kept English for make it better to 
+maintenance in the future.
+
+For new one to contribute translation, here is a good example:
+https://github.com/M2Team/NanaGet/pull/2.
