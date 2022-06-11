@@ -17,6 +17,8 @@
     <AppxBundlePlatforms>x86|x64|arm64</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <AppxBundle>Always</AppxBundle>
+    <AppxBundleAutoResourcePackageQualifiers>DXFeatureLevel</AppxBundleAutoResourcePackageQualifiers>
+    <AppxDefaultResourceQualifiers>Language=en|Scale=400</AppxDefaultResourceQualifiers>
   </PropertyGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -38,8 +40,6 @@
       <DeploymentContent>true</DeploymentContent>
       <Link>aria2c.exe</Link>
     </Content>
-    <None Include="priconfig.default.xml" />
-    <None Include="priconfig.packaging.xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NanaGet\NanaGet.vcxproj">
