@@ -10,6 +10,15 @@
 #include <winrt/Windows.UI.Xaml.Hosting.h>
 #include <windows.ui.xaml.hosting.desktopwindowxamlsource.h>
 
+#define _ATL_NO_AUTOMATIC_NAMESPACE
+#include <atlbase.h>
+#include <atlwin.h>
+#include <atltypes.h>
+
+#define _WTL_NO_AUTOMATIC_NAMESPACE
+#include <atlapp.h>
+#include <atlcrack.h>
+
 #include "NanaGetResources.h"
 
 #include <dwmapi.h>
@@ -102,259 +111,229 @@ namespace winrt
     using winrt::Windows::UI::Xaml::Media::VisualTreeHelper;
 }
 
-namespace
+namespace NanaGet
 {
-    static LRESULT CALLBACK XamlIslandWindowCallback(
-        _In_ HWND   hWnd,
-        _In_ UINT   uMsg,
-        _In_ WPARAM wParam,
-        _In_ LPARAM lParam)
+    class MainWindow : public ATL::CWindowImpl<MainWindow>
     {
-        switch (uMsg)
+    public:
+
+        DECLARE_WND_CLASS(L"NanaGetMainWindow")
+
+        BEGIN_MSG_MAP(MainWindow)
+            MSG_WM_CREATE(OnCreate)
+            MSG_WM_SETFOCUS(OnSetFocus)
+            MSG_WM_SIZE(OnSize)
+            MSG_WM_DPICHANGED(OnDpiChanged)
+            MSG_WM_MENUCHAR(OnMenuChar)
+            MSG_WM_SETTINGCHANGE(OnSettingChange)
+            MSG_WM_DESTROY(OnDestroy)
+        END_MSG_MAP()
+
+        int OnCreate(
+            LPCREATESTRUCT lpCreateStruct);
+
+        void OnSetFocus(
+            ATL::CWindow wndOld);
+
+        void OnSize(
+            UINT nType,
+            CSize size);
+
+        void OnDpiChanged(
+            UINT nDpiX,
+            UINT nDpiY,
+            PRECT pRect);
+
+        LRESULT OnMenuChar(
+            UINT nChar,
+            UINT nFlags,
+            WTL::CMenuHandle menu);
+
+        void OnSettingChange(
+            UINT uFlags,
+            LPCTSTR lpszSection);
+
+        void OnDestroy();
+
+    private:
+
+        WTL::CIcon m_ApplicationIcon;
+        winrt::DesktopWindowXamlSource m_XamlSource;
+        winrt::NanaGet::MainPage m_MainPage;
+    };
+}
+
+int NanaGet::MainWindow::OnCreate(
+    LPCREATESTRUCT lpCreateStruct)
+{
+    UNREFERENCED_PARAMETER(lpCreateStruct);
+
+    this->m_ApplicationIcon.LoadIconW(
+        MAKEINTRESOURCE(IDI_NANAGET),
+        256,
+        256,
+        LR_SHARED);
+
+    this->SetIcon(this->m_ApplicationIcon, TRUE);
+    this->SetIcon(this->m_ApplicationIcon, FALSE);
+
+    this->m_MainPage = winrt::make<winrt::NanaGet::implementation::MainPage>();
+    winrt::com_ptr<IDesktopWindowXamlSourceNative> XamlSourceNative =
+        this->m_XamlSource.as<IDesktopWindowXamlSourceNative>();
+    winrt::check_hresult(
+        XamlSourceNative->AttachToWindow(this->m_hWnd));
+    this->m_XamlSource.Content(this->m_MainPage);
+
+    HWND XamlWindowHandle = nullptr;
+    winrt::check_hresult(
+        XamlSourceNative->get_WindowHandle(&XamlWindowHandle));
+
+    // Focus on XAML Island host window for Acrylic brush support.
+    ::SetFocus(XamlWindowHandle);
+
+    ::DwmWindowDisableSystemBackdrop(this->m_hWnd);
+
+    winrt::FrameworkElement Content =
+        this->m_XamlSource.Content().try_as<winrt::FrameworkElement>();
+
+    ::DwmWindowSetUseImmersiveDarkModeAttribute(
+        this->m_hWnd,
+        (Content.ActualTheme() == winrt::ElementTheme::Dark
+            ? TRUE
+            : FALSE));
+
+    ::DwmWindowSetCaptionColorAttribute(
+        this->m_hWnd,
+        (Content.ActualTheme() == winrt::ElementTheme::Dark
+            ? RGB(0, 0, 0)
+            : RGB(255, 255, 255)));
+
+    UINT DpiValue = ::GetDpiForWindow(this->m_hWnd);
+
+    this->SetWindowPos(
+        nullptr,
+        0,
+        0,
+        ::MulDiv(720, DpiValue, USER_DEFAULT_SCREEN_DPI),
+        ::MulDiv(540, DpiValue, USER_DEFAULT_SCREEN_DPI),
+        SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
+
+    return 0;
+}
+
+void NanaGet::MainWindow::OnSetFocus(
+    ATL::CWindow wndOld)
+{
+    UNREFERENCED_PARAMETER(wndOld);
+
+    winrt::com_ptr<IDesktopWindowXamlSourceNative> XamlSourceNative =
+        this->m_XamlSource.as<IDesktopWindowXamlSourceNative>();
+
+    HWND XamlWindowHandle = nullptr;
+    winrt::check_hresult(
+        XamlSourceNative->get_WindowHandle(&XamlWindowHandle));
+
+    ::SetFocus(XamlWindowHandle);
+}
+
+void NanaGet::MainWindow::OnSize(
+    UINT nType,
+    CSize size)
+{
+    UNREFERENCED_PARAMETER(nType);
+
+    winrt::com_ptr<IDesktopWindowXamlSourceNative> XamlSourceNative =
+        this->m_XamlSource.as<IDesktopWindowXamlSourceNative>();
+
+    HWND XamlWindowHandle = nullptr;
+    winrt::check_hresult(
+        XamlSourceNative->get_WindowHandle(&XamlWindowHandle));
+    ::SetWindowPos(
+        XamlWindowHandle,
+        nullptr,
+        0,
+        0,
+        size.cx,
+        size.cy,
+        SWP_SHOWWINDOW);
+}
+
+void NanaGet::MainWindow::OnDpiChanged(
+    UINT nDpiX,
+    UINT nDpiY,
+    PRECT pRect)
+{
+    UNREFERENCED_PARAMETER(nDpiX);
+    UNREFERENCED_PARAMETER(nDpiY);
+
+    this->SetWindowPos(
+        nullptr,
+        pRect,
+        SWP_NOZORDER | SWP_NOACTIVATE);
+}
+
+LRESULT NanaGet::MainWindow::OnMenuChar(
+    UINT nChar,
+    UINT nFlags,
+    WTL::CMenuHandle menu)
+{
+    UNREFERENCED_PARAMETER(nChar);
+    UNREFERENCED_PARAMETER(nFlags);
+    UNREFERENCED_PARAMETER(menu);
+
+    // Reference: https://github.com/microsoft/terminal
+    //            /blob/756fd444b1d443320cf2ed6887d4b65aa67a9a03
+    //            /scratch/ScratchIslandApp
+    //            /WindowExe/SampleIslandWindow.cpp#L155
+    // Return this LRESULT here to prevent the app from making a bell
+    // when alt+key is pressed. A menu is active and the user presses a
+    // key that does not correspond to any mnemonic or accelerator key.
+
+    return MAKELRESULT(0, MNC_CLOSE);
+}
+
+void NanaGet::MainWindow::OnSettingChange(
+    UINT uFlags,
+    LPCTSTR lpszSection)
+{
+    UNREFERENCED_PARAMETER(uFlags);
+
+    if (lpszSection && 0 == std::wcscmp(
+        lpszSection,
+        L"ImmersiveColorSet"))
+    {
+        winrt::FrameworkElement Content =
+            this->m_XamlSource.Content().try_as<winrt::FrameworkElement>();
+        if (Content &&
+            winrt::VisualTreeHelper::GetParent(Content))
         {
-        case WM_CREATE:
-        {
-            // Note: Return -1 directly because WM_DESTROY message will be sent
-            // when destroy the window automatically. We free the resource when
-            // processing the WM_DESTROY message of this window.
-
-            LPCREATESTRUCT CreateStruct =
-                reinterpret_cast<LPCREATESTRUCT>(lParam);
-
-            winrt::DesktopWindowXamlSource XamlSource;
-
-            winrt::com_ptr<IDesktopWindowXamlSourceNative> XamlSourceNative =
-                XamlSource.as<IDesktopWindowXamlSourceNative>();
-
-            // Parent the DesktopWindowXamlSource object to current window
-            if (FAILED(XamlSourceNative->AttachToWindow(hWnd)))
-            {
-                return -1;
-            }
-
-            winrt::FrameworkElement Content = nullptr;
-            winrt::copy_from_abi(Content, CreateStruct->lpCreateParams);
-            XamlSource.Content(Content);
-
-            HWND XamlWindowHandle = nullptr;
-            if (FAILED(XamlSourceNative->get_WindowHandle(&XamlWindowHandle)))
-            {
-                return -1;
-            }
-
-            if (!::SetPropW(
-                hWnd,
-                L"XamlWindowSource",
-                reinterpret_cast<HANDLE>(winrt::detach_abi(XamlSource))))
-            {
-                return -1;
-            }
-
-            if (!::SetPropW(
-                hWnd,
-                L"XamlWindowHandle",
-                reinterpret_cast<HANDLE>(XamlWindowHandle)))
-            {
-                return -1;
-            }
-
-            // Focus on XAML Island host window for Acrylic brush support.
-            ::SetFocus(XamlWindowHandle);
-
-            ::DwmWindowDisableSystemBackdrop(hWnd);
+            Content.RequestedTheme(winrt::ElementTheme::Default);
 
             ::DwmWindowSetUseImmersiveDarkModeAttribute(
-                hWnd,
+                this->m_hWnd,
                 (Content.ActualTheme() == winrt::ElementTheme::Dark
                     ? TRUE
                     : FALSE));
 
             ::DwmWindowSetCaptionColorAttribute(
-                hWnd,
+                this->m_hWnd,
                 (Content.ActualTheme() == winrt::ElementTheme::Dark
                     ? RGB(0, 0, 0)
                     : RGB(255, 255, 255)));
-
-            UINT DpiValue = ::GetDpiForWindow(hWnd);
-
-            ::SetWindowPos(
-                hWnd,
-                nullptr,
-                0,
-                0,
-                ::MulDiv(720, DpiValue, USER_DEFAULT_SCREEN_DPI),
-                ::MulDiv(540, DpiValue, USER_DEFAULT_SCREEN_DPI),
-                SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
-
-            return 0;
         }
-        case WM_SETFOCUS:
-        {
-            HWND XamlWindowHandle = reinterpret_cast<HWND>(
-                ::GetPropW(hWnd, L"XamlWindowHandle"));
-            if (XamlWindowHandle)
-            {
-                ::SetFocus(XamlWindowHandle);
-            }
-
-            break;
-        }
-        case WM_SIZE:
-        {
-            HWND XamlWindowHandle = reinterpret_cast<HWND>(
-                ::GetPropW(hWnd, L"XamlWindowHandle"));
-            if (XamlWindowHandle)
-            {
-                ::SetWindowPos(
-                    XamlWindowHandle,
-                    nullptr,
-                    0,
-                    0,
-                    LOWORD(lParam),
-                    HIWORD(lParam),
-                    SWP_SHOWWINDOW);
-            }
-
-            break;
-        }
-        case WM_DPICHANGED:
-        {
-            LPRECT NewWindowRectangle = reinterpret_cast<LPRECT>(lParam);
-
-            ::SetWindowPos(
-                hWnd,
-                nullptr,
-                NewWindowRectangle->left,
-                NewWindowRectangle->top,
-                NewWindowRectangle->right - NewWindowRectangle->left,
-                NewWindowRectangle->bottom - NewWindowRectangle->top,
-                SWP_NOZORDER | SWP_NOACTIVATE);
-        }
-        case WM_MENUCHAR:
-        {
-            // Reference: https://github.com/microsoft/terminal
-            //            /blob/756fd444b1d443320cf2ed6887d4b65aa67a9a03
-            //            /scratch/ScratchIslandApp
-            //            /WindowExe/SampleIslandWindow.cpp#L155
-            // Return this LRESULT here to prevent the app from making a bell
-            // when alt+key is pressed. A menu is active and the user presses a
-            // key that does not correspond to any mnemonic or accelerator key.
-
-            return MAKELRESULT(0, MNC_CLOSE);
-        }
-        case WM_SETTINGCHANGE:
-        {
-            if (lParam && 0 == std::wcscmp(
-                reinterpret_cast<LPWSTR>(lParam),
-                L"ImmersiveColorSet"))
-            {
-                winrt::DesktopWindowXamlSource XamlSource = nullptr;
-                winrt::copy_from_abi(
-                    XamlSource,
-                    ::GetPropW(hWnd, L"XamlWindowSource"));
-                if (XamlSource)
-                {
-                    winrt::FrameworkElement Content =
-                        XamlSource.Content().try_as<winrt::FrameworkElement>();
-                    if (Content &&
-                        winrt::VisualTreeHelper::GetParent(Content))
-                    {
-                        Content.RequestedTheme(winrt::ElementTheme::Default);
-
-                        ::DwmWindowSetUseImmersiveDarkModeAttribute(
-                            hWnd,
-                            (Content.ActualTheme() == winrt::ElementTheme::Dark
-                                ? TRUE
-                                : FALSE));
-
-                        ::DwmWindowSetCaptionColorAttribute(
-                            hWnd,
-                            (Content.ActualTheme() == winrt::ElementTheme::Dark
-                                ? RGB(0, 0, 0)
-                                : RGB(255, 255, 255)));
-                    }
-                }
-            }
-       
-            break;
-        }
-        case WM_DESTROY:
-        {
-            winrt::DesktopWindowXamlSource XamlSource = nullptr;
-            winrt::copy_from_abi(
-                XamlSource,
-                ::RemovePropW(hWnd, L"XamlWindowSource"));
-            XamlSource.Close();
-
-            ::RemovePropW(hWnd, L"XamlWindowHandle");
-
-            ::PostQuitMessage(0);
-
-            break;
-        }
-        default:
-            return ::DefWindowProcW(hWnd, uMsg, wParam, lParam);
-        }
-
-        return 0;
     }
 }
 
-int WINAPI StartXamlIslandHost(
-    _In_ HINSTANCE InstanceHandle,
-    _In_opt_ HICON WindowIconHandle,
-    _In_ LPCWSTR WindowTitle,
-    _In_ LPVOID XamlWindowContent,
-    _In_ DWORD ShowWindowMode)
+void NanaGet::MainWindow::OnDestroy()
 {
-    WNDCLASSEXW WindowClass;
-    WindowClass.cbSize = sizeof(WNDCLASSEXW);
-    WindowClass.style = 0;
-    WindowClass.lpfnWndProc = ::XamlIslandWindowCallback;
-    WindowClass.cbClsExtra = 0;
-    WindowClass.cbWndExtra = 0;
-    WindowClass.hInstance = InstanceHandle;
-    WindowClass.hIcon = WindowIconHandle;
-    WindowClass.hCursor = ::LoadCursorW(nullptr, IDC_ARROW);
-    WindowClass.hbrBackground = reinterpret_cast<HBRUSH>(
-        ::GetStockObject(BLACK_BRUSH));
-    WindowClass.lpszMenuName = nullptr;
-    WindowClass.lpszClassName = L"Mile.Xaml.IslandWindow";
-    WindowClass.hIconSm = WindowIconHandle;
-    if (!::RegisterClassExW(&WindowClass))
-    {
-        return -1;
-    }
+    this->m_XamlSource.Close();
 
-    HWND WindowHandle = ::CreateWindowExW(
-        WS_EX_CLIENTEDGE,
-        WindowClass.lpszClassName,
-        WindowTitle,
-        WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
-        CW_USEDEFAULT,
-        0,
-        CW_USEDEFAULT,
-        0,
-        nullptr,
-        nullptr,
-        InstanceHandle,
-        XamlWindowContent);
-    if (!WindowHandle)
-    {
-        return -1;
-    }
+    ::PostQuitMessage(0);
+}
 
-    ::ShowWindow(WindowHandle, ShowWindowMode);
-    ::UpdateWindow(WindowHandle);
-
-    MSG Message;
-    while (::GetMessageW(&Message, nullptr, 0, 0))
-    {
-        ::TranslateMessage(&Message);
-        ::DispatchMessageW(&Message);
-    }
-
-    return static_cast<int>(Message.wParam);
+namespace
+{
+    WTL::CAppModule g_Module;
 }
 
 int WINAPI wWinMain(
@@ -371,21 +350,28 @@ int WINAPI wWinMain(
     winrt::NanaGet::App app =
         winrt::make<winrt::NanaGet::implementation::App>();
 
-    winrt::NanaGet::MainPage XamlWindowContent =
-        winrt::make<winrt::NanaGet::implementation::MainPage>();
+    WTL::CMessageLoop MessageLoop;
 
-    int Result = ::StartXamlIslandHost(
-        hInstance,
-        reinterpret_cast<HICON>(::LoadImageW(
-            hInstance,
-            MAKEINTRESOURCE(IDI_NANAGET),
-            IMAGE_ICON,
-            256,
-            256,
-            LR_SHARED)),
-        L"NanaGet",
-        winrt::get_abi(XamlWindowContent),
-        nShowCmd);
+    g_Module.Init(nullptr, hInstance);
+    g_Module.AddMessageLoop(&MessageLoop);
+
+    NanaGet::MainWindow Window;
+    if (!Window.Create(
+        nullptr,
+        Window.rcDefault,
+        L"NanaBox",
+        WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
+        WS_EX_CLIENTEDGE))
+    {
+        return -1;
+    }
+    Window.ShowWindow(nShowCmd);
+    Window.UpdateWindow();
+
+    int Result = MessageLoop.Run();
+
+    g_Module.RemoveMessageLoop();
+    g_Module.Term();
 
     app.Close();
 
