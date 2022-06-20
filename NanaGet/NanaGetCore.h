@@ -10,8 +10,8 @@
 
 #pragma once
 
-#ifndef NANA_GET_CORE
-#define NANA_GET_CORE
+#ifndef NANAGET_CORE
+#define NANAGET_CORE
 
 #if (defined(__cplusplus) && __cplusplus >= 201703L)
 #elif (defined(_MSVC_LANG) && _MSVC_LANG >= 201703L)
@@ -245,4 +245,4 @@ namespace winrt::NanaGet
     using namespace ::NanaGet;
 }
 
-#endif // !NANA_GET_CORE
+#endif // !NANAGET_CORE
