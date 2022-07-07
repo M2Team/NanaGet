@@ -104,11 +104,11 @@ bool ShouldAppsUseImmersiveDarkMode()
 
 namespace winrt
 {
-    using winrt::Windows::UI::Xaml::ElementTheme;
-    using winrt::Windows::UI::Xaml::FrameworkElement;
-    using winrt::Windows::UI::Xaml::UIElement;
-    using winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource;
-    using winrt::Windows::UI::Xaml::Media::VisualTreeHelper;
+    using Windows::UI::Xaml::ElementTheme;
+    using Windows::UI::Xaml::FrameworkElement;
+    using Windows::UI::Xaml::UIElement;
+    using Windows::UI::Xaml::Hosting::DesktopWindowXamlSource;
+    using Windows::UI::Xaml::Media::VisualTreeHelper;
 }
 
 namespace NanaGet
@@ -126,7 +126,7 @@ namespace NanaGet
             MSG_WM_DPICHANGED(OnDpiChanged)
             MSG_WM_MENUCHAR(OnMenuChar)
             MSG_WM_SETTINGCHANGE(OnSettingChange)
-            MSG_WM_DESTROY(OnDestroy)
+            MSG_WM_DESTROY(OnDestroy)           
         END_MSG_MAP()
 
         int OnCreate(
