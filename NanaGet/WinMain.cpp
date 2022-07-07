@@ -21,86 +21,7 @@
 
 #include "NanaGetResources.h"
 
-#include <dwmapi.h>
-#pragma comment(lib, "dwmapi.lib")
-
-HRESULT DwmWindowSetUseImmersiveDarkModeAttribute(
-    _In_ HWND WindowHandle,
-    _In_ BOOL Value)
-{
-    static bool IsWindows10Version20H1OrLater = ([]() -> bool
-    {
-        OSVERSIONINFOEXW OSVersionInfoEx = { 0 };
-        OSVersionInfoEx.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEXW);
-        OSVersionInfoEx.dwMajorVersion = 10;
-        OSVersionInfoEx.dwMinorVersion = 0;
-        OSVersionInfoEx.dwBuildNumber = 19041;
-        return ::VerifyVersionInfoW(
-            &OSVersionInfoEx,
-            VER_BUILDNUMBER,
-            ::VerSetConditionMask(
-                ::VerSetConditionMask(
-                    ::VerSetConditionMask(
-                        0,
-                        VER_MAJORVERSION,
-                        VER_GREATER_EQUAL),
-                    VER_MINORVERSION,
-                    VER_GREATER_EQUAL),
-                VER_BUILDNUMBER,
-                VER_GREATER_EQUAL));
-    }());
-
-    const DWORD DwmWindowUseImmersiveDarkModeBefore20H1Attribute = 19;
-    const DWORD DwmWindowUseImmersiveDarkModeAttribute = 20;
-    return ::DwmSetWindowAttribute(
-        WindowHandle,
-        (IsWindows10Version20H1OrLater
-            ? DwmWindowUseImmersiveDarkModeAttribute
-            : DwmWindowUseImmersiveDarkModeBefore20H1Attribute),
-        &Value,
-        sizeof(BOOL));
-}
-
-HRESULT DwmWindowSetCaptionColorAttribute(
-    _In_ HWND WindowHandle,
-    _In_ COLORREF Value)
-{
-    const DWORD DwmWindowCaptionColorAttribute = 35;
-    return ::DwmSetWindowAttribute(
-        WindowHandle,
-        DwmWindowCaptionColorAttribute,
-        &Value,
-        sizeof(COLORREF));
-}
-
-HRESULT DwmWindowDisableSystemBackdrop(
-    _In_ HWND WindowHandle)
-{
-    const DWORD DwmWindowSystemBackdropTypeAttribute = 38;
-    const DWORD DwmWindowSystemBackdropTypeNone = 1;
-    DWORD Value = DwmWindowSystemBackdropTypeNone;
-    return ::DwmSetWindowAttribute(
-        WindowHandle,
-        DwmWindowSystemBackdropTypeAttribute,
-        &Value,
-        sizeof(DWORD));
-}
-
-bool ShouldAppsUseImmersiveDarkMode()
-{
-    DWORD Type = REG_DWORD;
-    DWORD Value = 0;
-    DWORD ValueLength = sizeof(DWORD);
-    ::RegGetValueW(
-        HKEY_CURRENT_USER,
-        L"Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize",
-        L"AppsUseLightTheme",
-        RRF_RT_REG_DWORD | RRF_SUBKEY_WOW6464KEY,
-        &Type,
-        &Value,
-        &ValueLength);
-    return (Type == REG_DWORD && ValueLength == sizeof(DWORD) && Value == 0);
-}
+#include <Mile.Windows.DwmHelpers.h>
 
 namespace winrt
 {
@@ -191,18 +112,18 @@ int NanaGet::MainWindow::OnCreate(
     // Focus on XAML Island host window for Acrylic brush support.
     ::SetFocus(XamlWindowHandle);
 
-    ::DwmWindowDisableSystemBackdrop(this->m_hWnd);
+    ::MileDisableSystemBackdrop(this->m_hWnd);
 
     winrt::FrameworkElement Content =
         this->m_XamlSource.Content().try_as<winrt::FrameworkElement>();
 
-    ::DwmWindowSetUseImmersiveDarkModeAttribute(
+    ::MileSetUseImmersiveDarkModeAttribute(
         this->m_hWnd,
         (Content.ActualTheme() == winrt::ElementTheme::Dark
             ? TRUE
             : FALSE));
 
-    ::DwmWindowSetCaptionColorAttribute(
+    ::MileSetCaptionColorAttribute(
         this->m_hWnd,
         (Content.ActualTheme() == winrt::ElementTheme::Dark
             ? RGB(0, 0, 0)
@@ -217,7 +138,7 @@ int NanaGet::MainWindow::OnCreate(
         ::MulDiv(720, DpiValue, USER_DEFAULT_SCREEN_DPI),
         ::MulDiv(540, DpiValue, USER_DEFAULT_SCREEN_DPI),
         SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
-
+   
     return 0;
 }
 
@@ -309,13 +230,13 @@ void NanaGet::MainWindow::OnSettingChange(
         {
             Content.RequestedTheme(winrt::ElementTheme::Default);
 
-            ::DwmWindowSetUseImmersiveDarkModeAttribute(
+            ::MileSetUseImmersiveDarkModeAttribute(
                 this->m_hWnd,
                 (Content.ActualTheme() == winrt::ElementTheme::Dark
                     ? TRUE
                     : FALSE));
 
-            ::DwmWindowSetCaptionColorAttribute(
+            ::MileSetCaptionColorAttribute(
                 this->m_hWnd,
                 (Content.ActualTheme() == winrt::ElementTheme::Dark
                     ? RGB(0, 0, 0)
