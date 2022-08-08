@@ -32,6 +32,20 @@ namespace winrt
     using Windows::UI::Xaml::Media::VisualTreeHelper;
 }
 
+//namespace
+//{
+//    // {CCD5AA13-D01B-494F-A5E1-3E373234857B}
+//    const GUID NotifyIconGuid =
+//    {
+//        0xccd5aa13,
+//        0xd01b,
+//        0x494f,
+//        { 0xa5, 0xe1, 0x3e, 0x37, 0x32, 0x34, 0x85, 0x7b }
+//    };
+//
+//    const UINT NotifyIconCallbackMessage = WM_APP + 0x100;
+//}
+
 namespace NanaGet
 {
     class MainWindow : public ATL::CWindowImpl<MainWindow>
@@ -42,6 +56,7 @@ namespace NanaGet
 
         BEGIN_MSG_MAP(MainWindow)
             MSG_WM_CREATE(OnCreate)
+            //MESSAGE_HANDLER_EX(NotifyIconCallbackMessage, OnNotifyIcon)
             MSG_WM_SETFOCUS(OnSetFocus)
             MSG_WM_SIZE(OnSize)
             MSG_WM_DPICHANGED(OnDpiChanged)
@@ -52,6 +67,11 @@ namespace NanaGet
 
         int OnCreate(
             LPCREATESTRUCT lpCreateStruct);
+
+        /*LRESULT OnNotifyIcon(
+            UINT uMsg,
+            WPARAM wParam,
+            LPARAM lParam);*/
 
         void OnSetFocus(
             ATL::CWindow wndOld);
@@ -138,9 +158,56 @@ int NanaGet::MainWindow::OnCreate(
         ::MulDiv(720, DpiValue, USER_DEFAULT_SCREEN_DPI),
         ::MulDiv(540, DpiValue, USER_DEFAULT_SCREEN_DPI),
         SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
-   
+
+    /*NOTIFYICONDATAW NotifyIconData = { 0 };
+    NotifyIconData.cbSize = sizeof(NOTIFYICONDATAW);
+    NotifyIconData.hWnd = this->m_hWnd;
+    NotifyIconData.uFlags = NIF_MESSAGE | NIF_ICON | NIF_TIP;
+    NotifyIconData.uFlags |= NIF_GUID | NIF_SHOWTIP;
+    NotifyIconData.uCallbackMessage = NotifyIconCallbackMessage;
+    NotifyIconData.hIcon = this->m_ApplicationIcon.m_hIcon;
+    ::wcscpy_s(NotifyIconData.szTip, L"NanaGet");
+    NotifyIconData.guidItem = NotifyIconGuid;
+    winrt::check_bool(::Shell_NotifyIconW(NIM_DELETE, &NotifyIconData));
+    winrt::check_bool(::Shell_NotifyIconW(NIM_ADD, &NotifyIconData));
+
+    NotifyIconData.uVersion = NOTIFYICON_VERSION_4;
+    winrt::check_bool(::Shell_NotifyIconW(NIM_SETVERSION, &NotifyIconData));*/
+    
     return 0;
 }
+
+//LRESULT NanaGet::MainWindow::OnNotifyIcon(
+//    UINT uMsg,
+//    WPARAM wParam,
+//    LPARAM lParam)
+//{
+//    UNREFERENCED_PARAMETER(uMsg);
+//    UNREFERENCED_PARAMETER(wParam);
+//
+//    switch (LOWORD(lParam))
+//    {
+//    case NIN_SELECT:
+//    {
+//        this->ShowWindow(
+//            ::IsWindowVisible(this->m_hWnd)
+//            ? SW_HIDE
+//            : SW_SHOW);
+//
+//        break;
+//    }
+//    case WM_CONTEXTMENU:
+//    {
+//        ::SetForegroundWindow(this->m_hWnd);
+//
+//        break;
+//    }
+//    default:
+//        break;
+//    }
+//
+//    return 0;
+//}
 
 void NanaGet::MainWindow::OnSetFocus(
     ATL::CWindow wndOld)
@@ -247,6 +314,12 @@ void NanaGet::MainWindow::OnSettingChange(
 
 void NanaGet::MainWindow::OnDestroy()
 {
+    /*NOTIFYICONDATAW NotifyIconData = { 0 };
+    NotifyIconData.cbSize = sizeof(NOTIFYICONDATAW);
+    NotifyIconData.uFlags = NIF_GUID;
+    NotifyIconData.guidItem = NotifyIconGuid;
+    ::Shell_NotifyIconW(NIM_DELETE, &NotifyIconData);*/
+
     this->m_XamlSource.Close();
 
     ::PostQuitMessage(0);
