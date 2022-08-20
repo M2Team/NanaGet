@@ -113,10 +113,12 @@ namespace winrt::NanaGet::implementation
         UNREFERENCED_PARAMETER(sender);
         UNREFERENCED_PARAMETER(e);
 
+        std::filesystem::path downloadsFolderPath = NanaGet::GetDownloadsFolderPath();
+
         SHELLEXECUTEINFOW ExecInfo = { 0 };
         ExecInfo.cbSize = sizeof(SHELLEXECUTEINFOW);
         ExecInfo.lpVerb = L"open";
-        ExecInfo.lpFile = NanaGet::GetDownloadsFolderPath().c_str();
+        ExecInfo.lpFile = downloadsFolderPath.c_str();
         ExecInfo.nShow = SW_SHOWNORMAL;
         ::ShellExecuteExW(&ExecInfo);
     }
