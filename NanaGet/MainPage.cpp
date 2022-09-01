@@ -26,6 +26,18 @@ namespace winrt::NanaGet::implementation
             std::chrono::milliseconds(200));
     }
 
+    void MainPage::OnLoaded(
+        IInspectable const& sender,
+        RoutedEventArgs const& e)
+    {
+        UNREFERENCED_PARAMETER(sender);
+        UNREFERENCED_PARAMETER(e);
+        if (this->m_Instance == nullptr) {
+            this->m_Instance = std::make_unique<NanaGet::LocalAria2Instance>();
+            OutputDebugStringW(L"Loaded");
+        }
+    }
+
     winrt::hstring MainPage::SearchFilter()
     {
         return this->m_SearchFilter;
@@ -64,7 +76,7 @@ namespace winrt::NanaGet::implementation
 
         try
         {
-            this->m_Instance.ResumeAll();
+            this->m_Instance->ResumeAll();
         }
         catch (...)
         {
@@ -81,7 +93,7 @@ namespace winrt::NanaGet::implementation
 
         try
         {
-            this->m_Instance.PauseAll();
+            this->m_Instance->PauseAll();
         }
         catch (...)
         {
@@ -98,7 +110,7 @@ namespace winrt::NanaGet::implementation
 
         try
         {
-            this->m_Instance.ClearList();
+            this->m_Instance->ClearList();
         }
         catch (...)
         {
@@ -167,8 +179,8 @@ namespace winrt::NanaGet::implementation
         {
             NanaGet::TaskItem Current =
                 this->GetTaskItemFromEventSender(sender);
-            this->m_Instance.Remove(Current.Gid());
-            this->m_Instance.AddTask(Uri(Current.Source()));
+            this->m_Instance->Remove(Current.Gid());
+            this->m_Instance->AddTask(Uri(Current.Source()));
         }
         catch (...)
         {
@@ -186,7 +198,7 @@ namespace winrt::NanaGet::implementation
         {
             NanaGet::TaskItem Current =
                 this->GetTaskItemFromEventSender(sender);
-            this->m_Instance.Resume(Current.Gid());
+            this->m_Instance->Resume(Current.Gid());
         }
         catch (...)
         {
@@ -204,7 +216,7 @@ namespace winrt::NanaGet::implementation
         {
             NanaGet::TaskItem Current =
                 this->GetTaskItemFromEventSender(sender);
-            this->m_Instance.Pause(Current.Gid());  
+            this->m_Instance->Pause(Current.Gid());
         }
         catch (...)
         {
@@ -256,7 +268,7 @@ namespace winrt::NanaGet::implementation
         {
             NanaGet::TaskItem Current =
                 this->GetTaskItemFromEventSender(sender);
-            this->m_Instance.Cancel(Current.Gid());
+            this->m_Instance->Cancel(Current.Gid());
         }
         catch (...)
         {
@@ -274,7 +286,7 @@ namespace winrt::NanaGet::implementation
         {
             NanaGet::TaskItem Current =
                 this->GetTaskItemFromEventSender(sender);
-            this->m_Instance.Remove(Current.Gid());
+            this->m_Instance->Remove(Current.Gid());
         }
         catch (...)
         {
@@ -307,7 +319,7 @@ namespace winrt::NanaGet::implementation
 
         try
         {
-            this->m_Instance.AddTask(Uri(
+            this->m_Instance->AddTask(Uri(
                 this->NewTaskGridDownloadSourceTextBox().Text()));
         }
         catch (...)
@@ -390,21 +402,21 @@ namespace winrt::NanaGet::implementation
     {
         UNREFERENCED_PARAMETER(timer);
 
-        winrt::slim_lock_guard LockGuard(this->m_Instance.InstanceLock());
+        winrt::slim_lock_guard LockGuard(this->m_Instance->InstanceLock());
 
-        this->m_Instance.RefreshInformation();
+        this->m_Instance->RefreshInformation();
 
         winrt::hstring GlobalStatusText = NanaGet::FormatWindowsRuntimeString(
             L"\x2193 %s/s \x2191 %s/s",
             NanaGet::ConvertByteSizeToString(
-                this->m_Instance.TotalDownloadSpeed()).data(),
+                this->m_Instance->TotalDownloadSpeed()).data(),
             NanaGet::ConvertByteSizeToString(
-                this->m_Instance.TotalUploadSpeed()).data());   
+                this->m_Instance->TotalUploadSpeed()).data());   
 
         winrt::hstring CurrentSearchFilter = this->m_SearchFilter;
 
         std::set<winrt::hstring> Gids;
-        for (Aria2TaskInformation const& Task : this->m_Instance.Tasks())
+        for (Aria2TaskInformation const& Task : this->m_Instance->Tasks())
         {
             if (!NanaGet::FindSubString(
                 Task.FriendlyName,
@@ -428,7 +440,7 @@ namespace winrt::NanaGet::implementation
         else if (this->m_Gids != Gids)
         {
             std::vector<NanaGet::TaskItem> RawTasks;
-            for (Aria2TaskInformation const& Task : this->m_Instance.Tasks())
+            for (Aria2TaskInformation const& Task : this->m_Instance->Tasks())
             {
                 if (!NanaGet::FindSubString(
                     Task.FriendlyName,
@@ -468,7 +480,7 @@ namespace winrt::NanaGet::implementation
             if (this->m_Tasks)
             {
                 std::map<winrt::hstring, Aria2TaskInformation> RawTasks;
-                for (Aria2TaskInformation const& Task : this->m_Instance.Tasks())
+                for (Aria2TaskInformation const& Task : this->m_Instance->Tasks())
                 {
                     RawTasks.emplace(std::pair(Task.Gid, Task));
                 }
@@ -507,20 +519,20 @@ namespace winrt::NanaGet::implementation
         try
         {
             JsonValue TokenValue = JsonValue::CreateStringValue(
-                L"token:" + this->m_Instance.ServerToken());
+                L"token:" + this->m_Instance->ServerToken());
 
             JsonArray Parameters;
             Parameters.Append(TokenValue);
 
-            //JsonObject ResponseJson = this->m_Instance.ExecuteJsonRpcCall(
+            //JsonObject ResponseJson = this->m_Instance->ExecuteJsonRpcCall(
             //    L"aria2.getVersion", //L"aria2.tellActive",
             //    Parameters).GetObject();
 
-            //JsonArray ResponseJson = this->m_Instance.ExecuteJsonRpcCall(
+            //JsonArray ResponseJson = this->m_Instance->ExecuteJsonRpcCall(
             //    L"system.listMethods",
             //    Parameters).GetArray();
 
-            JsonObject ResponseJson = this->m_Instance.ExecuteJsonRpcCall(
+            JsonObject ResponseJson = this->m_Instance->ExecuteJsonRpcCall(
                 L"aria2.getGlobalOption",
                 Parameters).GetObject();
 
@@ -535,7 +547,7 @@ namespace winrt::NanaGet::implementation
 
         /*::MessageBoxW(
             nullptr,
-            this->m_Instance.ConsoleOutput().c_str(),
+            this->m_Instance->ConsoleOutput().c_str(),
             L"NanaGet",
             MB_ICONINFORMATION);*/
 

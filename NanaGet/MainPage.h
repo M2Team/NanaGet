@@ -126,9 +126,14 @@ namespace winrt::NanaGet::implementation
             IInspectable const& sender,
             RoutedEventArgs const& e);
 
+        void OnLoaded(
+            IInspectable const& sender,
+            RoutedEventArgs const& e
+        );
+
     private:
 
-        NanaGet::LocalAria2Instance m_Instance;
+        std::unique_ptr<NanaGet::LocalAria2Instance> m_Instance = nullptr;
         ThreadPoolTimer m_RefreshTimer = nullptr;
 
         std::set<winrt::hstring> m_Gids;
