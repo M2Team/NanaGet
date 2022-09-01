@@ -50,7 +50,9 @@ namespace winrt
 
 namespace NanaGet
 {
-    class MainWindow : public ATL::CWindowImpl<MainWindow>
+    class MainWindow :
+        public ATL::CWindowImpl<MainWindow>,
+        public WTL::CMessageFilter
     {
     public:
 
@@ -66,6 +68,8 @@ namespace NanaGet
             MSG_WM_SETTINGCHANGE(OnSettingChange)
             MSG_WM_DESTROY(OnDestroy)           
         END_MSG_MAP()
+
+        virtual BOOL PreTranslateMessage(MSG* pMsg);
 
         int OnCreate(
             LPCREATESTRUCT lpCreateStruct);
@@ -104,22 +108,19 @@ namespace NanaGet
         winrt::DesktopWindowXamlSource m_XamlSource;
         winrt::NanaGet::MainPage m_MainPage;
     };
-
-    class XamlIslandHostMessageFilter : public WTL::CMessageFilter
-    {
-    public:
-        virtual BOOL PreTranslateMessage(MSG* pMsg);
-    };
 }
 
-BOOL NanaGet::XamlIslandHostMessageFilter::PreTranslateMessage(MSG* pMsg) {
+BOOL NanaGet::MainWindow::PreTranslateMessage(MSG* pMsg) {
 
-    // Prevent XAML islands from capturing Alt-F4
-    // https://github.com/microsoft/microsoft-ui-xaml/issues/2408
+    // Workaround for capturing Alt+F4 in applications with XAML Islands.
+    // Reference: https://github.com/microsoft/microsoft-ui-xaml/issues/2408
     if (pMsg->message == WM_SYSKEYDOWN && pMsg->wParam == VK_F4)
     {
-        HWND hwndMain = ::GetAncestor(pMsg->hwnd, GA_ROOT);
-        ::SendMessageW(hwndMain, pMsg->message, pMsg->wParam, pMsg->lParam);
+        ::SendMessageW(
+            ::GetAncestor(pMsg->hwnd, GA_ROOT),
+            pMsg->message,
+            pMsg->wParam,
+            pMsg->lParam);
         return TRUE;
     }
     return FALSE;
@@ -151,11 +152,12 @@ int NanaGet::MainWindow::OnCreate(
         XamlSourceNative->get_WindowHandle(&XamlWindowHandle));
 
     // When focus is moving out from XAML island, move it back in again.
-    this->m_XamlSource.TakeFocusRequested(
-        [this](winrt::DesktopWindowXamlSource sender,
-            winrt::DesktopWindowXamlSourceTakeFocusRequestedEventArgs args) {
-            this->m_MainPage.Focus(winrt::FocusState::Programmatic);
-        });
+    this->m_XamlSource.TakeFocusRequested([this](
+        winrt::DesktopWindowXamlSource sender,
+        winrt::DesktopWindowXamlSourceTakeFocusRequestedEventArgs args)
+    {
+        this->m_MainPage.Focus(winrt::FocusState::Programmatic);
+    });
 
     // Focus on XAML Island host window for Acrylic brush support.
     ::SetFocus(XamlWindowHandle);
@@ -370,14 +372,9 @@ int WINAPI wWinMain(
     winrt::init_apartment(winrt::apartment_type::single_threaded);
 
     winrt::NanaGet::App app =
-        winrt::make<winrt::NanaGet::implementation::App>();
-
-    WTL::CMessageLoop MessageLoop;
-    NanaGet::XamlIslandHostMessageFilter MessageFilter;
-    MessageLoop.AddMessageFilter(&MessageFilter);
+        winrt::make<winrt::NanaGet::implementation::App>();  
 
     g_Module.Init(nullptr, hInstance);
-    g_Module.AddMessageLoop(&MessageLoop);
 
     NanaGet::MainWindow Window;
     if (!Window.Create(
@@ -392,6 +389,9 @@ int WINAPI wWinMain(
     Window.ShowWindow(nShowCmd);
     Window.UpdateWindow();
 
+    WTL::CMessageLoop MessageLoop;
+    MessageLoop.AddMessageFilter(&Window);
+    g_Module.AddMessageLoop(&MessageLoop);
     int Result = MessageLoop.Run();
 
     g_Module.RemoveMessageLoop();
