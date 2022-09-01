@@ -107,7 +107,7 @@ namespace NanaGet
 
         WTL::CIcon m_ApplicationIcon;
         winrt::DesktopWindowXamlSource m_XamlSource;
-        winrt::NanaGet::MainPage m_MainPage;
+        winrt::NanaGet::MainPage m_MainPage = nullptr;
     };
 }
 
