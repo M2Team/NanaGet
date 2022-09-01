@@ -69,7 +69,8 @@ namespace NanaGet
             MSG_WM_DESTROY(OnDestroy)           
         END_MSG_MAP()
 
-        virtual BOOL PreTranslateMessage(MSG* pMsg);
+        virtual BOOL PreTranslateMessage(
+            MSG* pMsg);
 
         int OnCreate(
             LPCREATESTRUCT lpCreateStruct);
@@ -110,8 +111,9 @@ namespace NanaGet
     };
 }
 
-BOOL NanaGet::MainWindow::PreTranslateMessage(MSG* pMsg) {
-
+BOOL NanaGet::MainWindow::PreTranslateMessage(
+    MSG* pMsg)
+{
     // Workaround for capturing Alt+F4 in applications with XAML Islands.
     // Reference: https://github.com/microsoft/microsoft-ui-xaml/issues/2408
     if (pMsg->message == WM_SYSKEYDOWN && pMsg->wParam == VK_F4)
