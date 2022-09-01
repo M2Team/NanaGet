@@ -50,6 +50,8 @@ namespace NanaGet
 {
     class MainWindow : public ATL::CWindowImpl<MainWindow>
     {
+        friend class XamlIslandHostMessageFilter;
+
     public:
 
         DECLARE_WND_CLASS(L"NanaGetMainWindow")
@@ -102,6 +104,25 @@ namespace NanaGet
         winrt::DesktopWindowXamlSource m_XamlSource;
         winrt::NanaGet::MainPage m_MainPage;
     };
+
+    class XamlIslandHostMessageFilter : public WTL::CMessageFilter
+    {
+    public:
+        virtual BOOL PreTranslateMessage(MSG* pMsg);
+    };
+}
+
+BOOL NanaGet::XamlIslandHostMessageFilter::PreTranslateMessage(MSG* pMsg) {
+
+    // Prevent XAML islands from capturing Alt-F4
+    // https://github.com/microsoft/microsoft-ui-xaml/issues/2408
+    if (pMsg->message == WM_SYSKEYDOWN && pMsg->wParam == VK_F4)
+    {
+        HWND hwndMain = ::GetAncestor(pMsg->hwnd, GA_ROOT);
+        ::SendMessageW(hwndMain, pMsg->message, pMsg->wParam, pMsg->lParam);
+        return TRUE;
+    }
+    return FALSE;
 }
 
 int NanaGet::MainWindow::OnCreate(
@@ -345,6 +366,8 @@ int WINAPI wWinMain(
         winrt::make<winrt::NanaGet::implementation::App>();
 
     WTL::CMessageLoop MessageLoop;
+    NanaGet::XamlIslandHostMessageFilter MessageFilter;
+    MessageLoop.AddMessageFilter(&MessageFilter);
 
     g_Module.Init(nullptr, hInstance);
     g_Module.AddMessageLoop(&MessageLoop);
