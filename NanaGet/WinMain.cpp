@@ -52,8 +52,6 @@ namespace NanaGet
 {
     class MainWindow : public ATL::CWindowImpl<MainWindow>
     {
-        friend class XamlIslandHostMessageFilter;
-
     public:
 
         DECLARE_WND_CLASS(L"NanaGetMainWindow")
