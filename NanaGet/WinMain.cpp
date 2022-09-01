@@ -26,9 +26,11 @@
 namespace winrt
 {
     using Windows::UI::Xaml::ElementTheme;
+    using Windows::UI::Xaml::FocusState;
     using Windows::UI::Xaml::FrameworkElement;
     using Windows::UI::Xaml::UIElement;
     using Windows::UI::Xaml::Hosting::DesktopWindowXamlSource;
+    using Windows::UI::Xaml::Hosting::DesktopWindowXamlSourceTakeFocusRequestedEventArgs;
     using Windows::UI::Xaml::Media::VisualTreeHelper;
 }
 
@@ -149,6 +151,13 @@ int NanaGet::MainWindow::OnCreate(
     HWND XamlWindowHandle = nullptr;
     winrt::check_hresult(
         XamlSourceNative->get_WindowHandle(&XamlWindowHandle));
+
+    // When focus is moving out from XAML island, move it back in again.
+    this->m_XamlSource.TakeFocusRequested(
+        [this](winrt::DesktopWindowXamlSource sender,
+            winrt::DesktopWindowXamlSourceTakeFocusRequestedEventArgs args) {
+            this->m_MainPage.Focus(winrt::FocusState::Programmatic);
+        });
 
     // Focus on XAML Island host window for Acrylic brush support.
     ::SetFocus(XamlWindowHandle);
