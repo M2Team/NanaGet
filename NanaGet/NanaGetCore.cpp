@@ -118,6 +118,7 @@ namespace winrt
     using Windows::ApplicationModel::Package;
     using Windows::Data::Json::JsonArray;
     using Windows::Storage::ApplicationData;
+    using Windows::Storage::Streams::IBuffer;
     using Windows::Web::Http::HttpResponseMessage;
     using Windows::Web::Http::HttpStringContent;
 }
@@ -599,6 +600,26 @@ void NanaGet::Aria2Instance::RefreshInformation()
     }
 }
 
+std::string NanaGet::Aria2Instance::SimplePost(
+    std::string const& Content)
+{
+    winrt::HttpResponseMessage ResponseMessage = this->m_HttpClient.PostAsync(
+        this->m_ServerUri,
+        winrt::HttpStringContent(winrt::to_hstring(Content))).get();
+
+    winrt::IBuffer ResponseBuffer =
+        ResponseMessage.Content().ReadAsBufferAsync().get();
+
+    if (!ResponseMessage.IsSuccessStatusCode() && !ResponseBuffer.Length())
+    {
+        ResponseMessage.EnsureSuccessStatusCode();
+    }
+
+    return std::string(
+        reinterpret_cast<char*>(ResponseBuffer.data()),
+        ResponseBuffer.Length());
+}
+
 winrt::JsonValue NanaGet::Aria2Instance::ExecuteJsonRpcCall(
     winrt::hstring const& MethodName,
     winrt::IJsonValue const& Parameters)
@@ -620,20 +641,8 @@ winrt::JsonValue NanaGet::Aria2Instance::ExecuteJsonRpcCall(
         L"id",
         winrt::JsonValue::CreateStringValue(Identifier));
 
-    winrt::HttpResponseMessage ResponseMessage = this->m_HttpClient.PostAsync(
-        this->m_ServerUri,
-        winrt::HttpStringContent(RequestJson.Stringify())).get();
-
-    auto Buffer = ResponseMessage.Content().ReadAsBufferAsync().get();
-
-    winrt::hstring ResponseString = winrt::to_hstring(std::string_view(
-        reinterpret_cast<char*>(Buffer.data()),
-        Buffer.Length()));
-
-    if (!ResponseMessage.IsSuccessStatusCode() && ResponseString.empty())
-    {
-        ResponseMessage.EnsureSuccessStatusCode();
-    }
+    winrt::hstring ResponseString = winrt::to_hstring(
+        this->SimplePost(winrt::to_string(RequestJson.Stringify())));
 
     winrt::JsonObject ResponseJson = winrt::JsonObject::Parse(ResponseString);
 

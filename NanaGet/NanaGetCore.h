@@ -172,6 +172,9 @@ namespace NanaGet
 
         void RefreshInformation();
 
+        std::string SimplePost(
+            std::string const& Content);
+
         winrt::JsonValue ExecuteJsonRpcCall(
             winrt::hstring const& MethodName,
             winrt::IJsonValue const& Parameters);
