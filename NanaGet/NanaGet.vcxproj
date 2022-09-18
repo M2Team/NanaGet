@@ -19,15 +19,6 @@
     <MileProjectEnableVCLTLSupport>true</MileProjectEnableVCLTLSupport>
     <MileProjectEnableCppWinRTSupport>true</MileProjectEnableCppWinRTSupport>
   </PropertyGroup>
-  <PropertyGroup Label="Globals">
-    <!--
-      This is an override that, puzzlingly, _forces XBF (XAML binary) embedding_.
-      We have to do this to overcome a layout issue in the WAP packaging project.
-      When we do this, the XBF ends up in resources.pri.
-    -->
-    <DisableEmbeddedXbf>false</DisableEmbeddedXbf>
-    <_SupportXbfAsEmbedFileResources>true</_SupportXbfAsEmbedFileResources>
-  </PropertyGroup>
   <Import Project="..\Mile.Project.Windows\Mile.Project.Cpp.props" />
   <Import Project="..\Mile.Library.Windows\Mile.Library.Windows.props" />
   <Import Project="..\ThirdParty\WindowsTemplateLibrary.props" />
@@ -35,11 +26,6 @@
   <ImportGroup Label="PropertySheets">
     <Import Project="PropertySheet.props" />
   </ImportGroup>
-  <ItemDefinitionGroup>
-    <ClCompile>
-      <PreprocessorDefinitions>DISABLE_XAML_GENERATED_MAIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-    </ClCompile>
-  </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Mile.Project.Properties.h" />
     <ClInclude Include="NanaGetCore.h" />
@@ -96,11 +82,12 @@
     <Manifest Include="NanaGet.manifest" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Mile.Xaml\Mile.Xaml.vcxproj" />
-  </ItemGroup>
-  <ItemGroup>
     <ResourceCompile Include="NanaGetResources.rc" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Mile.Xaml">
+      <Version>1.0.361</Version>
+    </PackageReference>
+  </ItemGroup>
   <Import Project="..\Mile.Project.Windows\Mile.Project.Cpp.targets" />
-  <Import Project="..\Mile.Xaml\MrtCore.PriGen.targets" />
 </Project>
