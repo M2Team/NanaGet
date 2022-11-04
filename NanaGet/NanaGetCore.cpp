@@ -30,6 +30,8 @@
 #include <winrt/Windows.Storage.h>
 #include <winrt/Windows.Storage.Streams.h>
 
+#include <json.hpp>
+
 namespace Mile
 {
     /**
@@ -618,6 +620,52 @@ std::string NanaGet::Aria2Instance::SimplePost(
     return std::string(
         reinterpret_cast<char*>(ResponseBuffer.data()),
         ResponseBuffer.Length());
+}
+
+std::string NanaGet::Aria2Instance::SimpleJsonRpcCall(
+    std::string const& MethodName,
+    std::string const& Parameters)
+{
+    std::string Identifier = winrt::to_string(NanaGet::CreateGuidString());
+
+    nlohmann::json RequestJson;
+    try
+    {
+        RequestJson["jsonrpc"] = "2.0";
+        RequestJson["method"] = MethodName;
+        RequestJson["params"] = nlohmann::json::parse(Parameters);
+        RequestJson["id"] = Identifier;
+    }
+    catch (std::exception const& ex)
+    {
+        throw winrt::hresult_invalid_argument(winrt::to_hstring(ex.what()));
+    }
+    
+    std::string ResponseString = this->SimplePost(RequestJson.dump(2));
+
+    nlohmann::json ResponseJson;
+    try
+    {
+        ResponseJson = nlohmann::json::parse(ResponseString);
+    }
+    catch (std::exception const& ex)
+    {
+        throw winrt::hresult_illegal_method_call(winrt::to_hstring(ex.what()));
+    }
+
+    if ("2.0" != ResponseJson["jsonrpc"].get<std::string>() ||
+        Identifier != ResponseJson["id"].get<std::string>())
+    {
+        throw winrt::hresult_illegal_method_call();
+    }
+
+    if (ResponseJson.end() != ResponseJson.find("error"))
+    {
+        throw winrt::hresult_illegal_method_call(
+            winrt::to_hstring(ResponseJson["error"].get<std::string>()));
+    }
+
+    return ResponseJson["result"].dump(2);
 }
 
 winrt::JsonValue NanaGet::Aria2Instance::ExecuteJsonRpcCall(
