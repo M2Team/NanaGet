@@ -533,12 +533,12 @@ void NanaGet::Aria2Instance::RefreshInformation()
     std::uint64_t NumStopped = 0;
 
     {
-        winrt::JsonArray Parameters;
-        Parameters.Append(this->m_ServerTokenJsonValue);
+        nlohmann::json Parameters;
+        Parameters.push_back("token:" + winrt::to_string(this->m_ServerToken));
 
-        winrt::JsonObject ResponseJson = this->ExecuteJsonRpcCall(
-            L"aria2.getGlobalStat",
-            Parameters).GetObject();
+        std::string ResponseJson = this->SimpleJsonRpcCall(
+            "aria2.getGlobalStat",
+            Parameters.dump(2));
 
         NanaGet::Aria2GlobalStatus GlobalStatus =
             this->ParseGlobalStatus(ResponseJson);
@@ -725,37 +725,39 @@ void NanaGet::Aria2Instance::UpdateInstance(
 }
 
 NanaGet::Aria2GlobalStatus NanaGet::Aria2Instance::ParseGlobalStatus(
-    winrt::JsonObject Value)
+    std::string const& Value)
 {
+    nlohmann::json JsonObject = nlohmann::json::parse(Value);
+
     NanaGet::Aria2GlobalStatus Result;
 
-    Result.DownloadSpeed = std::wcstoull(
-        Value.GetNamedString(L"downloadSpeed").c_str(),
+    Result.DownloadSpeed = std::strtoull(
+        JsonObject["downloadSpeed"].get<std::string>().c_str(),
         nullptr,
         10);
 
-    Result.UploadSpeed = std::wcstoull(
-        Value.GetNamedString(L"uploadSpeed").c_str(),
+    Result.UploadSpeed = std::strtoull(
+        JsonObject["uploadSpeed"].get<std::string>().c_str(),
         nullptr,
         10);
 
-    Result.NumActive = std::wcstoull(
-        Value.GetNamedString(L"numActive").c_str(),
+    Result.NumActive = std::strtoull(
+        JsonObject["numActive"].get<std::string>().c_str(),
         nullptr,
         10);
 
-    Result.NumWaiting = std::wcstoull(
-        Value.GetNamedString(L"numWaiting").c_str(),
+    Result.NumWaiting = std::strtoull(
+        JsonObject["numWaiting"].get<std::string>().c_str(),
         nullptr,
         10);
 
-    Result.NumStopped = std::wcstoull(
-        Value.GetNamedString(L"numStopped").c_str(),
+    Result.NumStopped = std::strtoull(
+        JsonObject["numStopped"].get<std::string>().c_str(),
         nullptr,
         10);
 
-    Result.NumStoppedTotal = std::wcstoull(
-        Value.GetNamedString(L"numStoppedTotal").c_str(),
+    Result.NumStoppedTotal = std::strtoull(
+        JsonObject["numStoppedTotal"].get<std::string>().c_str(),
         nullptr,
         10);
 

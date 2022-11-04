@@ -205,7 +205,7 @@ namespace NanaGet
         std::vector<Aria2TaskInformation> m_Tasks;
 
         Aria2GlobalStatus ParseGlobalStatus(
-            winrt::JsonObject Value);
+            std::string const& Value);
 
         Aria2UriInformation ParseUriInformation(
             winrt::JsonObject Value);
