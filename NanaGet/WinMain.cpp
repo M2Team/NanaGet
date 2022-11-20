@@ -5,11 +5,6 @@
 #include "App.h"
 #include "MainPage.h"
 
-#include <winrt/Windows.UI.Xaml.h>
-#include <winrt/Windows.UI.Xaml.Media.h>
-#include <winrt/Windows.UI.Xaml.Hosting.h>
-#include <windows.ui.xaml.hosting.desktopwindowxamlsource.h>
-
 #define _ATL_NO_AUTOMATIC_NAMESPACE
 #include <atlbase.h>
 #include <atlwin.h>
@@ -23,16 +18,10 @@
 
 #include <Mile.Windows.DwmHelpers.h>
 
-namespace winrt
-{
-    using Windows::UI::Xaml::ElementTheme;
-    using Windows::UI::Xaml::FocusState;
-    using Windows::UI::Xaml::FrameworkElement;
-    using Windows::UI::Xaml::UIElement;
-    using Windows::UI::Xaml::Hosting::DesktopWindowXamlSource;
-    using Windows::UI::Xaml::Hosting::DesktopWindowXamlSourceTakeFocusRequestedEventArgs;
-    using Windows::UI::Xaml::Media::VisualTreeHelper;
-}
+#include <dwmapi.h>
+#pragma comment(lib, "dwmapi.lib")
+
+#include <Mile.Helpers.h>
 
 //namespace
 //{
@@ -56,16 +45,13 @@ namespace NanaGet
     {
     public:
 
-        DECLARE_WND_CLASS(L"NanaGetMainWindow")
+        DECLARE_WND_SUPERCLASS(
+            L"NanaGetMainWindow",
+            L"Mile.Xaml.ContentWindow")
 
         BEGIN_MSG_MAP(MainWindow)
             MSG_WM_CREATE(OnCreate)
             //MESSAGE_HANDLER_EX(NotifyIconCallbackMessage, OnNotifyIcon)
-            MSG_WM_SETFOCUS(OnSetFocus)
-            MSG_WM_SIZE(OnSize)
-            MSG_WM_DPICHANGED(OnDpiChanged)
-            MSG_WM_MENUCHAR(OnMenuChar)
-            MSG_WM_SETTINGCHANGE(OnSettingChange)
             MSG_WM_DESTROY(OnDestroy)           
         END_MSG_MAP()
 
@@ -80,34 +66,11 @@ namespace NanaGet
             WPARAM wParam,
             LPARAM lParam);*/
 
-        void OnSetFocus(
-            ATL::CWindow wndOld);
-
-        void OnSize(
-            UINT nType,
-            CSize size);
-
-        void OnDpiChanged(
-            UINT nDpiX,
-            UINT nDpiY,
-            PRECT pRect);
-
-        LRESULT OnMenuChar(
-            UINT nChar,
-            UINT nFlags,
-            WTL::CMenuHandle menu);
-
-        void OnSettingChange(
-            UINT uFlags,
-            LPCTSTR lpszSection);
-
         void OnDestroy();
 
     private:
 
         WTL::CIcon m_ApplicationIcon;
-        winrt::DesktopWindowXamlSource m_XamlSource;
-        winrt::NanaGet::MainPage m_MainPage = nullptr;
     };
 }
 
@@ -133,6 +96,11 @@ int NanaGet::MainWindow::OnCreate(
 {
     UNREFERENCED_PARAMETER(lpCreateStruct);
 
+    if (this->DefWindowProcW() != 0)
+    {
+        return -1;
+    }
+
     this->m_ApplicationIcon.LoadIconW(
         MAKEINTRESOURCE(IDI_NANAGET),
         256,
@@ -141,45 +109,6 @@ int NanaGet::MainWindow::OnCreate(
 
     this->SetIcon(this->m_ApplicationIcon, TRUE);
     this->SetIcon(this->m_ApplicationIcon, FALSE);
-
-    this->m_MainPage = winrt::make<winrt::NanaGet::implementation::MainPage>();
-    winrt::com_ptr<IDesktopWindowXamlSourceNative> XamlSourceNative =
-        this->m_XamlSource.as<IDesktopWindowXamlSourceNative>();
-    winrt::check_hresult(
-        XamlSourceNative->AttachToWindow(this->m_hWnd));
-    this->m_XamlSource.Content(this->m_MainPage);
-
-    HWND XamlWindowHandle = nullptr;
-    winrt::check_hresult(
-        XamlSourceNative->get_WindowHandle(&XamlWindowHandle));
-
-    // When focus is moving out from XAML island, move it back in again.
-    this->m_XamlSource.TakeFocusRequested([this](
-        winrt::DesktopWindowXamlSource sender,
-        winrt::DesktopWindowXamlSourceTakeFocusRequestedEventArgs args)
-    {
-        this->m_MainPage.Focus(winrt::FocusState::Programmatic);
-    });
-
-    // Focus on XAML Island host window for Acrylic brush support.
-    ::SetFocus(XamlWindowHandle);
-
-    ::MileDisableSystemBackdrop(this->m_hWnd);
-
-    winrt::FrameworkElement Content =
-        this->m_XamlSource.Content().try_as<winrt::FrameworkElement>();
-
-    ::MileSetUseImmersiveDarkModeAttribute(
-        this->m_hWnd,
-        (Content.ActualTheme() == winrt::ElementTheme::Dark
-            ? TRUE
-            : FALSE));
-
-    ::MileSetCaptionColorAttribute(
-        this->m_hWnd,
-        (Content.ActualTheme() == winrt::ElementTheme::Dark
-            ? RGB(0, 0, 0)
-            : RGB(255, 255, 255)));
 
     UINT DpiValue = ::GetDpiForWindow(this->m_hWnd);
 
@@ -241,109 +170,6 @@ int NanaGet::MainWindow::OnCreate(
 //    return 0;
 //}
 
-void NanaGet::MainWindow::OnSetFocus(
-    ATL::CWindow wndOld)
-{
-    UNREFERENCED_PARAMETER(wndOld);
-
-    winrt::com_ptr<IDesktopWindowXamlSourceNative> XamlSourceNative =
-        this->m_XamlSource.as<IDesktopWindowXamlSourceNative>();
-
-    HWND XamlWindowHandle = nullptr;
-    winrt::check_hresult(
-        XamlSourceNative->get_WindowHandle(&XamlWindowHandle));
-
-    ::SetFocus(XamlWindowHandle);
-}
-
-void NanaGet::MainWindow::OnSize(
-    UINT nType,
-    CSize size)
-{
-    UNREFERENCED_PARAMETER(nType);
-
-    winrt::com_ptr<IDesktopWindowXamlSourceNative> XamlSourceNative =
-        this->m_XamlSource.as<IDesktopWindowXamlSourceNative>();
-
-    HWND XamlWindowHandle = nullptr;
-    winrt::check_hresult(
-        XamlSourceNative->get_WindowHandle(&XamlWindowHandle));
-    ::SetWindowPos(
-        XamlWindowHandle,
-        nullptr,
-        0,
-        0,
-        size.cx,
-        size.cy,
-        SWP_SHOWWINDOW);
-}
-
-void NanaGet::MainWindow::OnDpiChanged(
-    UINT nDpiX,
-    UINT nDpiY,
-    PRECT pRect)
-{
-    UNREFERENCED_PARAMETER(nDpiX);
-    UNREFERENCED_PARAMETER(nDpiY);
-
-    this->SetWindowPos(
-        nullptr,
-        pRect,
-        SWP_NOZORDER | SWP_NOACTIVATE);
-}
-
-LRESULT NanaGet::MainWindow::OnMenuChar(
-    UINT nChar,
-    UINT nFlags,
-    WTL::CMenuHandle menu)
-{
-    UNREFERENCED_PARAMETER(nChar);
-    UNREFERENCED_PARAMETER(nFlags);
-    UNREFERENCED_PARAMETER(menu);
-
-    // Reference: https://github.com/microsoft/terminal
-    //            /blob/756fd444b1d443320cf2ed6887d4b65aa67a9a03
-    //            /scratch/ScratchIslandApp
-    //            /WindowExe/SampleIslandWindow.cpp#L155
-    // Return this LRESULT here to prevent the app from making a bell
-    // when alt+key is pressed. A menu is active and the user presses a
-    // key that does not correspond to any mnemonic or accelerator key.
-
-    return MAKELRESULT(0, MNC_CLOSE);
-}
-
-void NanaGet::MainWindow::OnSettingChange(
-    UINT uFlags,
-    LPCTSTR lpszSection)
-{
-    UNREFERENCED_PARAMETER(uFlags);
-
-    if (lpszSection && 0 == std::wcscmp(
-        lpszSection,
-        L"ImmersiveColorSet"))
-    {
-        winrt::FrameworkElement Content =
-            this->m_XamlSource.Content().try_as<winrt::FrameworkElement>();
-        if (Content &&
-            winrt::VisualTreeHelper::GetParent(Content))
-        {
-            Content.RequestedTheme(winrt::ElementTheme::Default);
-
-            ::MileSetUseImmersiveDarkModeAttribute(
-                this->m_hWnd,
-                (Content.ActualTheme() == winrt::ElementTheme::Dark
-                    ? TRUE
-                    : FALSE));
-
-            ::MileSetCaptionColorAttribute(
-                this->m_hWnd,
-                (Content.ActualTheme() == winrt::ElementTheme::Dark
-                    ? RGB(0, 0, 0)
-                    : RGB(255, 255, 255)));
-        }
-    }
-}
-
 void NanaGet::MainWindow::OnDestroy()
 {
     /*NOTIFYICONDATAW NotifyIconData = { 0 };
@@ -351,8 +177,6 @@ void NanaGet::MainWindow::OnDestroy()
     NotifyIconData.uFlags = NIF_GUID;
     NotifyIconData.guidItem = NotifyIconGuid;
     ::Shell_NotifyIconW(NIM_DELETE, &NotifyIconData);*/
-
-    this->m_XamlSource.Close();
 
     ::PostQuitMessage(0);
 }
@@ -378,13 +202,19 @@ int WINAPI wWinMain(
 
     g_Module.Init(nullptr, hInstance);
 
+    using MainPageInstance = winrt::NanaGet::implementation::MainPage;
+
+    winrt::NanaGet::MainPage Control = winrt::make<MainPageInstance>();
+
     NanaGet::MainWindow Window;
     if (!Window.Create(
         nullptr,
         Window.rcDefault,
         L"NanaBox",
         WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
-        WS_EX_CLIENTEDGE))
+        WS_EX_CLIENTEDGE,
+        nullptr,
+        winrt::get_abi(Control)))
     {
         return -1;
     }
