@@ -16,13 +16,6 @@
 
 #include "NanaGetResources.h"
 
-#include <Mile.Windows.DwmHelpers.h>
-
-#include <dwmapi.h>
-#pragma comment(lib, "dwmapi.lib")
-
-#include <Mile.Helpers.h>
-
 //namespace
 //{
 //    // {CCD5AA13-D01B-494F-A5E1-3E373234857B}
