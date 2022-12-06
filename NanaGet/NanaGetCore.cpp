@@ -115,6 +115,23 @@ namespace Mile
     };
 }
 
+namespace NanaGet
+{
+    NLOHMANN_JSON_SERIALIZE_ENUM(NanaGet::Aria2UriStatus, {
+        { NanaGet::Aria2UriStatus::Used, "used" },
+        { NanaGet::Aria2UriStatus::Waiting, "waiting" }
+    })
+
+    NLOHMANN_JSON_SERIALIZE_ENUM(NanaGet::Aria2TaskStatus, {
+        { NanaGet::Aria2TaskStatus::Active, "active" },
+        { NanaGet::Aria2TaskStatus::Waiting, "waiting" },
+        { NanaGet::Aria2TaskStatus::Paused, "paused" },
+        { NanaGet::Aria2TaskStatus::Error, "error" },
+        { NanaGet::Aria2TaskStatus::Complete, "complete" },
+        { NanaGet::Aria2TaskStatus::Removed, "removed" }
+    })
+}
+
 namespace winrt
 {
     using Windows::ApplicationModel::Package;
@@ -551,53 +568,48 @@ void NanaGet::Aria2Instance::RefreshInformation()
     }
 
     {
-        winrt::JsonArray Parameters;
-        Parameters.Append(this->m_ServerTokenJsonValue);
+        nlohmann::json Parameters;
+        Parameters.push_back("token:" + winrt::to_string(this->m_ServerToken));
 
-        winrt::JsonArray ResponseJson = this->ExecuteJsonRpcCall(
-            L"aria2.tellActive",
-            Parameters).GetArray();
+        nlohmann::json ResponseJson = nlohmann::json::parse(
+            this->SimpleJsonRpcCall("aria2.tellActive", Parameters.dump(2)));
 
-        for (winrt::IJsonValue const& Task : ResponseJson)
+        for (nlohmann::json const& Task : ResponseJson)
         {
             this->m_Tasks.emplace_back(
-                this->ParseTaskInformation(Task.GetObject()));
+                this->ParseTaskInformation(Task.dump(2)));
         }
     }
 
     {
-        winrt::JsonArray Parameters;
-        Parameters.Append(this->m_ServerTokenJsonValue);
-        Parameters.Append(winrt::JsonValue::CreateNumberValue(0));
-        Parameters.Append(winrt::JsonValue::CreateNumberValue(
-            static_cast<double>(NumWaiting)));
+        nlohmann::json Parameters;
+        Parameters.push_back("token:" + winrt::to_string(this->m_ServerToken));
+        Parameters.push_back(0);
+        Parameters.push_back(static_cast<double>(NumWaiting));
 
-        winrt::JsonArray ResponseJson = this->ExecuteJsonRpcCall(
-            L"aria2.tellWaiting",
-            Parameters).GetArray();
+        nlohmann::json ResponseJson = nlohmann::json::parse(
+            this->SimpleJsonRpcCall("aria2.tellWaiting", Parameters.dump(2)));
 
-        for (winrt::IJsonValue const& Task : ResponseJson)
+        for (nlohmann::json const& Task : ResponseJson)
         {
             this->m_Tasks.emplace_back(
-                this->ParseTaskInformation(Task.GetObject()));
+                this->ParseTaskInformation(Task.dump(2)));
         }
     }
 
     {
-        winrt::JsonArray Parameters;
-        Parameters.Append(this->m_ServerTokenJsonValue);
-        Parameters.Append(winrt::JsonValue::CreateNumberValue(0));
-        Parameters.Append(winrt::JsonValue::CreateNumberValue(
-            static_cast<double>(NumStopped)));
+        nlohmann::json Parameters;
+        Parameters.push_back("token:" + winrt::to_string(this->m_ServerToken));
+        Parameters.push_back(0);
+        Parameters.push_back(static_cast<double>(NumStopped));
 
-        winrt::JsonArray ResponseJson = this->ExecuteJsonRpcCall(
-            L"aria2.tellStopped",
-            Parameters).GetArray();
+        nlohmann::json ResponseJson = nlohmann::json::parse(
+            this->SimpleJsonRpcCall("aria2.tellStopped", Parameters.dump(2)));
 
-        for (winrt::IJsonValue const& Task : ResponseJson)
+        for (nlohmann::json const& Task : ResponseJson)
         {
             this->m_Tasks.emplace_back(
-                this->ParseTaskInformation(Task.GetObject()));
+                this->ParseTaskInformation(Task.dump(2)));
         }
     }
 }
@@ -733,59 +745,49 @@ NanaGet::Aria2GlobalStatus NanaGet::Aria2Instance::ParseGlobalStatus(
 }
 
 NanaGet::Aria2UriInformation NanaGet::Aria2Instance::ParseUriInformation(
-    winrt::JsonObject Value)
+    std::string const& Value)
 {
+    nlohmann::json JsonObject = nlohmann::json::parse(Value);
+
     NanaGet::Aria2UriInformation Result;
 
-    Result.Uri = Value.GetNamedString(L"uri");
-
-    winrt::hstring Status = Value.GetNamedString(L"status");
-    if (0 == std::wcscmp(Status.c_str(), L"used"))
-    {
-        Result.Status = NanaGet::Aria2UriStatus::Used;
-    }
-    else if (0 == std::wcscmp(Status.c_str(), L"waiting"))
-    {
-        Result.Status = NanaGet::Aria2UriStatus::Waiting;
-    }
-    else
-    {
-        throw winrt::hresult_out_of_bounds();
-    }
+    Result.Uri = winrt::to_hstring(JsonObject["uri"].get<std::string>());
+    Result.Status = JsonObject["status"].get<NanaGet::Aria2UriStatus>();
 
     return Result;
 }
 
 NanaGet::Aria2FileInformation NanaGet::Aria2Instance::ParseFileInformation(
-    winrt::JsonObject Value)
+    std::string const& Value)
 {
+    nlohmann::json JsonObject = nlohmann::json::parse(Value);
+
     NanaGet::Aria2FileInformation Result;
 
-    Result.Index = std::wcstoull(
-        Value.GetNamedString(L"index").c_str(),
+    Result.Index = std::strtoull(
+        JsonObject["index"].get<std::string>().c_str(),
         nullptr,
         10);
 
-    Result.Path =
-        Value.GetNamedString(L"path");
+    Result.Path = winrt::to_hstring(
+        JsonObject["path"].get<std::string>());
 
-    Result.Length = std::wcstoull(
-        Value.GetNamedString(L"length").c_str(),
+    Result.Length = std::strtoull(
+        JsonObject["length"].get<std::string>().c_str(),
         nullptr,
         10);
 
-    Result.CompletedLength= std::wcstoull(
-        Value.GetNamedString(L"completedLength").c_str(),
+    Result.CompletedLength = std::strtoull(
+        JsonObject["completedLength"].get<std::string>().c_str(),
         nullptr,
         10);
 
-    winrt::hstring Selected =
-        Value.GetNamedString(L"selected");
-    if (0 == std::wcscmp(Selected.c_str(), L"true"))
+    std::string Selected = JsonObject["selected"].get<std::string>();
+    if (0 == std::strcmp(Selected.c_str(), "true"))
     {
         Result.Selected = true;
     }
-    else if (0 == std::wcscmp(Selected.c_str(), L"false"))
+    else if (0 == std::strcmp(Selected.c_str(), "false"))
     {
         Result.Selected = false;
     }
@@ -794,93 +796,77 @@ NanaGet::Aria2FileInformation NanaGet::Aria2Instance::ParseFileInformation(
         throw winrt::hresult_out_of_bounds();
     }
 
-    for (winrt::IJsonValue const& Uri : Value.GetNamedArray(L"uris"))
+    nlohmann::json Uris = JsonObject["uris"];
+    for (nlohmann::json const& Uri : Uris)
     {
         Result.Uris.emplace_back(
-            this->ParseUriInformation(Uri.GetObject()));
+            this->ParseUriInformation(Uri.dump(2)));
     }
 
     return Result;
 }
 
 NanaGet::Aria2TaskInformation NanaGet::Aria2Instance::ParseTaskInformation(
-    winrt::JsonObject Value)
+    std::string const& Value)
 {
+    nlohmann::json JsonObject = nlohmann::json::parse(Value);
+
     NanaGet::Aria2TaskInformation Result;
 
-    Result.Gid =
-        Value.GetNamedString(L"gid");
+    Result.Gid = winrt::to_hstring(
+        JsonObject["gid"].get<std::string>());
 
-    winrt::hstring Status = Value.GetNamedString(L"status");
-    if (0 == std::wcscmp(Status.c_str(), L"active"))
-    {
-        Result.Status = NanaGet::Aria2TaskStatus::Active;
-    }
-    else if (0 == std::wcscmp(Status.c_str(), L"waiting"))
-    {
-        Result.Status = NanaGet::Aria2TaskStatus::Waiting;
-    }
-    else if (0 == std::wcscmp(Status.c_str(), L"paused"))
-    {
-        Result.Status = NanaGet::Aria2TaskStatus::Paused;
-    }
-    else if (0 == std::wcscmp(Status.c_str(), L"error"))
-    {
-        Result.Status = NanaGet::Aria2TaskStatus::Error;
-    }
-    else if (0 == std::wcscmp(Status.c_str(), L"complete"))
-    {
-        Result.Status = NanaGet::Aria2TaskStatus::Complete;
-    }
-    else if (0 == std::wcscmp(Status.c_str(), L"removed"))
-    {
-        Result.Status = NanaGet::Aria2TaskStatus::Removed;
-    }
-    else
-    {
-        throw winrt::hresult_out_of_bounds();
-    }
+    Result.Status = JsonObject["status"].get<NanaGet::Aria2TaskStatus>();
 
-    Result.TotalLength = std::wcstoull(
-        Value.GetNamedString(L"totalLength").c_str(),
+    Result.TotalLength = std::strtoull(
+        JsonObject["totalLength"].get<std::string>().c_str(),
         nullptr,
         10);
 
-    Result.CompletedLength = std::wcstoull(
-        Value.GetNamedString(L"completedLength").c_str(),
+    Result.CompletedLength = std::strtoull(
+        JsonObject["completedLength"].get<std::string>().c_str(),
         nullptr,
         10);
 
-    Result.DownloadSpeed = std::wcstoull(
-        Value.GetNamedString(L"downloadSpeed").c_str(),
+    Result.DownloadSpeed = std::strtoull(
+        JsonObject["downloadSpeed"].get<std::string>().c_str(),
         nullptr,
         10);
 
-    Result.UploadSpeed = std::wcstoull(
-        Value.GetNamedString(L"uploadSpeed").c_str(),
+    Result.UploadSpeed = std::strtoull(
+        JsonObject["uploadSpeed"].get<std::string>().c_str(),
         nullptr,
         10);
 
-    Result.InfoHash = Value.GetNamedString(
-        L"infoHash",
-        winrt::hstring());
+    try
+    {
+        Result.InfoHash = winrt::to_hstring(
+            JsonObject["infoHash"].get<std::string>());
+    }
+    catch (...)
+    {
 
-    Result.Dir =
-        Value.GetNamedString(L"dir");
+    }
 
-    for (winrt::IJsonValue const& File : Value.GetNamedArray(L"files"))
+    Result.Dir = winrt::to_hstring(
+        JsonObject["dir"].get<std::string>());
+
+    nlohmann::json Files = JsonObject["files"];
+    for (nlohmann::json const& File : Files)
     {
         Result.Files.emplace_back(
-            this->ParseFileInformation(File.GetObject()));
+            this->ParseFileInformation(File.dump(2)));
     }
 
-    Result.FriendlyName = Value.GetNamedObject(
-        L"bittorrent",
-        winrt::JsonObject()).GetNamedObject(
-            L"info",
-            winrt::JsonObject()).GetNamedString(
-                L"name",
-                winrt::hstring());
+    try
+    {
+        Result.FriendlyName = winrt::to_hstring(
+            JsonObject["bittorrent"]["info"]["name"].get<std::string>());
+    }
+    catch (...)
+    {
+
+    }
 
     if (Result.FriendlyName.empty())
     {

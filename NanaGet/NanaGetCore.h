@@ -208,13 +208,13 @@ namespace NanaGet
             std::string const& Value);
 
         Aria2UriInformation ParseUriInformation(
-            winrt::JsonObject Value);
+            std::string const& Value);
 
         Aria2FileInformation ParseFileInformation(
-            winrt::JsonObject Value);
+            std::string const& Value);
 
         Aria2TaskInformation ParseTaskInformation(
-            winrt::JsonObject Value);
+            std::string const& Value);
     };
 
     class LocalAria2Instance : public Aria2Instance
