@@ -20,18 +20,16 @@
 #endif
 
 #include <winrt/Windows.Foundation.h>
-#include <winrt/Windows.Data.Json.h>
 #include <winrt/Windows.Web.Http.h>
 
 #include <filesystem>
 #include <set>
 
+#include <json.hpp>
+
 namespace winrt
 {
     using Windows::Foundation::Uri;
-    using Windows::Data::Json::IJsonValue;
-    using Windows::Data::Json::JsonObject;
-    using Windows::Data::Json::JsonValue;
     using Windows::Web::Http::HttpClient;
 }
 
@@ -179,10 +177,6 @@ namespace NanaGet
             std::string const& MethodName,
             std::string const& Parameters);
 
-        winrt::JsonValue ExecuteJsonRpcCall(
-            winrt::hstring const& MethodName,
-            winrt::IJsonValue const& Parameters);
-
     protected:
 
         Aria2Instance();
@@ -195,7 +189,6 @@ namespace NanaGet
 
         winrt::Uri m_ServerUri = nullptr;
         winrt::hstring m_ServerToken;
-        winrt::JsonValue m_ServerTokenJsonValue = nullptr;
 
         winrt::HttpClient m_HttpClient;
 

@@ -491,8 +491,6 @@ namespace winrt::NanaGet::implementation
 
 
 
-    using Windows::Data::Json::JsonArray;
-    using Windows::Data::Json::JsonObject;
 
     int MainPage::SimpleDemoEntry()
     {
@@ -506,25 +504,23 @@ namespace winrt::NanaGet::implementation
 
         try
         {
-            JsonValue TokenValue = JsonValue::CreateStringValue(
-                L"token:" + this->m_Instance.ServerToken());
+            nlohmann::json Parameters;
+            Parameters.push_back(
+                "token:" + winrt::to_string(this->m_Instance.ServerToken()));
 
-            JsonArray Parameters;
-            Parameters.Append(TokenValue);
+            //std::string ResponseJson = this->m_Instance.SimpleJsonRpcCall(
+            //    "aria2.getVersion", //"aria2.tellActive",
+            //    Parameters);
 
-            //JsonObject ResponseJson = this->m_Instance.ExecuteJsonRpcCall(
-            //    L"aria2.getVersion", //L"aria2.tellActive",
-            //    Parameters).GetObject();
-
-            //JsonArray ResponseJson = this->m_Instance.ExecuteJsonRpcCall(
+            //std::string ResponseJson = this->m_Instance.SimpleJsonRpcCall(
             //    L"system.listMethods",
-            //    Parameters).GetArray();
+            //    Parameters);
 
-            JsonObject ResponseJson = this->m_Instance.ExecuteJsonRpcCall(
-                L"aria2.getGlobalOption",
-                Parameters).GetObject();
+            std::string ResponseJson = this->m_Instance.SimpleJsonRpcCall(
+                "aria2.getGlobalOption",
+                Parameters);
 
-            winrt::hstring ResponseJsonString = ResponseJson.Stringify();
+            winrt::hstring ResponseJsonString = winrt::to_hstring(ResponseJson);
 
             ::MessageBoxW(nullptr, ResponseJsonString.data(), L"NanaGet", 0);
         }
