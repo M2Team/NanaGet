@@ -672,41 +672,9 @@ winrt::JsonValue NanaGet::Aria2Instance::ExecuteJsonRpcCall(
     winrt::hstring const& MethodName,
     winrt::IJsonValue const& Parameters)
 {
-    winrt::hstring Identifier = NanaGet::CreateGuidString();
-
-    winrt::JsonObject RequestJson = winrt::JsonObject();
-
-    RequestJson.Insert(
-        L"jsonrpc",
-        winrt::JsonValue::CreateStringValue(L"2.0"));
-    RequestJson.Insert(
-        L"method",
-        winrt::JsonValue::CreateStringValue(MethodName));
-    RequestJson.Insert(
-        L"params",
-        Parameters);
-    RequestJson.Insert(
-        L"id",
-        winrt::JsonValue::CreateStringValue(Identifier));
-
-    winrt::hstring ResponseString = winrt::to_hstring(
-        this->SimplePost(winrt::to_string(RequestJson.Stringify())));
-
-    winrt::JsonObject ResponseJson = winrt::JsonObject::Parse(ResponseString);
-
-    if (L"2.0" != ResponseJson.GetNamedString(L"jsonrpc") ||
-        Identifier != ResponseJson.GetNamedString(L"id"))
-    {
-        throw winrt::hresult_illegal_method_call();
-    }
-
-    if (ResponseJson.HasKey(L"error"))
-    {
-        throw winrt::hresult_illegal_method_call(
-            ResponseJson.GetNamedValue(L"error").Stringify());
-    }
-
-    return ResponseJson.GetNamedValue(L"result");
+    return winrt::JsonValue::Parse(winrt::to_hstring(this->SimpleJsonRpcCall(
+        winrt::to_string(MethodName),
+        winrt::to_string(Parameters.Stringify()))));
 }
 
 NanaGet::Aria2Instance::Aria2Instance()
