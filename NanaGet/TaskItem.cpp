@@ -29,19 +29,21 @@ namespace winrt::NanaGet::implementation
 
     hstring TaskItem::Gid()
     {
-        return this->m_Information.Gid;
+        return winrt::to_hstring(this->m_Information.Gid);
     }
 
     hstring TaskItem::Name()
     {
-        return this->m_Information.FriendlyName;
+        return winrt::to_hstring(this->m_Information.FriendlyName);
     }
 
     hstring TaskItem::Source()
     {
         if (!this->m_Information.InfoHash.empty())
         {
-            return L"magnet:?xt=urn:btih:" + this->m_Information.InfoHash;
+            return NanaGet::FormatWindowsRuntimeString(
+                L"magnet:?xt=urn:btih:%s",
+                winrt::to_hstring(this->m_Information.InfoHash).c_str());
         }
         else
         {
@@ -52,7 +54,7 @@ namespace winrt::NanaGet::implementation
             {
                 for (Aria2UriInformation const& Item : File.Uris)
                 {
-                    Uris.emplace(Item.Uri);
+                    Uris.emplace(winrt::to_hstring(Item.Uri));
                 }
             }
 

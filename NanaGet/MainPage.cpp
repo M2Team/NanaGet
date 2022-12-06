@@ -167,8 +167,8 @@ namespace winrt::NanaGet::implementation
         {
             NanaGet::TaskItem Current =
                 this->GetTaskItemFromEventSender(sender);
-            this->m_Instance.Remove(Current.Gid());
-            this->m_Instance.AddTask(Uri(Current.Source()));
+            this->m_Instance.Remove(winrt::to_string(Current.Gid()));
+            this->m_Instance.AddTask(winrt::to_string(Current.Source()));
         }
         catch (...)
         {
@@ -186,7 +186,7 @@ namespace winrt::NanaGet::implementation
         {
             NanaGet::TaskItem Current =
                 this->GetTaskItemFromEventSender(sender);
-            this->m_Instance.Resume(Current.Gid());
+            this->m_Instance.Resume(winrt::to_string(Current.Gid()));
         }
         catch (...)
         {
@@ -204,7 +204,7 @@ namespace winrt::NanaGet::implementation
         {
             NanaGet::TaskItem Current =
                 this->GetTaskItemFromEventSender(sender);
-            this->m_Instance.Pause(Current.Gid());  
+            this->m_Instance.Pause(winrt::to_string(Current.Gid()));
         }
         catch (...)
         {
@@ -256,7 +256,7 @@ namespace winrt::NanaGet::implementation
         {
             NanaGet::TaskItem Current =
                 this->GetTaskItemFromEventSender(sender);
-            this->m_Instance.Cancel(Current.Gid());
+            this->m_Instance.Cancel(winrt::to_string(Current.Gid()));
         }
         catch (...)
         {
@@ -274,7 +274,7 @@ namespace winrt::NanaGet::implementation
         {
             NanaGet::TaskItem Current =
                 this->GetTaskItemFromEventSender(sender);
-            this->m_Instance.Remove(Current.Gid());
+            this->m_Instance.Remove(winrt::to_string(Current.Gid()));
         }
         catch (...)
         {
@@ -307,7 +307,7 @@ namespace winrt::NanaGet::implementation
 
         try
         {
-            this->m_Instance.AddTask(Uri(
+            this->m_Instance.AddTask(winrt::to_string(
                 this->NewTaskGridDownloadSourceTextBox().Text()));
         }
         catch (...)
@@ -407,14 +407,14 @@ namespace winrt::NanaGet::implementation
         for (Aria2TaskInformation const& Task : this->m_Instance.Tasks())
         {
             if (!NanaGet::FindSubString(
-                Task.FriendlyName,
+                winrt::to_hstring(Task.FriendlyName),
                 CurrentSearchFilter,
                 true))
             {
                 continue;
             }
 
-            Gids.emplace(Task.Gid);
+            Gids.emplace(winrt::to_hstring(Task.Gid));
         }
 
         bool NeedFullRefresh = false;
@@ -431,7 +431,7 @@ namespace winrt::NanaGet::implementation
             for (Aria2TaskInformation const& Task : this->m_Instance.Tasks())
             {
                 if (!NanaGet::FindSubString(
-                    Task.FriendlyName,
+                    winrt::to_hstring(Task.FriendlyName),
                     CurrentSearchFilter,
                     true))
                 {
@@ -470,7 +470,9 @@ namespace winrt::NanaGet::implementation
                 std::map<winrt::hstring, Aria2TaskInformation> RawTasks;
                 for (Aria2TaskInformation const& Task : this->m_Instance.Tasks())
                 {
-                    RawTasks.emplace(std::pair(Task.Gid, Task));
+                    RawTasks.emplace(std::pair(
+                        winrt::to_hstring(Task.Gid),
+                        Task));
                 }
 
                 for (NanaGet::TaskItem const& Task : this->m_Tasks)
@@ -506,7 +508,7 @@ namespace winrt::NanaGet::implementation
         {
             nlohmann::json Parameters;
             Parameters.push_back(
-                "token:" + winrt::to_string(this->m_Instance.ServerToken()));
+                "token:" + this->m_Instance.ServerToken());
 
             //std::string ResponseJson = this->m_Instance.SimpleJsonRpcCall(
             //    "aria2.getVersion", //"aria2.tellActive",

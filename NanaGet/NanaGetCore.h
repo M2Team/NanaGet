@@ -82,14 +82,14 @@ namespace NanaGet
 
     struct Aria2UriInformation
     {
-        winrt::hstring Uri;
+        std::string Uri;
         Aria2UriStatus Status;
     };
 
     struct Aria2FileInformation
     {
         std::uint64_t Index;
-        winrt::hstring Path;
+        std::string Path;
         std::uint64_t Length;
         std::uint64_t CompletedLength;
         bool Selected;
@@ -108,16 +108,16 @@ namespace NanaGet
 
     struct Aria2TaskInformation
     {
-        winrt::hstring Gid;
+        std::string Gid;
         Aria2TaskStatus Status;
         std::uint64_t TotalLength;
         std::uint64_t CompletedLength;
         std::uint64_t DownloadSpeed;
         std::uint64_t UploadSpeed;
-        winrt::hstring InfoHash;
-        winrt::hstring Dir;
+        std::string InfoHash;
+        std::string Dir;
         std::vector<Aria2FileInformation> Files;
-        winrt::hstring FriendlyName;
+        std::string FriendlyName;
     };
 
     class Aria2Instance
@@ -125,13 +125,13 @@ namespace NanaGet
     public:
         Aria2Instance(
             winrt::Uri const& ServerUri,
-            winrt::hstring const& ServerToken);
+            std::string const& ServerToken);
 
         ~Aria2Instance();
 
         winrt::Uri ServerUri();
 
-        winrt::hstring ServerToken();
+        std::string ServerToken();
 
         void Shutdown(
             bool Force = false);
@@ -144,21 +144,21 @@ namespace NanaGet
         void ClearList();
 
         void Pause(
-            winrt::hstring Gid,
+            std::string const& Gid,
             bool Force = false);
 
         void Resume(
-            winrt::hstring Gid);
+            std::string const& Gid);
 
         void Cancel(
-            winrt::hstring Gid,
+            std::string const& Gid,
             bool Force = false);
 
         void Remove(
-            winrt::hstring Gid);
+            std::string const& Gid);
 
-        winrt::hstring AddTask(
-            winrt::Uri const& Source);
+        std::string AddTask(
+            std::string const& Source);
 
         winrt::slim_mutex& InstanceLock();
 
@@ -183,12 +183,12 @@ namespace NanaGet
 
         void UpdateInstance(
             winrt::Uri const& ServerUri,
-            winrt::hstring const& ServerToken);
+            std::string const& ServerToken);
 
     private:
 
         winrt::Uri m_ServerUri = nullptr;
-        winrt::hstring m_ServerToken;
+        std::string m_ServerToken;
 
         winrt::HttpClient m_HttpClient;
 
@@ -198,16 +198,16 @@ namespace NanaGet
         std::vector<Aria2TaskInformation> m_Tasks;
 
         Aria2GlobalStatus ParseGlobalStatus(
-            std::string const& Value);
+            nlohmann::json const& Value);
 
         Aria2UriInformation ParseUriInformation(
-            std::string const& Value);
+            nlohmann::json const& Value);
 
         Aria2FileInformation ParseFileInformation(
-            std::string const& Value);
+            nlohmann::json const& Value);
 
         Aria2TaskInformation ParseTaskInformation(
-            std::string const& Value);
+            nlohmann::json const& Value);
     };
 
     class LocalAria2Instance : public Aria2Instance
