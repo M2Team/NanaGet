@@ -397,7 +397,7 @@ void NanaGet::Aria2Instance::Shutdown(
     nlohmann::json Parameters;
     Parameters.push_back("token:" + this->m_ServerToken);
 
-    if ("OK" != this->SimpleJsonRpcCall(
+    if ("\"OK\"" != this->SimpleJsonRpcCall(
         Force ? "aria2.forceShutdown" : "aria2.shutdown",
         Parameters.dump(2)))
     {
@@ -411,7 +411,7 @@ void NanaGet::Aria2Instance::PauseAll(
     nlohmann::json Parameters;
     Parameters.push_back("token:" + this->m_ServerToken);
 
-    if ("OK" != this->SimpleJsonRpcCall(
+    if ("\"OK\"" != this->SimpleJsonRpcCall(
         Force ? "aria2.forcePauseAll" : "aria2.pauseAll",
         Parameters.dump(2)))
     {
@@ -424,7 +424,7 @@ void NanaGet::Aria2Instance::ResumeAll()
     nlohmann::json Parameters;
     Parameters.push_back("token:" + this->m_ServerToken);
 
-    if ("OK" != this->SimpleJsonRpcCall(
+    if ("\"OK\"" != this->SimpleJsonRpcCall(
         "aria2.unpauseAll",
         Parameters.dump(2)))
     {
@@ -437,7 +437,7 @@ void NanaGet::Aria2Instance::ClearList()
     nlohmann::json Parameters;
     Parameters.push_back("token:" + this->m_ServerToken);
 
-    if ("OK" != this->SimpleJsonRpcCall(
+    if ("\"OK\"" != this->SimpleJsonRpcCall(
         "aria2.purgeDownloadResult",
         Parameters.dump(2)))
     {
@@ -493,7 +493,7 @@ void NanaGet::Aria2Instance::Remove(
     Parameters.push_back("token:" + this->m_ServerToken);
     Parameters.push_back(Gid);
 
-    if ("OK" != this->SimpleJsonRpcCall(
+    if ("\"OK\"" != this->SimpleJsonRpcCall(
         "aria2.removeDownloadResult",
         Parameters.dump(2)))
     {
@@ -810,13 +810,9 @@ NanaGet::Aria2TaskInformation NanaGet::Aria2Instance::ParseTaskInformation(
         nullptr,
         10);
 
-    try
+    if (Value.contains("infoHash"))
     {
-        Result.InfoHash = Value.at("infoHash").get<std::string>();
-    }
-    catch (...)
-    {
-
+        Result.InfoHash = Value["infoHash"].get<std::string>();
     }
 
     Result.Dir = Value["dir"].get<std::string>();
@@ -827,14 +823,12 @@ NanaGet::Aria2TaskInformation NanaGet::Aria2Instance::ParseTaskInformation(
         Result.Files.emplace_back(this->ParseFileInformation(File));
     }
 
-    try
+    if (Value.contains("bittorrent") &&
+        Value["bittorrent"].contains("info") &&
+        Value["bittorrent"]["info"].contains("name"))
     {
         Result.FriendlyName =
-            Value.at("bittorrent").at("info").at("name").get<std::string>();
-    }
-    catch (...)
-    {
-
+            Value["bittorrent"]["info"]["name"].get<std::string>();
     }
 
     if (Result.FriendlyName.empty())
