@@ -45,7 +45,7 @@ namespace NanaGet
         BEGIN_MSG_MAP(MainWindow)
             MSG_WM_CREATE(OnCreate)
             //MESSAGE_HANDLER_EX(NotifyIconCallbackMessage, OnNotifyIcon)
-            MSG_WM_DESTROY(OnDestroy)           
+            MSG_WM_DESTROY(OnDestroy)
         END_MSG_MAP()
 
         virtual BOOL PreTranslateMessage(
@@ -127,7 +127,7 @@ int NanaGet::MainWindow::OnCreate(
 
     NotifyIconData.uVersion = NOTIFYICON_VERSION_4;
     winrt::check_bool(::Shell_NotifyIconW(NIM_SETVERSION, &NotifyIconData));*/
-    
+
     return 0;
 }
 
@@ -191,7 +191,7 @@ int WINAPI wWinMain(
     winrt::init_apartment(winrt::apartment_type::single_threaded);
 
     winrt::NanaGet::App app =
-        winrt::make<winrt::NanaGet::implementation::App>();  
+        winrt::make<winrt::NanaGet::implementation::App>();
 
     g_Module.Init(nullptr, hInstance);
 
@@ -203,7 +203,7 @@ int WINAPI wWinMain(
     if (!Window.Create(
         nullptr,
         Window.rcDefault,
-        L"NanaBox",
+        L"NanaGet",
         WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
         WS_EX_CLIENTEDGE,
         nullptr,
