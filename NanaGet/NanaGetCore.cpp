@@ -478,7 +478,7 @@ void NanaGet::Aria2Instance::Cancel(
     Parameters.push_back("token:" + this->m_ServerToken);
     Parameters.push_back(Gid);
 
-    if (Gid != this->SimpleJsonRpcCall(
+    if (std::string("\"") + Gid + "\"" != this->SimpleJsonRpcCall(
         Force ? "aria2.forceRemove" : "aria2.remove",
         Parameters.dump(2)))
     {
