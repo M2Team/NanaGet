@@ -1,7 +1,5 @@
 ﻿# The aria2 binaries for NanaGet
 
-Work In Progress.
-
 ## Notes
 
 - I only compile libssh2 dependency manually because msys2's libssh2 depends
