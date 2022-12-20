@@ -36,7 +36,7 @@
       <Link>Strings\%(RecursiveDir)%(FileName)%(Extension)</Link>
     </PRIResource>
     <!-- aria2 -->
-    <Content Include="..\aria2\aria2c.exe">
+    <Content Include="..\aria2\$(Platform)\aria2c.exe">
       <DeploymentContent>true</DeploymentContent>
       <Link>aria2c.exe</Link>
     </Content>
