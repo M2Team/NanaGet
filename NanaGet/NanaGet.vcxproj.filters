@@ -23,7 +23,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
-    <ClInclude Include="Mile.Project.Properties.h" />
     <ClInclude Include="NanaGetCore.h">
       <Filter>NanaGetCore</Filter>
     </ClInclude>

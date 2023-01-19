@@ -18,6 +18,15 @@
     <WindowsTargetPlatformMinVersion>10.0.19041.0</WindowsTargetPlatformMinVersion>
     <MileProjectEnableVCLTLSupport>true</MileProjectEnableVCLTLSupport>
     <MileProjectEnableCppWinRTSupport>true</MileProjectEnableCppWinRTSupport>
+    <MileProjectUseProjectProperties>true</MileProjectUseProjectProperties>
+    <MileProjectCompanyName>M2-Team</MileProjectCompanyName>
+    <MileProjectFileDescription>NanaGet for Windows</MileProjectFileDescription>
+    <MileProjectInternalName>NanaGet</MileProjectInternalName>
+    <MileProjectLegalCopyright>© M2-Team and Contributors. All rights reserved.</MileProjectLegalCopyright>
+    <MileProjectOriginalFilename>NanaGet.exe</MileProjectOriginalFilename>
+    <MileProjectProductName>NanaGet</MileProjectProductName>
+    <MileProjectVersion>1.1.90.0</MileProjectVersion>
+    <MileProjectVersionTag>Preview 1</MileProjectVersionTag>
   </PropertyGroup>
   <Import Project="..\Mile.Project.Windows\Mile.Project.Cpp.props" />
   <Import Project="..\ThirdParty\WindowsTemplateLibrary.props" />
@@ -26,7 +35,6 @@
     <Import Project="PropertySheet.props" />
   </ImportGroup>
   <ItemGroup>
-    <ClInclude Include="Mile.Project.Properties.h" />
     <ClInclude Include="NanaGetCore.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="App.h">
