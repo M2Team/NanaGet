@@ -815,6 +815,7 @@ Public License instead of this License.
 ### The third-party libraries used in NanaGet
 
 - C++/WinRT, https://github.com/microsoft/cppwinrt
-- Mile.Cpp, https://github.com/ProjectMile/Mile.Cpp
+- Mile.Project.Windows, https://github.com/ProjectMile/Mile.Project.Windows
+- Mile.Windows.Helpers, https://github.com/ProjectMile/Mile.Windows.Helpers
+- Mile.Xaml, https://github.com/ProjectMile/Mile.Xaml
 - VC-LTL, https://github.com/Chuyu-Team/VC-LTL5
-- Windows UI Library, https://github.com/microsoft/microsoft-ui-xaml
