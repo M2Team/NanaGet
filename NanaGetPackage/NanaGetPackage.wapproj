@@ -43,7 +43,8 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NanaGet\NanaGet.vcxproj">
-      <SkipGetTargetFrameworkProperties>True</SkipGetTargetFrameworkProperties>
+      <Project>{4C5F187E-4734-489E-9D80-200B3EF14DCA}</Project>
+      <SetPlatform Condition="'$(Platform)'=='x86'">Platform=Win32</SetPlatform>
     </ProjectReference>
   </ItemGroup>
   <Import Project="..\Mile.Project.Windows\Mile.Project.Wap.targets" />
