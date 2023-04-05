@@ -18,7 +18,9 @@ requests and issues are welcome.**
 
 ## Features
 
-- Currently based on aria2. (https://github.com/aria2/aria2#features)
+- Currently based on Mile.Aria2 (https://github.com/ProjectMile/Mile.Aria2), 
+  the customized version of aria2 (https://github.com/aria2/aria2#features)
+  which is specialized for MSVC toolchain. 
 - Multi-language Support: English, German, Japanese, Traditional Chinese and 
   Simplified Chinese.
 - Packaging with MSIX for modern deployment experience.
@@ -76,9 +78,9 @@ N/A.
         later.)
   - [x] Add full High DPI and partial Accessibility support.
 - 1.x Series (T.B.D.)
-  - [ ] Improve the Mile.Xaml implementations for providing more modern control
+  - [x] Improve the Mile.Xaml implementations for providing more modern control
         styles and keeping smaller binary size.
-  - [ ] Try to build my aria2 binary instead of using offical one for providing
+  - [x] Try to build my aria2 binary instead of using offical one for providing
         x64 and arm64 native support for aria2 part.
   - [ ] Remote aria2 instance support.
   - [ ] Providing HASH value for downloaded files.
