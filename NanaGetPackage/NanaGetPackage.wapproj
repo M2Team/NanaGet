@@ -35,11 +35,6 @@
     <PRIResource Include="Strings\**\*">
       <Link>Strings\%(RecursiveDir)%(FileName)%(Extension)</Link>
     </PRIResource>
-    <!-- aria2 -->
-    <Content Include="..\aria2\$(Platform)\aria2c.exe">
-      <DeploymentContent>true</DeploymentContent>
-      <Link>aria2c.exe</Link>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NanaGet\NanaGet.vcxproj">
