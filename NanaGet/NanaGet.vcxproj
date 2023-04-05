@@ -99,6 +99,9 @@
     <PackageReference Include="Mile.Windows.Helpers">
       <Version>1.0.11</Version>
     </PackageReference>
+    <PackageReference Include="Mile.Aria2">
+      <Version>1.0.6</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="..\Mile.Project.Windows\Mile.Project.Cpp.targets" />
 </Project>
