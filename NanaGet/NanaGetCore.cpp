@@ -1051,7 +1051,7 @@ void NanaGet::LocalAria2Instance::Startup()
     });
 
     std::filesystem::path Aria2Executable =
-        NanaGet::GetApplicationFolderPath() / L"aria2c.exe";
+        NanaGet::GetApplicationFolderPath() / L"Mile.Aria2.exe";
     std::filesystem::path Aria2LogFile =
         NanaGet::GetSettingsFolderPath() / L"aria2c.log";
     std::filesystem::path SessionFile =

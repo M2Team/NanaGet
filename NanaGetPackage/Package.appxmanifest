@@ -52,7 +52,7 @@
 
   <Extensions>
     <desktop2:Extension Category="windows.firewallRules">
-      <desktop2:FirewallRules Executable="aria2c.exe">
+      <desktop2:FirewallRules Executable="Mile.Aria2.exe">
         <desktop2:Rule Direction="in" IPProtocol="TCP" Profile="all" />
         <desktop2:Rule Direction="in" IPProtocol="UDP" Profile="all" />
       </desktop2:FirewallRules>
