@@ -1083,7 +1083,7 @@ void NanaGet::LocalAria2Instance::Startup()
     Settings.emplace_back(
         L"continue",
         L"true");
-    /*if (std::filesystem::exists(SessionFile))
+    if (std::filesystem::exists(SessionFile))
     {
         Settings.emplace_back(
             L"input-file",
@@ -1094,13 +1094,13 @@ void NanaGet::LocalAria2Instance::Startup()
         SessionFile);
     Settings.emplace_back(
         L"auto-save-interval",
-        L"10");*/
-    /*Settings.emplace_back(
+        L"10");
+    Settings.emplace_back(
         L"dht-file-path",
         DhtDataFile);
     Settings.emplace_back(
         L"dht-file-path6",
-        Dht6DataFile);*/
+        Dht6DataFile);
     Settings.emplace_back(
         L"bt-tracker",
         winrt::to_hstring(BitTorrentTrackers).c_str());
