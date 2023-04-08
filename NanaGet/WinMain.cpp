@@ -190,8 +190,8 @@ int WINAPI wWinMain(
 
     winrt::init_apartment(winrt::apartment_type::single_threaded);
 
-    winrt::NanaGet::App app =
-        winrt::make<winrt::NanaGet::implementation::App>();
+    winrt::com_ptr<winrt::NanaGet::implementation::App> app =
+        winrt::make_self<winrt::NanaGet::implementation::App>();
 
     g_Module.Init(nullptr, hInstance);
 
@@ -222,7 +222,7 @@ int WINAPI wWinMain(
     g_Module.RemoveMessageLoop();
     g_Module.Term();
 
-    app.Close();
+    app->Close();
 
     return Result;
 }
