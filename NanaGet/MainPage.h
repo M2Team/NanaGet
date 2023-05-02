@@ -12,7 +12,7 @@ namespace winrt::NanaGet::implementation
 {
     using Windows::Foundation::Collections::IObservableVector;
     using Windows::Foundation::IInspectable;  
-    using Windows::System::Threading::ThreadPoolTimer;
+    using Windows::UI::Xaml::DispatcherTimer;
     using Windows::UI::Xaml::RoutedEventArgs;
     using Windows::UI::Xaml::Controls::ContainerContentChangingEventArgs;
     using Windows::UI::Xaml::Controls::ListViewBase;
@@ -129,14 +129,15 @@ namespace winrt::NanaGet::implementation
     private:
 
         NanaGet::LocalAria2Instance m_Instance;
-        ThreadPoolTimer m_RefreshTimer = nullptr;
+        DispatcherTimer m_RefreshTimer = nullptr;
 
         std::set<winrt::hstring> m_Gids;
         IObservableVector<NanaGet::TaskItem> m_Tasks = nullptr;
         winrt::hstring m_SearchFilter;
 
-        winrt::fire_and_forget RefreshTimerHandler(
-            ThreadPoolTimer const& timer);
+        void RefreshTimerHandler(
+            IInspectable const& sender,
+            IInspectable const& e);
 
         int SimpleDemoEntry();
 

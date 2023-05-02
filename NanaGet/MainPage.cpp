@@ -21,9 +21,13 @@ namespace winrt::NanaGet::implementation
     {
         this->InitializeComponent();
         //this->SimpleDemoEntry();
-        this->m_RefreshTimer = ThreadPoolTimer::CreatePeriodicTimer(
-            { this, &MainPage::RefreshTimerHandler },
-            std::chrono::milliseconds(200));
+        this->m_RefreshTimer = DispatcherTimer();
+        if (this->m_RefreshTimer)
+        {
+            this->m_RefreshTimer.Interval(std::chrono::milliseconds(200));
+            this->m_RefreshTimer.Tick({ this, &MainPage::RefreshTimerHandler });
+            this->m_RefreshTimer.Start();
+        }
     }
 
     winrt::hstring MainPage::SearchFilter()
@@ -41,7 +45,7 @@ namespace winrt::NanaGet::implementation
     {
         if (this->m_RefreshTimer)
         {
-            this->m_RefreshTimer.Cancel();
+            this->m_RefreshTimer.Stop();
         }
     }
 
@@ -385,10 +389,12 @@ namespace winrt::NanaGet::implementation
         this->AboutGrid().Visibility(Visibility::Collapsed);
     }
 
-    winrt::fire_and_forget MainPage::RefreshTimerHandler(
-        ThreadPoolTimer const& timer)
+    void MainPage::RefreshTimerHandler(
+        IInspectable const& sender,
+        IInspectable const& e)
     {
-        UNREFERENCED_PARAMETER(timer);
+        UNREFERENCED_PARAMETER(sender);
+        UNREFERENCED_PARAMETER(e);
 
         winrt::slim_lock_guard LockGuard(this->m_Instance.InstanceLock());
 
@@ -399,7 +405,7 @@ namespace winrt::NanaGet::implementation
             NanaGet::ConvertByteSizeToString(
                 this->m_Instance.TotalDownloadSpeed()).data(),
             NanaGet::ConvertByteSizeToString(
-                this->m_Instance.TotalUploadSpeed()).data());   
+                this->m_Instance.TotalUploadSpeed()).data());
 
         winrt::hstring CurrentSearchFilter = this->m_SearchFilter;
 
@@ -449,13 +455,6 @@ namespace winrt::NanaGet::implementation
 
             NeedFullRefresh = true;
         }
-
-        CoreDispatcher Dispatcher = this->Dispatcher();
-        if (!Dispatcher)
-        {
-            co_return;
-        }
-        co_await winrt::resume_foreground(Dispatcher);
 
         this->TaskManagerGridGlobalStatusTextBlock().Text(GlobalStatusText);
 
