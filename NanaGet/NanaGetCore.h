@@ -19,6 +19,8 @@
 #error "[NanaGetCore] You should use a C++ compiler with the C++17 standard."
 #endif
 
+#include <Mile.Helpers.CppWinRT.h>
+
 #include <winrt/Windows.Foundation.h>
 #include <winrt/Windows.Web.Http.h>
 
@@ -243,6 +245,11 @@ namespace NanaGet
 namespace winrt::NanaGet
 {
     using namespace ::NanaGet;
+}
+
+namespace winrt::Mile
+{
+    using namespace ::Mile;
 }
 
 #endif // !NANAGET_CORE

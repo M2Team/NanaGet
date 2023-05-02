@@ -40,11 +40,7 @@ namespace winrt::NanaGet::implementation
 
         hstring StatusText();
 
-        event_token PropertyChanged(
-            PropertyChangedEventHandler const& value);
-
-        void PropertyChanged(
-            event_token const& token);
+        Mile::WinRT::Event<PropertyChangedEventHandler> PropertyChanged;
 
     protected:
 
@@ -52,8 +48,6 @@ namespace winrt::NanaGet::implementation
             std::wstring_view const& PropertyName);
 
     private:
-
-        event<PropertyChangedEventHandler> m_PropertyChanged;
 
         Aria2TaskInformation m_Information;
     };

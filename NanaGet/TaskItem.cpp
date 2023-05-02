@@ -161,23 +161,10 @@ namespace winrt::NanaGet::implementation
             this->TotalBytesToReceive());
     }
 
-    event_token TaskItem::PropertyChanged(
-        PropertyChangedEventHandler const& value)
-    {
-        return this->m_PropertyChanged.add(value);
-    }
-
-    void TaskItem::PropertyChanged(
-        event_token const& token)
-    {
-        this->m_PropertyChanged.remove(token);
-    }
-
     void TaskItem::RaisePropertyChanged(
         std::wstring_view const& PropertyName)
     {
-        this->m_PropertyChanged(
-            *this, PropertyChangedEventArgs(PropertyName));
+        this->PropertyChanged(*this, PropertyChangedEventArgs(PropertyName));
     }
 
     IInspectable ConvertUInt64ToDouble(
