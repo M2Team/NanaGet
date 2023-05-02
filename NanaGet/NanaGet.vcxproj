@@ -97,7 +97,7 @@
       <Version>2.0.591-preview</Version>
     </PackageReference>
     <PackageReference Include="Mile.Windows.Helpers">
-      <Version>1.0.12</Version>
+      <Version>1.0.14</Version>
     </PackageReference>
     <PackageReference Include="Mile.Aria2">
       <Version>1.0.8</Version>
