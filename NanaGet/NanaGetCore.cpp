@@ -1083,6 +1083,9 @@ void NanaGet::LocalAria2Instance::Startup()
     Settings.emplace_back(
         L"continue",
         L"true");
+    Settings.emplace_back(
+        L"auto-save-interval",
+        L"1");
     if (std::filesystem::exists(SessionFile))
     {
         Settings.emplace_back(
@@ -1093,8 +1096,11 @@ void NanaGet::LocalAria2Instance::Startup()
         L"save-session",
         SessionFile);
     Settings.emplace_back(
-        L"auto-save-interval",
-        L"10");
+        L"force-save",
+        L"true");
+    Settings.emplace_back(
+        L"save-session-interval",
+        L"1");
     Settings.emplace_back(
         L"dht-file-path",
         DhtDataFile);
