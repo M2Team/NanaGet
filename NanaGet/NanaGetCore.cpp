@@ -562,15 +562,21 @@ void NanaGet::Aria2Instance::RefreshInformation()
 
     for (std::string const& Gid : this->GetTaskList())
     {
-        nlohmann::json Parameters;
-        Parameters.emplace_back("token:" + this->m_ServerToken);
-        Parameters.emplace_back(Gid);
-
-        nlohmann::json ResponseJson = nlohmann::json::parse(
-            this->SimpleJsonRpcCall("aria2.tellStatus", Parameters.dump(2)));
-
-        this->m_Tasks.emplace_back(this->ParseTaskInformation(ResponseJson));
+        this->m_Tasks.emplace_back(this->GetTaskInformation(Gid));
     }
+}
+
+NanaGet::Aria2TaskInformation NanaGet::Aria2Instance::GetTaskInformation(
+    std::string const& Gid)
+{
+    nlohmann::json Parameters;
+    Parameters.emplace_back("token:" + this->m_ServerToken);
+    Parameters.emplace_back(Gid);
+
+    nlohmann::json ResponseJson = nlohmann::json::parse(
+        this->SimpleJsonRpcCall("aria2.tellStatus", Parameters.dump(2)));
+
+    return this->ParseTaskInformation(ResponseJson);
 }
 
 std::vector<std::string> NanaGet::Aria2Instance::GetTaskList()

@@ -172,6 +172,9 @@ namespace NanaGet
 
         void RefreshInformation();
 
+        Aria2TaskInformation GetTaskInformation(
+            std::string const& Gid);
+
         std::vector<std::string> GetTaskList();
 
         std::string SimplePost(
