@@ -172,6 +172,8 @@ namespace NanaGet
 
         void RefreshInformation();
 
+        std::vector<std::string> GetTaskList();
+
         std::string SimplePost(
             std::string const& Content);
 

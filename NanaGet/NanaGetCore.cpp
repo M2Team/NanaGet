@@ -542,7 +542,38 @@ void NanaGet::Aria2Instance::RefreshInformation()
     this->m_TotalUploadSpeed = 0;
     this->m_Tasks.clear();
 
-    std::uint64_t NumActive = 0;
+    {
+        nlohmann::json Parameters;
+        Parameters.push_back("token:" + this->m_ServerToken);
+
+        std::string ResponseJson = this->SimpleJsonRpcCall(
+            "aria2.getGlobalStat",
+            Parameters.dump(2));
+
+        NanaGet::Aria2GlobalStatus GlobalStatus =
+            this->ParseGlobalStatus(nlohmann::json::parse(ResponseJson));
+
+        this->m_TotalDownloadSpeed = GlobalStatus.DownloadSpeed;
+        this->m_TotalUploadSpeed = GlobalStatus.UploadSpeed;
+    }
+
+    for (std::string const& Gid : this->GetTaskList())
+    {
+        nlohmann::json Parameters;
+        Parameters.emplace_back("token:" + this->m_ServerToken);
+        Parameters.emplace_back(Gid);
+
+        nlohmann::json ResponseJson = nlohmann::json::parse(
+            this->SimpleJsonRpcCall("aria2.tellStatus", Parameters.dump(2)));
+
+        this->m_Tasks.emplace_back(this->ParseTaskInformation(ResponseJson));
+    }
+}
+
+std::vector<std::string> NanaGet::Aria2Instance::GetTaskList()
+{
+    std::vector<std::string> Result;
+
     std::uint64_t NumWaiting = 0;
     std::uint64_t NumStopped = 0;
 
@@ -557,55 +588,63 @@ void NanaGet::Aria2Instance::RefreshInformation()
         NanaGet::Aria2GlobalStatus GlobalStatus =
             this->ParseGlobalStatus(nlohmann::json::parse(ResponseJson));
 
-        this->m_TotalDownloadSpeed = GlobalStatus.DownloadSpeed;
-        this->m_TotalUploadSpeed = GlobalStatus.UploadSpeed;
-        NumActive = GlobalStatus.NumActive;
         NumWaiting = GlobalStatus.NumWaiting;
         NumStopped = GlobalStatus.NumStopped;
     }
 
     {
         nlohmann::json Parameters;
-        Parameters.push_back("token:" + this->m_ServerToken);
+        Parameters.emplace_back("token:" + this->m_ServerToken);
+        nlohmann::json Keys;
+        Keys.emplace_back("gid");
+        Parameters.emplace_back(Keys);
 
         nlohmann::json ResponseJson = nlohmann::json::parse(
             this->SimpleJsonRpcCall("aria2.tellActive", Parameters.dump(2)));
 
         for (nlohmann::json const& Task : ResponseJson)
         {
-            this->m_Tasks.emplace_back(this->ParseTaskInformation(Task));
+            Result.emplace_back(Task["gid"].get<std::string>());
         }
     }
 
     {
         nlohmann::json Parameters;
-        Parameters.push_back("token:" + this->m_ServerToken);
-        Parameters.push_back(0);
-        Parameters.push_back(static_cast<double>(NumWaiting));
+        Parameters.emplace_back("token:" + this->m_ServerToken);
+        Parameters.emplace_back(0);
+        Parameters.emplace_back(static_cast<double>(NumWaiting));
+        nlohmann::json Keys;
+        Keys.emplace_back("gid");
+        Parameters.emplace_back(Keys);
 
         nlohmann::json ResponseJson = nlohmann::json::parse(
             this->SimpleJsonRpcCall("aria2.tellWaiting", Parameters.dump(2)));
 
         for (nlohmann::json const& Task : ResponseJson)
         {
-            this->m_Tasks.emplace_back(this->ParseTaskInformation(Task));
+            Result.emplace_back(Task["gid"].get<std::string>());
         }
     }
 
     {
         nlohmann::json Parameters;
-        Parameters.push_back("token:" + this->m_ServerToken);
-        Parameters.push_back(0);
-        Parameters.push_back(static_cast<double>(NumStopped));
+        Parameters.emplace_back("token:" + this->m_ServerToken);
+        Parameters.emplace_back(0);
+        Parameters.emplace_back(static_cast<double>(NumStopped));
+        nlohmann::json Keys;
+        Keys.emplace_back("gid");
+        Parameters.emplace_back(Keys);
 
         nlohmann::json ResponseJson = nlohmann::json::parse(
             this->SimpleJsonRpcCall("aria2.tellStopped", Parameters.dump(2)));
 
         for (nlohmann::json const& Task : ResponseJson)
         {
-            this->m_Tasks.emplace_back(this->ParseTaskInformation(Task));
+            Result.emplace_back(Task["gid"].get<std::string>());
         }
     }
+
+    return Result;
 }
 
 std::string NanaGet::Aria2Instance::SimplePost(
