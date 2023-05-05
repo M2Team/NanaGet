@@ -531,16 +531,10 @@ std::uint64_t NanaGet::Aria2Instance::TotalUploadSpeed()
     return this->m_TotalUploadSpeed;
 }
 
-std::vector<NanaGet::Aria2TaskInformation> NanaGet::Aria2Instance::Tasks()
-{
-    return this->m_Tasks;
-}
-
 void NanaGet::Aria2Instance::RefreshInformation()
 {
     this->m_TotalDownloadSpeed = 0;
     this->m_TotalUploadSpeed = 0;
-    this->m_Tasks.clear();
 
     {
         nlohmann::json Parameters;
@@ -558,11 +552,6 @@ void NanaGet::Aria2Instance::RefreshInformation()
             ResponseJson["uploadSpeed"].get<std::string>().c_str(),
             nullptr,
             10);
-    }
-
-    for (std::string const& Gid : this->GetTaskList())
-    {
-        this->m_Tasks.emplace_back(this->GetTaskInformation(Gid));
     }
 }
 

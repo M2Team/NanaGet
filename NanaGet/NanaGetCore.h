@@ -168,8 +168,6 @@ namespace NanaGet
 
         std::uint64_t TotalUploadSpeed();
 
-        std::vector<Aria2TaskInformation> Tasks();
-
         void RefreshInformation();
 
         Aria2TaskInformation GetTaskInformation(
@@ -202,7 +200,6 @@ namespace NanaGet
         winrt::slim_mutex m_InstanceLock;
         std::uint64_t m_TotalDownloadSpeed = 0;
         std::uint64_t m_TotalUploadSpeed = 0;
-        std::vector<Aria2TaskInformation> m_Tasks;
 
         Aria2UriInformation ParseUriInformation(
             nlohmann::json const& Value);

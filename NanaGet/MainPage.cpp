@@ -409,8 +409,15 @@ namespace winrt::NanaGet::implementation
 
         winrt::hstring CurrentSearchFilter = this->m_SearchFilter;
 
+        std::vector<Aria2TaskInformation> Tasks;
+
+        for (std::string const& Gid : this->m_Instance.GetTaskList())
+        {
+            Tasks.emplace_back(this->m_Instance.GetTaskInformation(Gid));
+        }
+
         std::set<winrt::hstring> Gids;
-        for (Aria2TaskInformation const& Task : this->m_Instance.Tasks())
+        for (Aria2TaskInformation const& Task : Tasks)
         {
             if (!NanaGet::FindSubString(
                 winrt::to_hstring(Task.FriendlyName),
@@ -434,7 +441,7 @@ namespace winrt::NanaGet::implementation
         else if (this->m_Gids != Gids)
         {
             std::vector<NanaGet::TaskItem> RawTasks;
-            for (Aria2TaskInformation const& Task : this->m_Instance.Tasks())
+            for (Aria2TaskInformation const& Task : Tasks)
             {
                 if (!NanaGet::FindSubString(
                     winrt::to_hstring(Task.FriendlyName),
@@ -467,7 +474,7 @@ namespace winrt::NanaGet::implementation
             if (this->m_Tasks)
             {
                 std::map<winrt::hstring, Aria2TaskInformation> RawTasks;
-                for (Aria2TaskInformation const& Task : this->m_Instance.Tasks())
+                for (Aria2TaskInformation const& Task : Tasks)
                 {
                     RawTasks.emplace(std::pair(
                         winrt::to_hstring(Task.Gid),
