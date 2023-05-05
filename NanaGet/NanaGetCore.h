@@ -201,9 +201,6 @@ namespace NanaGet
         std::uint64_t m_TotalUploadSpeed = 0;
         std::vector<Aria2TaskInformation> m_Tasks;
 
-        Aria2GlobalStatus ParseGlobalStatus(
-            nlohmann::json const& Value);
-
         Aria2UriInformation ParseUriInformation(
             nlohmann::json const& Value);
 

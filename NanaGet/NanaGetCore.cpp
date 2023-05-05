@@ -546,15 +546,18 @@ void NanaGet::Aria2Instance::RefreshInformation()
         nlohmann::json Parameters;
         Parameters.push_back("token:" + this->m_ServerToken);
 
-        std::string ResponseJson = this->SimpleJsonRpcCall(
-            "aria2.getGlobalStat",
-            Parameters.dump(2));
+        nlohmann::json ResponseJson = nlohmann::json::parse(
+            this->SimpleJsonRpcCall("aria2.getGlobalStat", Parameters.dump(2)));
 
-        NanaGet::Aria2GlobalStatus GlobalStatus =
-            this->ParseGlobalStatus(nlohmann::json::parse(ResponseJson));
+        this->m_TotalDownloadSpeed = std::strtoull(
+            ResponseJson["downloadSpeed"].get<std::string>().c_str(),
+            nullptr,
+            10);
 
-        this->m_TotalDownloadSpeed = GlobalStatus.DownloadSpeed;
-        this->m_TotalUploadSpeed = GlobalStatus.UploadSpeed;
+        this->m_TotalUploadSpeed = std::strtoull(
+            ResponseJson["uploadSpeed"].get<std::string>().c_str(),
+            nullptr,
+            10);
     }
 
     for (std::string const& Gid : this->GetTaskList())
@@ -581,15 +584,18 @@ std::vector<std::string> NanaGet::Aria2Instance::GetTaskList()
         nlohmann::json Parameters;
         Parameters.push_back("token:" + this->m_ServerToken);
 
-        std::string ResponseJson = this->SimpleJsonRpcCall(
-            "aria2.getGlobalStat",
-            Parameters.dump(2));
+        nlohmann::json ResponseJson = nlohmann::json::parse(
+            this->SimpleJsonRpcCall("aria2.getGlobalStat", Parameters.dump(2)));
 
-        NanaGet::Aria2GlobalStatus GlobalStatus =
-            this->ParseGlobalStatus(nlohmann::json::parse(ResponseJson));
+        NumWaiting = std::strtoull(
+            ResponseJson["numWaiting"].get<std::string>().c_str(),
+            nullptr,
+            10);
 
-        NumWaiting = GlobalStatus.NumWaiting;
-        NumStopped = GlobalStatus.NumStopped;
+        NumStopped = std::strtoull(
+            ResponseJson["numStopped"].get<std::string>().c_str(),
+            nullptr,
+            10);
     }
 
     {
@@ -724,44 +730,6 @@ void NanaGet::Aria2Instance::UpdateInstance(
 {
     this->m_ServerUri = ServerUri;
     this->m_ServerToken = ServerToken;
-}
-
-NanaGet::Aria2GlobalStatus NanaGet::Aria2Instance::ParseGlobalStatus(
-    nlohmann::json const& Value)
-{
-    NanaGet::Aria2GlobalStatus Result;
-
-    Result.DownloadSpeed = std::strtoull(
-        Value["downloadSpeed"].get<std::string>().c_str(),
-        nullptr,
-        10);
-
-    Result.UploadSpeed = std::strtoull(
-        Value["uploadSpeed"].get<std::string>().c_str(),
-        nullptr,
-        10);
-
-    Result.NumActive = std::strtoull(
-        Value["numActive"].get<std::string>().c_str(),
-        nullptr,
-        10);
-
-    Result.NumWaiting = std::strtoull(
-        Value["numWaiting"].get<std::string>().c_str(),
-        nullptr,
-        10);
-
-    Result.NumStopped = std::strtoull(
-        Value["numStopped"].get<std::string>().c_str(),
-        nullptr,
-        10);
-
-    Result.NumStoppedTotal = std::strtoull(
-        Value["numStoppedTotal"].get<std::string>().c_str(),
-        nullptr,
-        10);
-
-    return Result;
 }
 
 NanaGet::Aria2UriInformation NanaGet::Aria2Instance::ParseUriInformation(
