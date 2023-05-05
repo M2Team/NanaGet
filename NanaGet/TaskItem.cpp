@@ -11,46 +11,29 @@ namespace winrt::NanaGet::implementation
 
     TaskItem::TaskItem(
         Aria2TaskInformation const& Information)
-        : m_Information(Information)
     {
-
+        this->Update(Information);
     }
 
     void TaskItem::Update(
         Aria2TaskInformation const& Information)
     {
-        this->m_Information = Information;
-        this->RaisePropertyChanged(L"Name");
-        this->RaisePropertyChanged(L"Status");
-        this->RaisePropertyChanged(L"BytesReceived");
-        this->RaisePropertyChanged(L"TotalBytesToReceive");
-        this->RaisePropertyChanged(L"StatusText");
-    }
+        this->Gid.Value = winrt::to_hstring(Information.Gid);
 
-    hstring TaskItem::Gid()
-    {
-        return winrt::to_hstring(this->m_Information.Gid);
-    }
+        this->Name.Value = winrt::to_hstring(Information.FriendlyName);
 
-    hstring TaskItem::Name()
-    {
-        return winrt::to_hstring(this->m_Information.FriendlyName);
-    }
-
-    hstring TaskItem::Source()
-    {
-        if (!this->m_Information.InfoHash.empty())
+        if (!Information.InfoHash.empty())
         {
-            return NanaGet::FormatWindowsRuntimeString(
+            this->Source.Value = NanaGet::FormatWindowsRuntimeString(
                 L"magnet:?xt=urn:btih:%s",
-                winrt::to_hstring(this->m_Information.InfoHash).c_str());
+                winrt::to_hstring(Information.InfoHash).c_str());
         }
         else
         {
             hstring Result;
 
             std::set<hstring> Uris;
-            for (Aria2FileInformation const& File : this->m_Information.Files)
+            for (Aria2FileInformation const& File : Information.Files)
             {
                 for (Aria2UriInformation const& Item : File.Uris)
                 {
@@ -63,102 +46,83 @@ namespace winrt::NanaGet::implementation
                 Result = Result + Item + L"\r\n";
             }
 
-            return Result;
+            this->Source.Value = Result;
         }
-    }
 
-    hstring TaskItem::Path()
-    {
-        return hstring();
-    }
+        this->Path.Value = hstring();
 
-    TaskStatus TaskItem::Status()
-    {
-        TaskStatus Result;
-
-        switch (this->m_Information.Status)
+        switch (Information.Status)
         {
         case Aria2TaskStatus::Active:
-            Result = TaskStatus::Active;
+            this->Status.Value = TaskStatus::Active;
             break;
         case Aria2TaskStatus::Waiting:
-            Result = TaskStatus::Waiting;
+            this->Status.Value = TaskStatus::Waiting;
             break;
         case Aria2TaskStatus::Paused:
-            Result = TaskStatus::Paused;
+            this->Status.Value = TaskStatus::Paused;
             break;
         case Aria2TaskStatus::Error:
-            Result = TaskStatus::Error;
+            this->Status.Value = TaskStatus::Error;
             break;
         case Aria2TaskStatus::Complete:
-            Result = TaskStatus::Complete;
+            this->Status.Value = TaskStatus::Complete;
             break;
         case Aria2TaskStatus::Removed:
-            Result = TaskStatus::Removed;
+            this->Status.Value = TaskStatus::Removed;
             break;
         default:
             throw winrt::hresult_out_of_bounds();
         }
 
-        return Result;
-    }
+        this->DownloadSpeed.Value = Information.DownloadSpeed;
 
-    std::uint64_t TaskItem::DownloadSpeed()
-    {
-        return this->m_Information.DownloadSpeed;
-    }
+        this->UploadSpeed.Value = Information.UploadSpeed;
 
-    std::uint64_t TaskItem::UploadSpeed()
-    {
-        return this->m_Information.UploadSpeed;
-    }
+        this->BytesReceived.Value = Information.CompletedLength;
 
-    std::uint64_t TaskItem::BytesReceived()
-    {
-        return this->m_Information.CompletedLength;
-    }
+        this->TotalBytesToReceive.Value = Information.TotalLength;
 
-    std::uint64_t TaskItem::TotalBytesToReceive()
-    {
-        return this->m_Information.TotalLength;
-    }
-
-    std::uint64_t TaskItem::RemainTime()
-    {
-        if (0 == this->DownloadSpeed() ||
-            0 == this->TotalBytesToReceive())
+        if (0 == this->DownloadSpeed.Value ||
+            0 == this->TotalBytesToReceive.Value)
         {
-            return static_cast<uint64_t>(-1);
+            this->RemainTime.Value = static_cast<uint64_t>(-1);
         }
         else
         {
             std::uint64_t RemainBytesToReceive =
-                this->TotalBytesToReceive() - this->BytesReceived();
-            return (RemainBytesToReceive / this->DownloadSpeed());
+                this->TotalBytesToReceive.Value - this->BytesReceived.Value;
+            this->RemainTime.Value =
+                RemainBytesToReceive / this->DownloadSpeed.Value;
         }
-    }
 
-    hstring TaskItem::StatusText()
-    {
-        if (TaskStatus::Active == this->Status() ||
-            TaskStatus::Paused == this->Status())
+        if (TaskStatus::Active == this->Status.Value ||
+            TaskStatus::Paused == this->Status.Value)
         {
-            return NanaGet::FormatWindowsRuntimeString(
+            this->StatusText.Value = NanaGet::FormatWindowsRuntimeString(
                 L"%s %s / %s %s/s \x2193 %s/s \x2191",
                 NanaGet::ConvertSecondsToTimeString(
-                    this->RemainTime()).data(),
+                    this->RemainTime.Value).data(),
                 NanaGet::ConvertByteSizeToString(
-                    this->BytesReceived()).data(),
+                    this->BytesReceived.Value).data(),
                 NanaGet::ConvertByteSizeToString(
-                    this->TotalBytesToReceive()).data(),
+                    this->TotalBytesToReceive.Value).data(),
                 NanaGet::ConvertByteSizeToString(
-                    this->DownloadSpeed()).data(),
+                    this->DownloadSpeed.Value).data(),
                 NanaGet::ConvertByteSizeToString(
-                    this->UploadSpeed()).data());
+                    this->UploadSpeed.Value).data());
+        }
+        else
+        {
+            this->StatusText.Value = NanaGet::ConvertByteSizeToString(
+                this->TotalBytesToReceive.Value);
         }
 
-        return NanaGet::ConvertByteSizeToString(
-            this->TotalBytesToReceive());
+        this->RaisePropertyChanged(L"Name");
+        this->RaisePropertyChanged(L"Status");
+        this->RaisePropertyChanged(L"BytesReceived");
+        this->RaisePropertyChanged(L"TotalBytesToReceive");
+        this->RaisePropertyChanged(L"StatusText");
     }
 
     void TaskItem::RaisePropertyChanged(

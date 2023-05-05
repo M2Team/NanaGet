@@ -27,18 +27,18 @@ namespace winrt::NanaGet::implementation
         void Update(
             Aria2TaskInformation const& Information);
 
-        hstring Gid();
-        hstring Name();
-        hstring Source();
-        hstring Path();
-        TaskStatus Status();
-        std::uint64_t DownloadSpeed();
-        std::uint64_t UploadSpeed();
-        std::uint64_t BytesReceived();
-        std::uint64_t TotalBytesToReceive();
-        std::uint64_t RemainTime();
+        Mile::WinRT::Property<hstring> Gid;
+        Mile::WinRT::Property<hstring> Name;
+        Mile::WinRT::Property<hstring> Source;
+        Mile::WinRT::Property<hstring> Path;
+        Mile::WinRT::Property<TaskStatus> Status;
+        Mile::WinRT::Property<std::uint64_t> DownloadSpeed;
+        Mile::WinRT::Property<std::uint64_t> UploadSpeed;
+        Mile::WinRT::Property<std::uint64_t> BytesReceived;
+        Mile::WinRT::Property<std::uint64_t> TotalBytesToReceive;
+        Mile::WinRT::Property<std::uint64_t> RemainTime;
 
-        hstring StatusText();
+        Mile::WinRT::Property<hstring> StatusText;
 
         Mile::WinRT::Event<PropertyChangedEventHandler> PropertyChanged;
 
@@ -46,10 +46,6 @@ namespace winrt::NanaGet::implementation
 
         void RaisePropertyChanged(
             std::wstring_view const& PropertyName);
-
-    private:
-
-        Aria2TaskInformation m_Information;
     };
 
     struct TaskItemConverter :
