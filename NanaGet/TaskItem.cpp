@@ -15,6 +15,15 @@ namespace winrt::NanaGet::implementation
         this->Update(Information);
     }
 
+    void TaskItem::Notify()
+    {
+        this->RaisePropertyChanged(L"Name");
+        this->RaisePropertyChanged(L"Status");
+        this->RaisePropertyChanged(L"BytesReceived");
+        this->RaisePropertyChanged(L"TotalBytesToReceive");
+        this->RaisePropertyChanged(L"StatusText");
+    }
+
     void TaskItem::Update(
         Aria2TaskInformation const& Information)
     {
@@ -117,12 +126,6 @@ namespace winrt::NanaGet::implementation
             this->StatusText.Value = NanaGet::ConvertByteSizeToString(
                 this->TotalBytesToReceive.Value);
         }
-
-        this->RaisePropertyChanged(L"Name");
-        this->RaisePropertyChanged(L"Status");
-        this->RaisePropertyChanged(L"BytesReceived");
-        this->RaisePropertyChanged(L"TotalBytesToReceive");
-        this->RaisePropertyChanged(L"StatusText");
     }
 
     void TaskItem::RaisePropertyChanged(

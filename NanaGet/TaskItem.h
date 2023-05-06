@@ -24,6 +24,8 @@ namespace winrt::NanaGet::implementation
         TaskItem(
             Aria2TaskInformation const& Information);
 
+        void Notify();
+
         void Update(
             Aria2TaskInformation const& Information);
 

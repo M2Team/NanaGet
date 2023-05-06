@@ -21,13 +21,9 @@ namespace winrt::NanaGet::implementation
     {
         this->InitializeComponent();
         //this->SimpleDemoEntry();
-        this->m_RefreshTimer = DispatcherTimer();
-        if (this->m_RefreshTimer)
-        {
-            this->m_RefreshTimer.Interval(std::chrono::milliseconds(200));
-            this->m_RefreshTimer.Tick({ this, &MainPage::RefreshTimerHandler });
-            this->m_RefreshTimer.Start();
-        }
+        this->m_RefreshTimer = ThreadPoolTimer::CreateTimer(
+            { this, &MainPage::RefreshTimerHandler },
+            std::chrono::milliseconds(200));
     }
 
     winrt::hstring MainPage::SearchFilter()
@@ -45,7 +41,7 @@ namespace winrt::NanaGet::implementation
     {
         if (this->m_RefreshTimer)
         {
-            this->m_RefreshTimer.Stop();
+            this->m_RefreshTimer.Cancel();
         }
     }
 
@@ -390,13 +386,13 @@ namespace winrt::NanaGet::implementation
     }
 
     void MainPage::RefreshTimerHandler(
-        IInspectable const& sender,
-        IInspectable const& e)
+        ThreadPoolTimer const& timer)
     {
-        UNREFERENCED_PARAMETER(sender);
-        UNREFERENCED_PARAMETER(e);
+        UNREFERENCED_PARAMETER(timer);
 
-        winrt::slim_lock_guard LockGuard(this->m_Instance.InstanceLock());
+        ::OutputDebugStringW(L"MainPage::RefreshTimerHandler\r\n");
+
+        //winrt::slim_lock_guard LockGuard(this->m_Instance.InstanceLock());
 
         this->m_Instance.RefreshInformation();
 
@@ -463,31 +459,55 @@ namespace winrt::NanaGet::implementation
             NeedFullRefresh = true;
         }
 
-        this->TaskManagerGridGlobalStatusTextBlock().Text(GlobalStatusText);
-
-        if (NeedFullRefresh)
+        if (!NeedFullRefresh && this->m_Tasks)
         {
-            this->TaskManagerGridTaskList().ItemsSource(this->m_Tasks);
-        }
-        else
-        {
-            if (this->m_Tasks)
+            std::map<winrt::hstring, Aria2TaskInformation> RawTasks;
+            for (Aria2TaskInformation const& Task : Tasks)
             {
-                std::map<winrt::hstring, Aria2TaskInformation> RawTasks;
-                for (Aria2TaskInformation const& Task : Tasks)
-                {
-                    RawTasks.emplace(std::pair(
-                        winrt::to_hstring(Task.Gid),
-                        Task));
-                }
+                RawTasks.emplace(std::pair(
+                    winrt::to_hstring(Task.Gid),
+                    Task));
+            }
 
-                for (NanaGet::TaskItem const& Task : this->m_Tasks)
-                {
-                    Task.as<NanaGet::implementation::TaskItem>()->Update(
-                        RawTasks[Task.Gid()]);
-                }
+            for (NanaGet::TaskItem const& Task : this->m_Tasks)
+            {
+                Task.as<NanaGet::implementation::TaskItem>()->Update(
+                    RawTasks[Task.Gid()]);
             }
         }
+
+        CoreDispatcher Dispatcher = this->Dispatcher();
+        if (!Dispatcher)
+        {
+            return;
+        }
+        Dispatcher.RunAsync(
+            CoreDispatcherPriority::Normal,
+            [=]()
+        {
+            this->TaskManagerGridGlobalStatusTextBlock().Text(GlobalStatusText);
+
+            if (NeedFullRefresh)
+            {
+                this->TaskManagerGridTaskList().ItemsSource(this->m_Tasks);
+            }
+            else
+            {
+                if (this->m_Tasks)
+                {
+                    for (NanaGet::TaskItem const& Task : this->m_Tasks)
+                    {
+                        Task.as<NanaGet::implementation::TaskItem>()->Notify();
+                    }
+
+                    this->TaskManagerGridTaskList().UpdateLayout();
+                }
+            }
+
+            this->m_RefreshTimer = ThreadPoolTimer::CreateTimer(
+                { this, &MainPage::RefreshTimerHandler },
+                std::chrono::milliseconds(200));
+        });
     }
 
     NanaGet::TaskItem MainPage::GetTaskItemFromEventSender(
