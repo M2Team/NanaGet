@@ -15,13 +15,13 @@ namespace winrt::NanaGet::implementation
 {
     using Windows::ApplicationModel::DataTransfer::Clipboard;
     using Windows::ApplicationModel::DataTransfer::DataPackage;
-    using Windows::UI::Core::CoreDispatcher;
-    using Windows::UI::Core::CoreDispatcherPriority;
+    using Windows::System::DispatcherQueuePriority;
     using Windows::UI::Xaml::Visibility;
 
     MainPage::MainPage()
     {
         this->InitializeComponent();
+        this->m_DispatcherQueue = DispatcherQueue::GetForCurrentThread();
         //this->SimpleDemoEntry();
         this->m_RefreshThread = std::thread(
             &MainPage::RefreshThreadEntryPoint,
@@ -494,13 +494,12 @@ namespace winrt::NanaGet::implementation
             }
         }
 
-        CoreDispatcher Dispatcher = this->Dispatcher();
-        if (!Dispatcher)
+        if (!this->m_DispatcherQueue)
         {
             return;
         }
-        Dispatcher.RunAsync(
-            CoreDispatcherPriority::Normal,
+        this->m_DispatcherQueue.TryEnqueue(
+            DispatcherQueuePriority::Normal,
             [=]()
         {
             this->TaskManagerGridGlobalStatusTextBlock().Text(GlobalStatusText);
@@ -518,10 +517,17 @@ namespace winrt::NanaGet::implementation
                         Task.as<NanaGet::implementation::TaskItem>()->Notify();
                     }
 
-                    this->TaskManagerGridTaskList().UpdateLayout();
+                    try
+                    {
+                        this->TaskManagerGridTaskList().UpdateLayout();
+                    }
+                    catch (...)
+                    {
+
+                    }
                 }
             }
-        }).get();
+        });
     }
 
     NanaGet::TaskItem MainPage::GetTaskItemFromEventSender(

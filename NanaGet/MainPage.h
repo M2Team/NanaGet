@@ -3,6 +3,7 @@
 #include "MainPage.g.h"
 
 #include <winrt/Windows.Foundation.h>
+#include <winrt/Windows.System.h>
 #include <winrt/Windows.UI.Xaml.Controls.h>
 
 #include "NanaGetCore.h"
@@ -10,6 +11,7 @@
 namespace winrt::NanaGet::implementation
 {
     using Windows::Foundation::Collections::IObservableVector;
+    using Windows::System::DispatcherQueue;
     using Windows::UI::Xaml::DispatcherTimer;
     using Windows::UI::Xaml::RoutedEventArgs;
     using Windows::UI::Xaml::Controls::ContainerContentChangingEventArgs;
@@ -127,6 +129,8 @@ namespace winrt::NanaGet::implementation
     private:
 
         NanaGet::LocalAria2Instance m_Instance;
+
+        DispatcherQueue m_DispatcherQueue = nullptr;
 
         std::thread m_RefreshThread;
         volatile bool m_StopRefreshThread = false;
