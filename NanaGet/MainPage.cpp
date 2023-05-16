@@ -410,6 +410,13 @@ namespace winrt::NanaGet::implementation
 
     void MainPage::RefreshThreadHandler()
     {
+        winrt::handle EventHandle;
+        EventHandle.attach(::CreateEventExW(
+            nullptr, nullptr,
+            0,
+            EVENT_ALL_ACCESS));
+        winrt::check_bool(static_cast<bool>(EventHandle));
+
         //winrt::slim_lock_guard LockGuard(this->m_Instance.InstanceLock());
 
         this->m_Instance.RefreshInformation();
@@ -500,7 +507,7 @@ namespace winrt::NanaGet::implementation
         }
         this->m_DispatcherQueue.TryEnqueue(
             DispatcherQueuePriority::Normal,
-            [=]()
+            [&]()
         {
             this->TaskManagerGridGlobalStatusTextBlock().Text(GlobalStatusText);
 
@@ -516,18 +523,16 @@ namespace winrt::NanaGet::implementation
                     {
                         Task.as<NanaGet::implementation::TaskItem>()->Notify();
                     }
-
-                    try
-                    {
-                        this->TaskManagerGridTaskList().UpdateLayout();
-                    }
-                    catch (...)
-                    {
-
-                    }
                 }
             }
+
+            ::SetEvent(EventHandle.get());
         });
+
+        ::WaitForSingleObjectEx(
+            EventHandle.get(),
+            INFINITE,
+            FALSE);
     }
 
     NanaGet::TaskItem MainPage::GetTaskItemFromEventSender(

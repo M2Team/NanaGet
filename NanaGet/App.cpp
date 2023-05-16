@@ -19,8 +19,7 @@ namespace winrt::NanaGet::implementation
         {
             UNREFERENCED_PARAMETER(sender);
 
-            e.Handled(true);
-            throw winrt::hresult_error(e.Exception(), e.Message());       
+            e.Handled(true);       
         });
     }
 
