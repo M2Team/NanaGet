@@ -117,7 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AboutButton.Label" xml:space="preserve">
+  <data name="AboutButton.Text" xml:space="preserve">
     <value>關於</value>
     <comment>About</comment>
   </data>
@@ -137,7 +137,7 @@
     <value>新建任務</value>
     <comment>New Task</comment>
   </data>
-  <data name="OpenDownloadsFolderButton.Label" xml:space="preserve">
+  <data name="OpenDownloadsFolderButton.Text" xml:space="preserve">
     <value>打開下載目錄</value>
     <comment>Open Downloads Folder</comment>
   </data>
@@ -153,7 +153,7 @@
     <value>搜索下載項</value>
     <comment>Search Downloads</comment>
   </data>
-  <data name="SettingsButton.Label" xml:space="preserve">
+  <data name="SettingsButton.Text" xml:space="preserve">
     <value>設定</value>
     <comment>Settings</comment>
   </data>
@@ -165,15 +165,15 @@
     <value>全部開始</value>
     <comment>Start All</comment>
   </data>
-  <data name="TaskItemCancelButton.Label" xml:space="preserve">
+  <data name="TaskItemCancelButton.Text" xml:space="preserve">
     <value>取消</value>
     <comment>Cancel</comment>
   </data>
-  <data name="TaskItemCopyLinkButton.Label" xml:space="preserve">
+  <data name="TaskItemCopyLinkButton.Text" xml:space="preserve">
     <value>複製連結</value>
     <comment>Copy Link</comment>
   </data>
-  <data name="TaskItemOpenFolderButton.Label" xml:space="preserve">
+  <data name="TaskItemOpenFolderButton.Text" xml:space="preserve">
     <value>打開資料夾</value>
     <comment>Open Folder</comment>
   </data>
@@ -185,7 +185,7 @@
     <value>暫停</value>
     <comment>Pause</comment>
   </data>
-  <data name="TaskItemRemoveButton.Label" xml:space="preserve">
+  <data name="TaskItemRemoveButton.Text" xml:space="preserve">
     <value>刪除</value>
     <comment>Remove</comment>
   </data>

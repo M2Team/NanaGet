@@ -117,7 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AboutButton.Label" xml:space="preserve">
+  <data name="AboutButton.Text" xml:space="preserve">
     <value>製品情報</value>
     <comment>About</comment>
   </data>
@@ -137,7 +137,7 @@
     <value>タスクを作成</value>
     <comment>New Task</comment>
   </data>
-  <data name="OpenDownloadsFolderButton.Label" xml:space="preserve">
+  <data name="OpenDownloadsFolderButton.Text" xml:space="preserve">
     <value>ダウンロードフォルダを開く</value>
     <comment>Open Downloads Folder</comment>
   </data>
@@ -153,7 +153,7 @@
     <value>アイテムを検索</value>
     <comment>Search Downloads</comment>
   </data>
-  <data name="SettingsButton.Label" xml:space="preserve">
+  <data name="SettingsButton.Text" xml:space="preserve">
     <value>設定</value>
     <comment>Settings</comment>
   </data>
@@ -165,15 +165,15 @@
     <value>すべてを開始</value>
     <comment>Start All</comment>
   </data>
-  <data name="TaskItemCancelButton.Label" xml:space="preserve">
+  <data name="TaskItemCancelButton.Text" xml:space="preserve">
     <value>取り消す</value>
     <comment>Cancel</comment>
   </data>
-  <data name="TaskItemCopyLinkButton.Label" xml:space="preserve">
+  <data name="TaskItemCopyLinkButton.Text" xml:space="preserve">
     <value>リンクをコーピー</value>
     <comment>Copy Link</comment>
   </data>
-  <data name="TaskItemOpenFolderButton.Label" xml:space="preserve">
+  <data name="TaskItemOpenFolderButton.Text" xml:space="preserve">
     <value>フォルダを開く</value>
     <comment>Open Folder</comment>
   </data>
@@ -185,7 +185,7 @@
     <value>一時停止</value>
     <comment>Pause</comment>
   </data>
-  <data name="TaskItemRemoveButton.Label" xml:space="preserve">
+  <data name="TaskItemRemoveButton.Text" xml:space="preserve">
     <value>削除</value>
     <comment>Remove</comment>
   </data>
