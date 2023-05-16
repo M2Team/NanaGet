@@ -129,6 +129,14 @@
     <value>Clear List</value>
     <comment>Clear List</comment>
   </data>
+  <data name="MoreButton.AutomationProperties.Name" xml:space="preserve">
+    <value>More Button</value>
+    <comment>More Button</comment>
+  </data>
+  <data name="MoreButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>More</value>
+    <comment>More</comment>
+  </data>
   <data name="NewTaskButton.AutomationProperties.Name" xml:space="preserve">
     <value>New Task Button</value>
     <comment>New Task Button</comment>
@@ -172,6 +180,14 @@
   <data name="TaskItemCopyLinkButton.Text" xml:space="preserve">
     <value>Copy Link</value>
     <comment>Copy Link</comment>
+  </data>
+  <data name="TaskItemMoreButton.AutomationProperties.Name1" xml:space="preserve">
+    <value>More Button</value>
+    <comment>More Button</comment>
+  </data>
+  <data name="TaskItemMoreButton.ToolTipService.ToolTip1" xml:space="preserve">
+    <value>More</value>
+    <comment>More</comment>
   </data>
   <data name="TaskItemOpenFolderButton.Text" xml:space="preserve">
     <value>Open Folder</value>

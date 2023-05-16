@@ -129,6 +129,14 @@
     <value>清除清單</value>
     <comment>Clear List</comment>
   </data>
+  <data name="MoreButton.AutomationProperties.Name" xml:space="preserve">
+    <value>更多按鈕</value>
+    <comment>More Button</comment>
+  </data>
+  <data name="MoreButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>更多</value>
+    <comment>More</comment>
+  </data>
   <data name="NewTaskButton.AutomationProperties.Name" xml:space="preserve">
     <value>新建任務按鈕</value>
     <comment>New Task Button</comment>
@@ -172,6 +180,14 @@
   <data name="TaskItemCopyLinkButton.Text" xml:space="preserve">
     <value>複製連結</value>
     <comment>Copy Link</comment>
+  </data>
+  <data name="TaskItemMoreButton.AutomationProperties.Name1" xml:space="preserve">
+    <value>更多按鈕</value>
+    <comment>More Button</comment>
+  </data>
+  <data name="TaskItemMoreButton.ToolTipService.ToolTip1" xml:space="preserve">
+    <value>更多</value>
+    <comment>More</comment>
   </data>
   <data name="TaskItemOpenFolderButton.Text" xml:space="preserve">
     <value>打開資料夾</value>
