@@ -1098,9 +1098,6 @@ void NanaGet::LocalAria2Instance::Startup()
         L"save-session",
         SessionFile);
     Settings.emplace_back(
-        L"force-save",
-        L"true");
-    Settings.emplace_back(
         L"save-session-interval",
         L"1");
     Settings.emplace_back(
