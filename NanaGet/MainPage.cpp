@@ -3,6 +3,8 @@
 #include "MainPage.g.cpp"
 #include "TaskItem.h"
 
+#include <Mile.Helpers.Base.h>
+
 #include <ShlObj.h>
 
 #include <winrt/Windows.ApplicationModel.DataTransfer.h>
@@ -21,9 +23,9 @@ namespace winrt::NanaGet::implementation
     {
         this->InitializeComponent();
         //this->SimpleDemoEntry();
-        this->m_RefreshTimer = ThreadPoolTimer::CreateTimer(
-            { this, &MainPage::RefreshTimerHandler },
-            std::chrono::milliseconds(200));
+        this->m_RefreshThread = std::thread(
+            &MainPage::RefreshThreadEntryPoint,
+            this);
     }
 
     winrt::hstring MainPage::SearchFilter()
@@ -39,9 +41,10 @@ namespace winrt::NanaGet::implementation
 
     MainPage::~MainPage()
     {
-        if (this->m_RefreshTimer)
+        this->m_StopRefreshThread = true;
+        if (this->m_RefreshThread.joinable())
         {
-            this->m_RefreshTimer.Cancel();
+            this->m_RefreshThread.join();
         }
     }
 
@@ -385,13 +388,28 @@ namespace winrt::NanaGet::implementation
         this->AboutGrid().Visibility(Visibility::Collapsed);
     }
 
-    void MainPage::RefreshTimerHandler(
-        ThreadPoolTimer const& timer)
+    void MainPage::RefreshThreadEntryPoint()
     {
-        UNREFERENCED_PARAMETER(timer);
+        winrt::init_apartment();
 
-        ::OutputDebugStringW(L"MainPage::RefreshTimerHandler\r\n");
+        ULONGLONG PreviousTick = ::MileGetTickCount();
 
+        while (!this->m_StopRefreshThread)
+        {
+            ::OutputDebugStringW(L"MainPage::RefreshThreadHandler\r\n");
+            this->RefreshThreadHandler();
+
+            ULONGLONG ElapsedTick = ::MileGetTickCount() - PreviousTick;
+            if (ElapsedTick < 1000)
+            {
+                ::SleepEx(static_cast<DWORD>(1000 - ElapsedTick), FALSE);
+            }
+            PreviousTick += ElapsedTick;
+        }
+    }
+
+    void MainPage::RefreshThreadHandler()
+    {
         //winrt::slim_lock_guard LockGuard(this->m_Instance.InstanceLock());
 
         this->m_Instance.RefreshInformation();
@@ -503,11 +521,7 @@ namespace winrt::NanaGet::implementation
                     this->TaskManagerGridTaskList().UpdateLayout();
                 }
             }
-
-            this->m_RefreshTimer = ThreadPoolTimer::CreateTimer(
-                { this, &MainPage::RefreshTimerHandler },
-                std::chrono::milliseconds(200));
-        });
+        }).get();
     }
 
     NanaGet::TaskItem MainPage::GetTaskItemFromEventSender(
