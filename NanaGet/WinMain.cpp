@@ -4,6 +4,7 @@
 
 #include "App.h"
 #include "MainPage.h"
+#include "AboutPage.h"
 
 #define _ATL_NO_AUTOMATIC_NAMESPACE
 #include <atlbase.h>
@@ -48,6 +49,8 @@ namespace NanaGet
             MSG_WM_CREATE(OnCreate)
             //MESSAGE_HANDLER_EX(NotifyIconCallbackMessage, OnNotifyIcon)
             MSG_WM_DESTROY(OnDestroy)
+
+            COMMAND_ID_HANDLER(ID_APP_ABOUT, OnAbout)
         END_MSG_MAP()
 
         virtual BOOL PreTranslateMessage(
@@ -62,6 +65,12 @@ namespace NanaGet
             LPARAM lParam);*/
 
         void OnDestroy();
+
+        LRESULT OnAbout(
+            WORD wNotifyCode,
+            WORD wID,
+            HWND hWndCtl,
+            BOOL& bHandled);
 
     private:
 
@@ -179,6 +188,24 @@ void NanaGet::MainWindow::OnDestroy()
     ::Shell_NotifyIconW(NIM_DELETE, &NotifyIconData);*/
 
     ::PostQuitMessage(0);
+}
+
+LRESULT NanaGet::MainWindow::OnAbout(
+    WORD wNotifyCode,
+    WORD wID,
+    HWND hWndCtl,
+    BOOL& bHandled)
+{
+    UNREFERENCED_PARAMETER(wNotifyCode);
+    UNREFERENCED_PARAMETER(wID);
+    UNREFERENCED_PARAMETER(hWndCtl);
+    UNREFERENCED_PARAMETER(bHandled);
+
+    winrt::NanaGet::AboutPage Window =
+        winrt::make<winrt::NanaGet::implementation::AboutPage>();
+    this->ShowXamlDialog(480, 320, winrt::get_abi(Window));
+
+    return 0;
 }
 
 int NanaGet::MainWindow::ShowXamlDialog(

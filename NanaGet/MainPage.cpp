@@ -7,6 +7,8 @@
 
 #include <ShlObj.h>
 
+#include <atlres.h>
+
 #include <winrt/Windows.ApplicationModel.DataTransfer.h>
 #include <winrt/Windows.Foundation.Collections.h>
 #include <winrt/Windows.UI.Core.h>
@@ -148,7 +150,11 @@ namespace winrt::NanaGet::implementation
         UNREFERENCED_PARAMETER(sender);
         UNREFERENCED_PARAMETER(e);
 
-        this->AboutGrid().Visibility(Visibility::Visible);
+        ::PostMessageW(
+            NanaGet::MainWindowHandle,
+            WM_COMMAND,
+            MAKEWPARAM(ID_APP_ABOUT, BN_CLICKED),
+            0);
     }
 
     void MainPage::TaskManagerGridTaskListContainerContentChanging(
@@ -367,31 +373,6 @@ namespace winrt::NanaGet::implementation
 
         this->SettingsGrid().Visibility(Visibility::Collapsed);
     }*/
-
-    void MainPage::AboutGridGitHubButtonClick(
-        IInspectable const& sender,
-        RoutedEventArgs const& e)
-    {
-        UNREFERENCED_PARAMETER(sender);
-        UNREFERENCED_PARAMETER(e);
-
-        SHELLEXECUTEINFOW ExecInfo = { 0 };
-        ExecInfo.cbSize = sizeof(SHELLEXECUTEINFOW);
-        ExecInfo.lpVerb = L"open";
-        ExecInfo.lpFile = L"https://github.com/M2Team/NanaGet";
-        ExecInfo.nShow = SW_SHOWNORMAL;
-        ::ShellExecuteExW(&ExecInfo);
-    }
-
-    void MainPage::AboutGridCancelButtonClick(
-        IInspectable const& sender,
-        RoutedEventArgs const& e)
-    {
-        UNREFERENCED_PARAMETER(sender);
-        UNREFERENCED_PARAMETER(e);
-
-        this->AboutGrid().Visibility(Visibility::Collapsed);
-    }
 
     void MainPage::RefreshThreadEntryPoint()
     {

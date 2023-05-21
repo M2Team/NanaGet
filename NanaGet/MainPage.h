@@ -118,14 +118,6 @@ namespace winrt::NanaGet::implementation
             IInspectable const& sender,
             RoutedEventArgs const& e);*/
 
-        void AboutGridGitHubButtonClick(
-            IInspectable const& sender,
-            RoutedEventArgs const& e);
-
-        void AboutGridCancelButtonClick(
-            IInspectable const& sender,
-            RoutedEventArgs const& e);
-
     private:
 
         NanaGet::LocalAria2Instance m_Instance;
