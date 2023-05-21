@@ -181,11 +181,11 @@
     <value>Copy Link</value>
     <comment>Copy Link</comment>
   </data>
-  <data name="TaskItemMoreButton.AutomationProperties.Name1" xml:space="preserve">
+  <data name="TaskItemMoreButton.AutomationProperties.Name" xml:space="preserve">
     <value>More Button</value>
     <comment>More Button</comment>
   </data>
-  <data name="TaskItemMoreButton.ToolTipService.ToolTip1" xml:space="preserve">
+  <data name="TaskItemMoreButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>More</value>
     <comment>More</comment>
   </data>
