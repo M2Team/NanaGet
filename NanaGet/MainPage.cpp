@@ -515,14 +515,18 @@ namespace winrt::NanaGet::implementation
             {
                 this->TaskManagerGridTaskList().ItemsSource(this->m_Tasks);
             }
-            else
+            else if(this->m_Tasks)
             {
-                if (this->m_Tasks)
+                try
                 {
                     for (NanaGet::TaskItem const& Task : this->m_Tasks)
                     {
                         Task.as<NanaGet::implementation::TaskItem>()->Notify();
                     }
+                }
+                catch (...)
+                {
+                    
                 }
             }
 
