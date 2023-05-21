@@ -32,6 +32,8 @@
 
 namespace NanaGet
 {
+    HWND MainWindowHandle = nullptr;
+
     class MainWindow :
         public ATL::CWindowImpl<MainWindow>,
         public WTL::CMessageFilter
@@ -285,9 +287,8 @@ int WINAPI wWinMain(
 
     g_Module.Init(nullptr, hInstance);
 
-    using MainPageInstance = winrt::NanaGet::implementation::MainPage;
-
-    winrt::NanaGet::MainPage Control = winrt::make<MainPageInstance>();
+    winrt::NanaGet::MainPage Control =
+        winrt::make<winrt::NanaGet::implementation::MainPage>();
 
     NanaGet::MainWindow Window;
     if (!Window.Create(
@@ -301,6 +302,7 @@ int WINAPI wWinMain(
     {
         return -1;
     }
+    NanaGet::MainWindowHandle = Window.m_hWnd;
     Window.ShowWindow(nShowCmd);
     Window.UpdateWindow();
 

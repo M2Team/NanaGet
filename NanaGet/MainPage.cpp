@@ -11,6 +11,11 @@
 #include <winrt/Windows.Foundation.Collections.h>
 #include <winrt/Windows.UI.Core.h>
 
+namespace NanaGet
+{
+    extern HWND MainWindowHandle;
+}
+
 namespace winrt::NanaGet::implementation
 {
     using Windows::ApplicationModel::DataTransfer::Clipboard;
