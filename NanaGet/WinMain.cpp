@@ -16,6 +16,8 @@
 #include <atlapp.h>
 #include <atlcrack.h>
 
+#include <Mile.Xaml.h>
+
 #include "NanaGetResources.h"
 
 //namespace
@@ -84,7 +86,10 @@ namespace NanaGet
 
         WTL::CIcon m_ApplicationIcon;
 
+        HWND CreateXamlDialog();
+
         int ShowXamlDialog(
+            _In_ HWND WindowHandle,
             _In_ int Width,
             _In_ int Height,
             _In_ LPVOID Content);
@@ -209,9 +214,14 @@ LRESULT NanaGet::MainWindow::OnNewTask(
     UNREFERENCED_PARAMETER(hWndCtl);
     UNREFERENCED_PARAMETER(bHandled);
 
-    winrt::NanaGet::NewTaskPage Window =
-        winrt::make<winrt::NanaGet::implementation::NewTaskPage>();
-    this->ShowXamlDialog(480, 320, winrt::get_abi(Window));
+    HWND WindowHandle = this->CreateXamlDialog();
+    if (WindowHandle)
+    {
+        winrt::NanaGet::NewTaskPage Window =
+            winrt::make<winrt::NanaGet::implementation::NewTaskPage>(
+                WindowHandle);
+        this->ShowXamlDialog(WindowHandle, 480, 320, winrt::get_abi(Window));
+    }
 
     return 0;
 }
@@ -227,19 +237,21 @@ LRESULT NanaGet::MainWindow::OnAbout(
     UNREFERENCED_PARAMETER(hWndCtl);
     UNREFERENCED_PARAMETER(bHandled);
 
-    winrt::NanaGet::AboutPage Window =
-        winrt::make<winrt::NanaGet::implementation::AboutPage>();
-    this->ShowXamlDialog(480, 320, winrt::get_abi(Window));
+    HWND WindowHandle = this->CreateXamlDialog();
+    if (WindowHandle)
+    {
+        winrt::NanaGet::AboutPage Window =
+            winrt::make<winrt::NanaGet::implementation::AboutPage>(
+                WindowHandle);
+        this->ShowXamlDialog(WindowHandle, 480, 320, winrt::get_abi(Window));
+    }
 
     return 0;
 }
 
-int NanaGet::MainWindow::ShowXamlDialog(
-    _In_ int Width,
-    _In_ int Height,
-    _In_ LPVOID Content)
+HWND NanaGet::MainWindow::CreateXamlDialog()
 {
-    HWND WindowHandle = ::CreateWindowExW(
+    return ::CreateWindowExW(
         WS_EX_STATICEDGE | WS_EX_DLGMODALFRAME,
         L"Mile.Xaml.ContentWindow",
         nullptr,
@@ -251,8 +263,23 @@ int NanaGet::MainWindow::ShowXamlDialog(
         this->m_hWnd,
         nullptr,
         nullptr,
-        Content);
+        nullptr);
+}
+
+int NanaGet::MainWindow::ShowXamlDialog(
+    _In_ HWND WindowHandle,
+    _In_ int Width,
+    _In_ int Height,
+    _In_ LPVOID Content)
+{
     if (!WindowHandle)
+    {
+        return -1;
+    }
+
+    if (FAILED(::MileXamlSetXamlContentForContentWindow(
+        WindowHandle,
+        Content)))
     {
         return -1;
     }
