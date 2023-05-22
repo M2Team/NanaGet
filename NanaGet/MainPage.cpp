@@ -16,6 +16,7 @@
 namespace NanaGet
 {
     extern HWND MainWindowHandle;
+    extern LocalAria2Instance* LocalInstance;
 }
 
 namespace winrt::NanaGet::implementation
@@ -78,7 +79,7 @@ namespace winrt::NanaGet::implementation
 
         try
         {
-            this->m_Instance.ResumeAll();
+            NanaGet::LocalInstance->ResumeAll();
         }
         catch (...)
         {
@@ -95,7 +96,7 @@ namespace winrt::NanaGet::implementation
 
         try
         {
-            this->m_Instance.PauseAll();
+            NanaGet::LocalInstance->PauseAll();
         }
         catch (...)
         {
@@ -112,7 +113,7 @@ namespace winrt::NanaGet::implementation
 
         try
         {
-            this->m_Instance.ClearList();
+            NanaGet::LocalInstance->ClearList();
         }
         catch (...)
         {
@@ -185,8 +186,8 @@ namespace winrt::NanaGet::implementation
         {
             NanaGet::TaskItem Current =
                 this->GetTaskItemFromEventSender(sender);
-            this->m_Instance.Remove(winrt::to_string(Current.Gid()));
-            this->m_Instance.AddTask(winrt::to_string(Current.Source()));
+            NanaGet::LocalInstance->Remove(winrt::to_string(Current.Gid()));
+            NanaGet::LocalInstance->AddTask(winrt::to_string(Current.Source()));
         }
         catch (...)
         {
@@ -204,7 +205,7 @@ namespace winrt::NanaGet::implementation
         {
             NanaGet::TaskItem Current =
                 this->GetTaskItemFromEventSender(sender);
-            this->m_Instance.Resume(winrt::to_string(Current.Gid()));
+            NanaGet::LocalInstance->Resume(winrt::to_string(Current.Gid()));
         }
         catch (...)
         {
@@ -222,7 +223,7 @@ namespace winrt::NanaGet::implementation
         {
             NanaGet::TaskItem Current =
                 this->GetTaskItemFromEventSender(sender);
-            this->m_Instance.Pause(winrt::to_string(Current.Gid()));
+            NanaGet::LocalInstance->Pause(winrt::to_string(Current.Gid()));
         }
         catch (...)
         {
@@ -274,7 +275,7 @@ namespace winrt::NanaGet::implementation
         {
             NanaGet::TaskItem Current =
                 this->GetTaskItemFromEventSender(sender);
-            this->m_Instance.Cancel(winrt::to_string(Current.Gid()));
+            NanaGet::LocalInstance->Cancel(winrt::to_string(Current.Gid()));
         }
         catch (...)
         {
@@ -292,7 +293,7 @@ namespace winrt::NanaGet::implementation
         {
             NanaGet::TaskItem Current =
                 this->GetTaskItemFromEventSender(sender);
-            this->m_Instance.Remove(winrt::to_string(Current.Gid()));
+            NanaGet::LocalInstance->Remove(winrt::to_string(Current.Gid()));
         }
         catch (...)
         {
@@ -357,24 +358,24 @@ namespace winrt::NanaGet::implementation
             EVENT_ALL_ACCESS));
         winrt::check_bool(static_cast<bool>(EventHandle));
 
-        //winrt::slim_lock_guard LockGuard(this->m_Instance.InstanceLock());
+        //winrt::slim_lock_guard LockGuard(NanaGet::LocalInstance->InstanceLock());
 
-        this->m_Instance.RefreshInformation();
+        NanaGet::LocalInstance->RefreshInformation();
 
         winrt::hstring GlobalStatusText = NanaGet::FormatWindowsRuntimeString(
             L"\x2193 %s/s \x2191 %s/s",
             NanaGet::ConvertByteSizeToString(
-                this->m_Instance.TotalDownloadSpeed()).data(),
+                NanaGet::LocalInstance->TotalDownloadSpeed()).data(),
             NanaGet::ConvertByteSizeToString(
-                this->m_Instance.TotalUploadSpeed()).data());
+                NanaGet::LocalInstance->TotalUploadSpeed()).data());
 
         winrt::hstring CurrentSearchFilter = this->m_SearchFilter;
 
         std::vector<Aria2TaskInformation> Tasks;
 
-        for (std::string const& Gid : this->m_Instance.GetTaskList())
+        for (std::string const& Gid : NanaGet::LocalInstance->GetTaskList())
         {
-            Tasks.emplace_back(this->m_Instance.GetTaskInformation(Gid));
+            Tasks.emplace_back(NanaGet::LocalInstance->GetTaskInformation(Gid));
         }
 
         std::set<winrt::hstring> Gids;
@@ -503,17 +504,17 @@ namespace winrt::NanaGet::implementation
         {
             nlohmann::json Parameters;
             Parameters.push_back(
-                "token:" + this->m_Instance.ServerToken());
+                "token:" + NanaGet::LocalInstance->ServerToken());
 
-            //std::string ResponseJson = this->m_Instance.SimpleJsonRpcCall(
+            //std::string ResponseJson = NanaGet::LocalInstance->SimpleJsonRpcCall(
             //    "aria2.getVersion", //"aria2.tellActive",
             //    Parameters);
 
-            //std::string ResponseJson = this->m_Instance.SimpleJsonRpcCall(
+            //std::string ResponseJson = NanaGet::LocalInstance->SimpleJsonRpcCall(
             //    L"system.listMethods",
             //    Parameters);
 
-            std::string ResponseJson = this->m_Instance.SimpleJsonRpcCall(
+            std::string ResponseJson = NanaGet::LocalInstance->SimpleJsonRpcCall(
                 "aria2.getGlobalOption",
                 Parameters);
 
@@ -528,7 +529,7 @@ namespace winrt::NanaGet::implementation
 
         /*::MessageBoxW(
             nullptr,
-            this->m_Instance.ConsoleOutput().c_str(),
+            NanaGet::LocalInstance->ConsoleOutput().c_str(),
             L"NanaGet",
             MB_ICONINFORMATION);*/
 

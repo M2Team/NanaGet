@@ -104,8 +104,6 @@ namespace winrt::NanaGet::implementation
 
     private:
 
-        NanaGet::LocalAria2Instance m_Instance;
-
         DispatcherQueue m_DispatcherQueue = nullptr;
 
         std::thread m_RefreshThread;

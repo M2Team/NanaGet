@@ -37,6 +37,7 @@
 namespace NanaGet
 {
     HWND MainWindowHandle = nullptr;
+    LocalAria2Instance* LocalInstance = nullptr;
 
     class MainWindow :
         public ATL::CWindowImpl<MainWindow>,
@@ -366,6 +367,9 @@ int WINAPI wWinMain(
         winrt::make_self<winrt::NanaGet::implementation::App>();
 
     g_Module.Init(nullptr, hInstance);
+
+    NanaGet::LocalAria2Instance LocalInstance;
+    NanaGet::LocalInstance = &LocalInstance;
 
     winrt::NanaGet::MainPage Control =
         winrt::make<winrt::NanaGet::implementation::MainPage>();
