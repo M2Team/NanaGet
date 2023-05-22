@@ -2,13 +2,16 @@
 
 #include "NewTaskPage.g.h"
 
+#include <Windows.h>
+
 namespace winrt::NanaGet::implementation
 {
     using Windows::UI::Xaml::RoutedEventArgs;
 
     struct NewTaskPage : NewTaskPageT<NewTaskPage>
     {
-        NewTaskPage() = default;
+        NewTaskPage(
+            _In_ HWND WindowHandle = nullptr);
 
         /*void DownloadSourceBrowseButtonClick(
             IInspectable const& sender,
@@ -25,6 +28,10 @@ namespace winrt::NanaGet::implementation
         void CancelButtonClick(
             IInspectable const& sender,
             RoutedEventArgs const& e);
+
+    private:
+
+        HWND m_WindowHandle;
     };
 }
 

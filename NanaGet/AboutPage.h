@@ -2,6 +2,8 @@
 
 #include "AboutPage.g.h"
 
+#include <Windows.h>
+
 namespace winrt::NanaGet::implementation
 {
     using Windows::UI::Xaml::RoutedEventArgs;
@@ -9,7 +11,10 @@ namespace winrt::NanaGet::implementation
     struct AboutPage :
         AboutPageT<AboutPage>
     {
-        AboutPage() = default;
+    public:
+
+        AboutPage(
+            _In_ HWND WindowHandle = nullptr);
 
         void InitializeComponent();
 
@@ -20,6 +25,10 @@ namespace winrt::NanaGet::implementation
         void CancelButtonClick(
             IInspectable const& sender,
             RoutedEventArgs const& e);
+
+    private:
+
+        HWND m_WindowHandle;
     };
 }
 

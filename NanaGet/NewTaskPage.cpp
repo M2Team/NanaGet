@@ -9,6 +9,13 @@ using namespace Windows::UI::Xaml;
 
 namespace winrt::NanaGet::implementation
 {
+    NewTaskPage::NewTaskPage(
+        _In_ HWND WindowHandle) :
+        m_WindowHandle(WindowHandle)
+    {
+
+    }
+
     /*void NewTaskPage::DownloadSourceBrowseButtonClick(
         IInspectable const& sender,
         RoutedEventArgs const& e)
@@ -41,10 +48,6 @@ namespace winrt::NanaGet::implementation
         {
 
         }*/
-
-        //this->NewTaskGrid().Visibility(Visibility::Collapsed);
-
-        //this->NewTaskGridDownloadSourceTextBox().Text(L"");
     }
 
     void NewTaskPage::CancelButtonClick(
@@ -54,8 +57,6 @@ namespace winrt::NanaGet::implementation
         UNREFERENCED_PARAMETER(sender);
         UNREFERENCED_PARAMETER(e);
 
-        //this->NewTaskGrid().Visibility(Visibility::Collapsed);
-
-        //this->DownloadSourceTextBox().Text(L"");
+        ::DestroyWindow(this->m_WindowHandle);
     }
 }

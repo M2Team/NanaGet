@@ -15,6 +15,13 @@ using namespace Windows::UI::Xaml;
 
 namespace winrt::NanaGet::implementation
 {
+    AboutPage::AboutPage(
+        _In_ HWND WindowHandle) :
+        m_WindowHandle(WindowHandle)
+    {
+
+    }
+
     void AboutPage::InitializeComponent()
     {
         AboutPageT::InitializeComponent();
@@ -44,5 +51,7 @@ namespace winrt::NanaGet::implementation
     {
         UNREFERENCED_PARAMETER(sender);
         UNREFERENCED_PARAMETER(e);
+
+        ::DestroyWindow(this->m_WindowHandle);
     }
 }

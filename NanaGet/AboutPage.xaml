@@ -29,20 +29,20 @@
       </Grid.Background>
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="*" />
-        <!--<ColumnDefinition Width="8" />
-        <ColumnDefinition Width="*" />-->
+        <ColumnDefinition Width="8" />
+        <ColumnDefinition Width="*" />
       </Grid.ColumnDefinitions>
       <Button
         Grid.Column="0"
         HorizontalAlignment="Stretch"
         Click="GitHubButtonClick"
         Content="GitHub" />
-      <!--<Button
+      <Button
         x:Uid="/AboutPage/CancelButton"
         Grid.Column="2"
         HorizontalAlignment="Stretch"
         Click="CancelButtonClick"
-        Content="[Cancel]" />-->
+        Content="[Cancel]" />
     </Grid>
   </Grid>
 </Page>

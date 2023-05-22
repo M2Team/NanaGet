@@ -97,8 +97,8 @@
       </Grid.Background>
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="*" />
-        <!--<ColumnDefinition Width="8" />
-        <ColumnDefinition Width="*" />-->
+        <ColumnDefinition Width="8" />
+        <ColumnDefinition Width="*" />
       </Grid.ColumnDefinitions>
       <Button
         x:Uid="/NewTaskPage/DownloadButton"
@@ -106,12 +106,12 @@
         HorizontalAlignment="Stretch"
         Click="DownloadButtonClick"
         Content="[Download]" />
-      <!--<Button
+      <Button
         x:Uid="/NewTaskPage/CancelButton"
         Grid.Column="2"
         HorizontalAlignment="Stretch"
         Click="CancelButtonClick"
-        Content="[Cancel]" />-->
+        Content="[Cancel]" />
     </Grid>
   </Grid>
 </Page>
