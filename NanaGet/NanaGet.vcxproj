@@ -124,10 +124,10 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Mile.Xaml">
-      <Version>2.0.616</Version>
+      <Version>2.0.617</Version>
     </PackageReference>
     <PackageReference Include="Mile.Windows.Helpers">
-      <Version>1.0.14</Version>
+      <Version>1.0.15</Version>
     </PackageReference>
     <PackageReference Include="Mile.Aria2">
       <Version>1.0.8</Version>
