@@ -336,7 +336,7 @@ namespace winrt::NanaGet::implementation
 
         while (!this->m_StopRefreshThread)
         {
-            ::OutputDebugStringW(L"MainPage::RefreshThreadHandler\r\n");
+            //::OutputDebugStringW(L"MainPage::RefreshThreadHandler\r\n");
             this->RefreshThreadHandler();
 
             ULONGLONG ElapsedTick = ::MileGetTickCount() - PreviousTick;
