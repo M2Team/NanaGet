@@ -10,34 +10,6 @@
     <local:TaskItemConverter x:Name="TaskItemConverter" />
   </Page.Resources>
   <Grid>
-    <Grid Visibility="Collapsed">
-      <Grid.RowDefinitions>
-        <RowDefinition Height="*" />
-        <RowDefinition Height="Auto" />
-      </Grid.RowDefinitions>
-      <Grid Grid.Row="0" Padding="24">
-        <TextBlock FontSize="20" Text="This is the test message." />
-      </Grid>
-      <Grid Grid.Row="1" Padding="24">
-        <Grid.Background>
-          <SolidColorBrush Opacity="0.2" Color="{ThemeResource SystemChromeHighColor}" />
-        </Grid.Background>
-        <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="*" />
-          <ColumnDefinition Width="8" />
-          <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-        <Button
-          Grid.Column="0"
-          HorizontalAlignment="Stretch"
-          Content="GitHub" />
-        <Button
-          Grid.Column="2"
-          HorizontalAlignment="Stretch"
-          Content="Cancel" />
-      </Grid>
-    </Grid>
-
     <Grid x:Name="TaskManagerGrid">
       <Grid.RowDefinitions>
         <RowDefinition Height="auto" />
