@@ -4,8 +4,15 @@
 #include "NewTaskPage.g.cpp"
 #endif
 
+#include "NanaGetCore.h"
+
 using namespace winrt;
 using namespace Windows::UI::Xaml;
+
+namespace NanaGet
+{
+    extern LocalAria2Instance* LocalInstance;
+}
 
 namespace winrt::NanaGet::implementation
 {
@@ -39,15 +46,17 @@ namespace winrt::NanaGet::implementation
         UNREFERENCED_PARAMETER(sender);
         UNREFERENCED_PARAMETER(e);
 
-        /*try
+        try
         {
-            this->m_Instance.AddTask(winrt::to_string(
+            NanaGet::LocalInstance->AddTask(winrt::to_string(
                 this->DownloadSourceTextBox().Text()));
         }
         catch (...)
         {
 
-        }*/
+        }
+
+        ::DestroyWindow(this->m_WindowHandle);
     }
 
     void NewTaskPage::CancelButtonClick(
