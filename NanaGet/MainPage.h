@@ -90,22 +90,6 @@ namespace winrt::NanaGet::implementation
             IInspectable const& sender,
             RoutedEventArgs const& e);
 
-        /*void NewTaskGridDownloadSourceBrowseButtonClick(
-            IInspectable const& sender,
-            RoutedEventArgs const& e);
-
-        void NewTaskGridSaveFolderBrowseButtonClick(
-            IInspectable const& sender,
-            RoutedEventArgs const& e);*/
-
-        void NewTaskGridDownloadButtonClick(
-            IInspectable const& sender,
-            RoutedEventArgs const& e);
-
-        void NewTaskGridCancelButtonClick(
-            IInspectable const& sender,
-            RoutedEventArgs const& e);
-
         /*void SettingsGridCustomDownloadFolderBrowseButtonClick(
             IInspectable const& sender,
             RoutedEventArgs const& e);

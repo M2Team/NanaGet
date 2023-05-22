@@ -41,6 +41,10 @@
       <SubType>Code</SubType>
     </ClInclude>
     <ClInclude Include="NanaGetCore.h" />
+    <ClInclude Include="NewTaskPage.h">
+      <DependentUpon>NewTaskPage.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </ClInclude>
     <ClInclude Include="pch.h" />
     <ClInclude Include="App.h">
       <DependentUpon>App.xaml</DependentUpon>
@@ -63,6 +67,9 @@
     <Page Include="MainPage.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="NewTaskPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AboutPage.cpp">
@@ -70,6 +77,10 @@
       <SubType>Code</SubType>
     </ClCompile>
     <ClCompile Include="NanaGetCore.cpp" />
+    <ClCompile Include="NewTaskPage.cpp">
+      <DependentUpon>NewTaskPage.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </ClCompile>
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
@@ -95,6 +106,10 @@
     </Midl>
     <Midl Include="MainPage.idl">
       <DependentUpon>MainPage.xaml</DependentUpon>
+    </Midl>
+    <Midl Include="NewTaskPage.idl">
+      <DependentUpon>NewTaskPage.xaml</DependentUpon>
+      <SubType>Code</SubType>
     </Midl>
     <Midl Include="TaskItem.idl" />
   </ItemGroup>

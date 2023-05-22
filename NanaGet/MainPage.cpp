@@ -62,7 +62,11 @@ namespace winrt::NanaGet::implementation
         UNREFERENCED_PARAMETER(sender);
         UNREFERENCED_PARAMETER(e);
 
-        this->NewTaskGrid().Visibility(Visibility::Visible);
+        ::PostMessageW(
+            NanaGet::MainWindowHandle,
+            WM_COMMAND,
+            MAKEWPARAM(ID_FILE_NEW, BN_CLICKED),
+            0);
     }
 
     void MainPage::TaskManagerGridStartAllButtonClick(
@@ -294,56 +298,6 @@ namespace winrt::NanaGet::implementation
         {
 
         }
-    }
-
-    /*void MainPage::NewTaskGridDownloadSourceBrowseButtonClick(
-        IInspectable const& sender,
-        RoutedEventArgs const& e)
-    {
-        UNREFERENCED_PARAMETER(sender);
-        UNREFERENCED_PARAMETER(e);
-    }
-
-    void MainPage::NewTaskGridSaveFolderBrowseButtonClick(
-        IInspectable const& sender,
-        RoutedEventArgs const& e)
-    {
-        UNREFERENCED_PARAMETER(sender);
-        UNREFERENCED_PARAMETER(e);
-    }*/
-
-    void MainPage::NewTaskGridDownloadButtonClick(
-        IInspectable const& sender,
-        RoutedEventArgs const& e)
-    {
-        UNREFERENCED_PARAMETER(sender);
-        UNREFERENCED_PARAMETER(e);
-
-        try
-        {
-            this->m_Instance.AddTask(winrt::to_string(
-                this->NewTaskGridDownloadSourceTextBox().Text()));
-        }
-        catch (...)
-        {
-
-        }
-
-        this->NewTaskGrid().Visibility(Visibility::Collapsed);
-
-        this->NewTaskGridDownloadSourceTextBox().Text(L"");
-    }
-
-    void MainPage::NewTaskGridCancelButtonClick(
-        IInspectable const& sender,
-        RoutedEventArgs const& e)
-    {
-        UNREFERENCED_PARAMETER(sender);
-        UNREFERENCED_PARAMETER(e);
-
-        this->NewTaskGrid().Visibility(Visibility::Collapsed);
-
-        this->NewTaskGridDownloadSourceTextBox().Text(L"");
     }
 
     /*void MainPage::SettingsGridCustomDownloadFolderBrowseButtonClick(

@@ -6,6 +6,7 @@
   <ItemGroup>
     <Page Include="MainPage.xaml" />
     <Page Include="AboutPage.xaml" />
+    <Page Include="NewTaskPage.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Midl Include="App.idl" />
