@@ -16,6 +16,7 @@
         x:Uid="/NewTaskPage/GridTitleTextBlock"
         Margin="0,0,0,12"
         FontSize="24"
+        FontWeight="SemiBold"
         Text="[New Task]" />
       <StackPanel
         MinWidth="300"
