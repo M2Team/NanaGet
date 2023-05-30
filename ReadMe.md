@@ -24,8 +24,8 @@ requests and issues are welcome.**
 - Multi-language Support: English, German, Japanese, Traditional Chinese and 
   Simplified Chinese.
 - Packaging with MSIX for modern deployment experience.
-- Modernize the UI with XAML Islands with dark and light mode support. (Dynamic
-  dark and light mode switching is supported for Windows 11 and later.)
+- Modernize the UI with XAML Islands with the Windows 11 control style, dark
+  and light mode support.
 - Full High DPI and partial Accessibility support.
 
 ## System Requirements
@@ -77,11 +77,12 @@ N/A.
         (Dynamic dark and light mode switching is supported for Windows 11 and 
         later.)
   - [x] Add full High DPI and partial Accessibility support.
-- 1.x Series (T.B.D.)
+- 1.1 (May 30, 2023)
   - [x] Improve the Mile.Xaml implementations for providing more modern control
         styles and keeping smaller binary size.
   - [x] Try to build my aria2 binary instead of using offical one for providing
         x64 and arm64 native support for aria2 part.
+- 1.x Series (T.B.D.)
   - [ ] Remote aria2 instance support.
   - [ ] Providing HASH value for downloaded files.
   - [ ] Get download uri from QR code and texts in images.
