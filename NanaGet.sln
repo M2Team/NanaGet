@@ -7,6 +7,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NanaGet", "NanaGet\NanaGet.
 EndProject
 Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "NanaGetPackage", "NanaGetPackage\NanaGetPackage.wapproj", "{79087060-1853-4203-B6F6-06DE231B97D7}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MaintainerTools", "MaintainerTools", "{B8CF352C-745A-4D30-92C7-D1DB8E5D0236}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevelopmentChannelSwitcher", "DevelopmentChannelSwitcher\DevelopmentChannelSwitcher.csproj", "{AAAA4B2F-2582-46D9-A996-4B274FD5B016}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM64 = Debug|ARM64
@@ -47,9 +51,20 @@ Global
 		{79087060-1853-4203-B6F6-06DE231B97D7}.Release|x86.ActiveCfg = Release|x86
 		{79087060-1853-4203-B6F6-06DE231B97D7}.Release|x86.Build.0 = Release|x86
 		{79087060-1853-4203-B6F6-06DE231B97D7}.Release|x86.Deploy.0 = Release|x86
+		{AAAA4B2F-2582-46D9-A996-4B274FD5B016}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{AAAA4B2F-2582-46D9-A996-4B274FD5B016}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{AAAA4B2F-2582-46D9-A996-4B274FD5B016}.Debug|x64.Build.0 = Debug|Any CPU
+		{AAAA4B2F-2582-46D9-A996-4B274FD5B016}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AAAA4B2F-2582-46D9-A996-4B274FD5B016}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{AAAA4B2F-2582-46D9-A996-4B274FD5B016}.Release|x64.ActiveCfg = Release|Any CPU
+		{AAAA4B2F-2582-46D9-A996-4B274FD5B016}.Release|x64.Build.0 = Release|Any CPU
+		{AAAA4B2F-2582-46D9-A996-4B274FD5B016}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{AAAA4B2F-2582-46D9-A996-4B274FD5B016} = {B8CF352C-745A-4D30-92C7-D1DB8E5D0236}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {63D93022-EEE8-42F3-90CE-06773351C9F4}
