@@ -5,10 +5,10 @@
   <Target Name="Restore">
     <ItemGroup>
       <ProjectReference Include="$(MSBuildThisFileDirectory)NanaGet.sln">
-        <AdditionalProperties>Configuration=Debug;Platform=x86</AdditionalProperties>   
+        <AdditionalProperties>Configuration=Debug;Platform=x64</AdditionalProperties>   
       </ProjectReference>
       <ProjectReference Include="$(MSBuildThisFileDirectory)NanaGet.sln">
-        <AdditionalProperties>Configuration=Release;Platform=x86</AdditionalProperties>   
+        <AdditionalProperties>Configuration=Release;Platform=x64</AdditionalProperties>   
       </ProjectReference>
     </ItemGroup>
     <MSBuild
@@ -23,12 +23,12 @@
       Targets="Build"
       BuildInParallel="True"
       StopOnFirstFailure="True"
-      Properties="PreferredToolArchitecture=x64;Configuration=Debug;Platform=x86" />
+      Properties="PreferredToolArchitecture=x64;Configuration=Debug;Platform=x64" />
     <MSBuild
       Projects="$(MSBuildThisFileDirectory)NanaGetPackage\NanaGetPackage.wapproj"
       Targets="Build"
       BuildInParallel="True"
       StopOnFirstFailure="True"
-      Properties="PreferredToolArchitecture=x64;Configuration=Release;Platform=x86" />
+      Properties="PreferredToolArchitecture=x64;Configuration=Release;Platform=x64" />
   </Target>
 </Project>
