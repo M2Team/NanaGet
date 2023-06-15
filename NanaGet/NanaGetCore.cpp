@@ -5,7 +5,7 @@
  *
  * LICENSE:   The MIT License
  *
- * DEVELOPER: Mouri_Naruto (Mouri_Naruto AT Outlook.com)
+ * DEVELOPER: MouriNaruto (KurikoMouri@outlook.jp)
  */
 
 #include "NanaGetCore.h"
@@ -200,7 +200,7 @@ std::filesystem::path NanaGet::GetSettingsFolderPath()
 
         // Create the directory if it doesn't exist.
         std::filesystem::create_directories(FolderPath);
-        
+
         return FolderPath;
     }());
 
@@ -686,7 +686,7 @@ std::string NanaGet::Aria2Instance::SimpleJsonRpcCall(
     {
         throw winrt::hresult_invalid_argument(winrt::to_hstring(ex.what()));
     }
-    
+
     std::string ResponseString = this->SimplePost(RequestJson.dump(2));
 
     nlohmann::json ResponseJson;
