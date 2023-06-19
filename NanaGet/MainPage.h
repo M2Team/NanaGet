@@ -21,7 +21,9 @@ namespace winrt::NanaGet::implementation
     {
     public:
 
-        MainPage();
+        MainPage() = default;
+
+        void InitializeComponent();
 
         winrt::hstring SearchFilter();
 

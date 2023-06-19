@@ -25,6 +25,7 @@ namespace winrt::NanaGet::implementation
     void AboutPage::InitializeComponent()
     {
         AboutPageT::InitializeComponent();
+
         this->Version().Text(winrt::hstring(
             L"NanaGet " MILE_PROJECT_VERSION_STRING
             L" (" MILE_PROJECT_DOT_VERSION_STRING L")"));

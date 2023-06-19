@@ -26,9 +26,10 @@ namespace winrt::NanaGet::implementation
     using Windows::System::DispatcherQueuePriority;
     using Windows::UI::Xaml::Visibility;
 
-    MainPage::MainPage()
+    void MainPage::InitializeComponent()
     {
-        this->InitializeComponent();
+        MainPageT::InitializeComponent();
+
         this->m_DispatcherQueue = DispatcherQueue::GetForCurrentThread();
         //this->SimpleDemoEntry();
         this->m_RefreshThread = std::thread(
