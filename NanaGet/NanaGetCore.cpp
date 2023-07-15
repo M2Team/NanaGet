@@ -25,7 +25,6 @@
 
 #undef GetObject
 
-#include <winrt/Windows.ApplicationModel.h>
 #include <winrt/Windows.Foundation.Collections.h>
 #include <winrt/Windows.Storage.h>
 #include <winrt/Windows.Storage.Streams.h>
@@ -132,7 +131,6 @@ namespace NanaGet
 
 namespace winrt
 {
-    using Windows::ApplicationModel::Package;
     using Windows::Storage::ApplicationData;
     using Windows::Storage::Streams::IBuffer;
     using Windows::Web::Http::HttpResponseMessage;
@@ -150,24 +148,6 @@ std::filesystem::path NanaGet::GetApplicationFolderPath()
         ::GetModuleFileNameW(nullptr, Buffer, BufferSize);
         std::wcsrchr(Buffer, L'\\')[0] = L'\0';
         return std::filesystem::path(Buffer);
-    }());
-
-    return CachedResult;
-}
-
-bool NanaGet::IsPackagedMode()
-{
-    static bool CachedResult = ([]() -> bool
-    {
-        try
-        {
-            const auto CurrentPackage = winrt::Package::Current();
-            return true;
-        }
-        catch (...)
-        {
-            return false;
-        }
     }());
 
     return CachedResult;
@@ -191,7 +171,7 @@ std::filesystem::path NanaGet::GetSettingsFolderPath()
                 nullptr,
                 &RawFolderPath));
             FolderPath = std::filesystem::path(RawFolderPath);
-            if (!NanaGet::IsPackagedMode())
+            if (!Mile::WinRT::IsPackagedMode())
             {
                 FolderPath /= L"M2-Team\\NanaGet";
             }

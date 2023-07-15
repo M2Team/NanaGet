@@ -39,8 +39,6 @@ namespace NanaGet
 {
     std::filesystem::path GetApplicationFolderPath();
 
-    bool IsPackagedMode();
-
     std::filesystem::path GetSettingsFolderPath();
 
     std::filesystem::path GetDownloadsFolderPath();
