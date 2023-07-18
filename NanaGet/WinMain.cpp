@@ -6,6 +6,7 @@
 #include "MainPage.h"
 #include "NewTaskPage.h"
 #include "AboutPage.h"
+#include "SettingsPage.h"
 
 #define _ATL_NO_AUTOMATIC_NAMESPACE
 #include <atlbase.h>
@@ -56,6 +57,7 @@ namespace NanaGet
 
             COMMAND_ID_HANDLER(ID_FILE_NEW, OnNewTask)
             COMMAND_ID_HANDLER(ID_APP_ABOUT, OnAbout)
+            COMMAND_ID_HANDLER(ID_FILE_UPDATE, OnSettings)
         END_MSG_MAP()
 
         virtual BOOL PreTranslateMessage(
@@ -78,6 +80,12 @@ namespace NanaGet
             BOOL& bHandled);
 
         LRESULT OnAbout(
+            WORD wNotifyCode,
+            WORD wID,
+            HWND hWndCtl,
+            BOOL& bHandled);
+
+        LRESULT OnSettings(
             WORD wNotifyCode,
             WORD wID,
             HWND hWndCtl,
@@ -243,6 +251,29 @@ LRESULT NanaGet::MainWindow::OnAbout(
     {
         winrt::NanaGet::AboutPage Window =
             winrt::make<winrt::NanaGet::implementation::AboutPage>(
+                WindowHandle);
+        this->ShowXamlDialog(WindowHandle, 480, 320, winrt::get_abi(Window));
+    }
+
+    return 0;
+}
+
+LRESULT NanaGet::MainWindow::OnSettings(
+    WORD wNotifyCode,
+    WORD wID,
+    HWND hWndCtl,
+    BOOL& bHandled)
+{
+    UNREFERENCED_PARAMETER(wNotifyCode);
+    UNREFERENCED_PARAMETER(wID);
+    UNREFERENCED_PARAMETER(hWndCtl);
+    UNREFERENCED_PARAMETER(bHandled);
+
+    HWND WindowHandle = this->CreateXamlDialog();
+    if (WindowHandle)
+    {
+        winrt::NanaGet::SettingsPage Window =
+            winrt::make<winrt::NanaGet::implementation::SettingsPage>(
                 WindowHandle);
         this->ShowXamlDialog(WindowHandle, 480, 320, winrt::get_abi(Window));
     }

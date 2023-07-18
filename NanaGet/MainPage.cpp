@@ -139,15 +139,19 @@ namespace winrt::NanaGet::implementation
         ::ShellExecuteExW(&ExecInfo);
     }
 
-    /*void MainPage::TaskManagerGridSettingsButtonClick(
+    void MainPage::TaskManagerGridSettingsButtonClick(
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
         UNREFERENCED_PARAMETER(sender);
         UNREFERENCED_PARAMETER(e);
 
-        this->SettingsGrid().Visibility(Visibility::Visible);
-    }*/
+        ::PostMessageW(
+            NanaGet::MainWindowHandle,
+            WM_COMMAND,
+            MAKEWPARAM(ID_FILE_UPDATE, BN_CLICKED),
+            0);
+    }
 
     void MainPage::TaskManagerGridAboutButtonClick(
         IInspectable const& sender,
@@ -301,34 +305,6 @@ namespace winrt::NanaGet::implementation
 
         }
     }
-
-    /*void MainPage::SettingsGridCustomDownloadFolderBrowseButtonClick(
-        IInspectable const& sender,
-        RoutedEventArgs const& e)
-    {
-        UNREFERENCED_PARAMETER(sender);
-        UNREFERENCED_PARAMETER(e);
-    }
-
-    void MainPage::SettingsGridApplyButtonClick(
-        IInspectable const& sender,
-        RoutedEventArgs const& e)
-    {
-        UNREFERENCED_PARAMETER(sender);
-        UNREFERENCED_PARAMETER(e);
-
-        this->SettingsGrid().Visibility(Visibility::Collapsed);
-    }
-
-    void MainPage::SettingsGridCancelButtonClick(
-        IInspectable const& sender,
-        RoutedEventArgs const& e)
-    {
-        UNREFERENCED_PARAMETER(sender);
-        UNREFERENCED_PARAMETER(e);
-
-        this->SettingsGrid().Visibility(Visibility::Collapsed);
-    }*/
 
     void MainPage::RefreshThreadEntryPoint()
     {

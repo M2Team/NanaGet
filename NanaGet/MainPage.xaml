@@ -108,11 +108,11 @@
                 Click="TaskManagerGridOpenDownloadsFolderButtonClick"
                 Icon="Folder"
                 Text="[Open Downloads Folder]" />
-              <!--<MenuFlyoutItem
+              <MenuFlyoutItem
                 x:Uid="/TaskManagerGrid/SettingsButton"
                 Click="TaskManagerGridSettingsButtonClick"
                 Icon="Setting"
-                Text="[Settings]" />-->
+                Text="[Settings]" />
               <MenuFlyoutItem
                 x:Uid="/TaskManagerGrid/AboutButton"
                 Click="TaskManagerGridAboutButtonClick"
@@ -269,67 +269,5 @@
         FontSize="15"
         Text="&#x2193; 0 Byte/s &#x2191; 0 Byte/s" />
     </Grid>
-    <!--<Grid
-      x:Name="SettingsGrid"
-      Background="{ThemeResource SystemControlPageBackgroundMediumAltMediumBrush}"
-      Visibility="Collapsed">
-      <Border
-        Padding="12"
-        HorizontalAlignment="Center"
-        VerticalAlignment="Center"
-        Background="{ThemeResource SystemControlPageBackgroundAltHighBrush}"
-        BorderBrush="{ThemeResource SystemControlBackgroundBaseLowBrush}"
-        BorderThickness="2">
-        <StackPanel>
-          <TextBlock
-            x:Uid="/SettingsGrid/GridTitleTextBlock"
-            Margin="0,0,0,12"
-            FontSize="20"
-            Text="[Settings]" />
-          <ScrollViewer
-            MinWidth="300"
-            MaxHeight="200"
-            Margin="-12,0"
-            Padding="12,0">
-            <StackPanel Orientation="Vertical">
-              <TextBlock
-                x:Uid="/SettingsGrid/DefaultDownloadFolderTitle"
-                FontSize="16"
-                Text="[Default download folder]" />
-              <CheckBox
-                x:Name="SettingsGridUseCustomFolderCheckBox"
-                x:Uid="/SettingsGrid/UseCustomFolderCheckBox"
-                Content="[Use custom folder instead of last used folder]" />
-              <TextBox
-                x:Name="SettingsGridCustomDownloadFolderCheckBox"
-                IsReadOnly="True"
-                PlaceholderText="N/A" />
-              <Button
-                x:Uid="/SettingsGrid/CustomDownloadFolderBrowseButton"
-                Margin="0,4"
-                HorizontalAlignment="Right"
-                Click="SettingsGridCustomDownloadFolderBrowseButtonClick"
-                Content="[Browse to modify]"
-                IsEnabled="False" />
-            </StackPanel>
-          </ScrollViewer>
-          <StackPanel
-            Margin="0,12,0,0"
-            HorizontalAlignment="Right"
-            Orientation="Horizontal">
-            <Button
-              x:Uid="/SettingsGrid/ApplyButton"
-              Margin="0,0,6,0"
-              Click="SettingsGridApplyButtonClick"
-              Content="[Apply]" />
-            <Button
-              x:Uid="/SettingsGrid/CancelButton"
-              Margin="6,0,0,0"
-              Click="SettingsGridCancelButtonClick"
-              Content="[Cancel]" />
-          </StackPanel>
-        </StackPanel>
-      </Border>
-    </Grid>-->
   </Grid>
 </Page>

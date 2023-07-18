@@ -52,9 +52,9 @@ namespace winrt::NanaGet::implementation
             IInspectable const& sender,
             RoutedEventArgs const& e);
 
-        /*void TaskManagerGridSettingsButtonClick(
+        void TaskManagerGridSettingsButtonClick(
             IInspectable const& sender,
-            RoutedEventArgs const& e);*/
+            RoutedEventArgs const& e);
 
         void TaskManagerGridAboutButtonClick(
             IInspectable const& sender,
@@ -91,18 +91,6 @@ namespace winrt::NanaGet::implementation
         void TaskManagerGridTaskItemRemoveButtonClick(
             IInspectable const& sender,
             RoutedEventArgs const& e);
-
-        /*void SettingsGridCustomDownloadFolderBrowseButtonClick(
-            IInspectable const& sender,
-            RoutedEventArgs const& e);
-
-        void SettingsGridApplyButtonClick(
-            IInspectable const& sender,
-            RoutedEventArgs const& e);
-
-        void SettingsGridCancelButtonClick(
-            IInspectable const& sender,
-            RoutedEventArgs const& e);*/
 
     private:
 

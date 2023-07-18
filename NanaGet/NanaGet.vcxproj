@@ -52,6 +52,10 @@
     <ClInclude Include="MainPage.h">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </ClInclude>
+    <ClInclude Include="SettingsPage.h">
+      <DependentUpon>SettingsPage.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </ClInclude>
     <ClInclude Include="TaskItem.h">
       <DependentUpon>TaskItem.idl</DependentUpon>
     </ClInclude>
@@ -68,6 +72,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="NewTaskPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="SettingsPage.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
@@ -90,6 +97,10 @@
     <ClCompile Include="MainPage.cpp">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </ClCompile>
+    <ClCompile Include="SettingsPage.cpp">
+      <DependentUpon>SettingsPage.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </ClCompile>
     <ClCompile Include="TaskItem.cpp">
       <DependentUpon>TaskItem.idl</DependentUpon>
     </ClCompile>
@@ -109,6 +120,10 @@
     </Midl>
     <Midl Include="NewTaskPage.idl">
       <DependentUpon>NewTaskPage.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Midl>
+    <Midl Include="SettingsPage.idl">
+      <DependentUpon>SettingsPage.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Midl>
     <Midl Include="TaskItem.idl" />
