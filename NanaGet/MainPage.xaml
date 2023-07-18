@@ -102,7 +102,7 @@
             <SymbolIcon Symbol="More" />
           </Button.Content>
           <Button.Flyout>
-            <MenuFlyout>
+            <MenuFlyout Placement="BottomEdgeAlignedRight">
               <MenuFlyoutItem
                 x:Uid="/TaskManagerGrid/OpenDownloadsFolderButton"
                 Click="TaskManagerGridOpenDownloadsFolderButtonClick"
@@ -222,7 +222,7 @@
                     <SymbolIcon Symbol="More" />
                   </Button.Content>
                   <Button.Flyout>
-                    <MenuFlyout>
+                    <MenuFlyout Placement="BottomEdgeAlignedRight">
                       <MenuFlyoutItem
                         x:Uid="/TaskManagerGrid/TaskItemCopyLinkButton"
                         Click="TaskManagerGridTaskItemCopyLinkButtonClick"
