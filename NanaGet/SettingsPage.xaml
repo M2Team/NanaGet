@@ -29,11 +29,11 @@
             FontSize="16"
             Text="[Default download folder]" />
           <CheckBox
-            x:Name="SettingsPageUseCustomFolderCheckBox"
+            x:Name="UseCustomFolderCheckBox"
             x:Uid="/SettingsPage/UseCustomFolderCheckBox"
-            Content="[Use custom folder instead of last used folder]" />
+            Content="[Use custom folder instead of last used folder]" IsEnabled="False"/>
           <TextBox
-            x:Name="SettingsPageCustomDownloadFolderCheckBox"
+            x:Name="CustomDownloadFolderCheckBox"
             IsReadOnly="True"
             PlaceholderText="N/A" />
           <Button
