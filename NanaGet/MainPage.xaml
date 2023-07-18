@@ -10,264 +10,262 @@
     <local:TaskItemConverter x:Name="TaskItemConverter" />
   </Page.Resources>
   <Grid>
-    <Grid x:Name="TaskManagerGrid">
-      <Grid.RowDefinitions>
-        <RowDefinition Height="auto" />
-        <RowDefinition Height="*" />
-        <RowDefinition Height="auto" />
-      </Grid.RowDefinitions>
-      <Grid Grid.Row="0" Height="44">
-        <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="*" />
-          <ColumnDefinition Width="44" />
-          <ColumnDefinition Width="44" />
-          <ColumnDefinition Width="44" />
-          <ColumnDefinition Width="44" />
-          <ColumnDefinition Width="44" />
-        </Grid.ColumnDefinitions>
-        <AutoSuggestBox
-          x:Uid="/TaskManagerGrid/SearchBox"
-          Grid.Column="0"
-          Margin="4,0"
-          HorizontalAlignment="Stretch"
-          VerticalAlignment="Center"
-          PlaceholderText="[Search Downloads]"
-          Text="{x:Bind SearchFilter, Mode=TwoWay}" />
-        <Button
-          x:Uid="/TaskManagerGrid/NewTaskButton"
-          Grid.Column="1"
-          Width="44"
-          VerticalAlignment="Stretch"
-          AutomationProperties.Name="[New Task Button]"
-          Background="Transparent"
-          BorderBrush="Transparent"
-          Click="TaskManagerGridNewTaskButtonClick"
-          ToolTipService.ToolTip="[New Task]">
-          <Button.Content>
-            <SymbolIcon Symbol="Add" />
-          </Button.Content>
-        </Button>
-        <Button
-          x:Uid="/TaskManagerGrid/StartAllButton"
-          Grid.Column="2"
-          Width="44"
-          VerticalAlignment="Stretch"
-          AutomationProperties.Name="[Start All Button]"
-          Background="Transparent"
-          BorderBrush="Transparent"
-          Click="TaskManagerGridStartAllButtonClick"
-          ToolTipService.ToolTip="[Start All]">
-          <Button.Content>
-            <SymbolIcon Symbol="Play" />
-          </Button.Content>
-        </Button>
-        <Button
-          x:Uid="/TaskManagerGrid/PauseAllButton"
-          Grid.Column="3"
-          Width="44"
-          VerticalAlignment="Stretch"
-          AutomationProperties.Name="[Pause All Button]"
-          Background="Transparent"
-          BorderBrush="Transparent"
-          Click="TaskManagerGridPauseAllButtonClick"
-          ToolTipService.ToolTip="[Pause All]">
-          <Button.Content>
-            <SymbolIcon Symbol="Pause" />
-          </Button.Content>
-        </Button>
-        <Button
-          x:Uid="/TaskManagerGrid/ClearListButton"
-          Grid.Column="4"
-          Width="44"
-          VerticalAlignment="Stretch"
-          AutomationProperties.Name="[Clear List Button]"
-          Background="Transparent"
-          BorderBrush="Transparent"
-          Click="TaskManagerGridClearListButtonClick"
-          ToolTipService.ToolTip="[Clear List]">
-          <Button.Content>
-            <SymbolIcon Symbol="Delete" />
-          </Button.Content>
-        </Button>
-        <Button
-          x:Uid="/TaskManagerGrid/MoreButton"
-          Grid.Column="5"
-          Width="44"
-          VerticalAlignment="Stretch"
-          AutomationProperties.Name="[More Button]"
-          Background="Transparent"
-          BorderBrush="Transparent"
-          ToolTipService.ToolTip="[More]">
-          <Button.Content>
-            <SymbolIcon Symbol="More" />
-          </Button.Content>
-          <Button.Flyout>
-            <MenuFlyout Placement="BottomEdgeAlignedRight">
-              <MenuFlyoutItem
-                x:Uid="/TaskManagerGrid/OpenDownloadsFolderButton"
-                Click="TaskManagerGridOpenDownloadsFolderButtonClick"
-                Icon="Folder"
-                Text="[Open Downloads Folder]" />
-              <MenuFlyoutItem
-                x:Uid="/TaskManagerGrid/SettingsButton"
-                Click="TaskManagerGridSettingsButtonClick"
-                Icon="Setting"
-                Text="[Settings]" />
-              <MenuFlyoutItem
-                x:Uid="/TaskManagerGrid/AboutButton"
-                Click="TaskManagerGridAboutButtonClick"
-                Icon="Help"
-                Text="[About]" />
-            </MenuFlyout>
-          </Button.Flyout>
-        </Button>
-      </Grid>
-      <ListView
-        x:Name="TaskManagerGridTaskList"
-        Grid.Row="1"
-        ContainerContentChanging="TaskManagerGridTaskListContainerContentChanging">
-        <ListView.ItemContainerStyle>
-          <Style TargetType="ListViewItem">
-            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-            <Setter Property="VerticalContentAlignment" Value="Stretch" />
-            <Setter Property="Padding" Value="1,0" />
-            <Setter Property="Margin" Value="-1,0,-1,-1" />
-            <Setter Property="BorderBrush" Value="Gray" />
-            <Setter Property="BorderThickness" Value="1" />
-          </Style>
-        </ListView.ItemContainerStyle>
-        <ListView.ItemTemplate>
-          <DataTemplate x:DataType="local:TaskItem">
-            <Grid Height="44">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="auto" />
+      <RowDefinition Height="*" />
+      <RowDefinition Height="auto" />
+    </Grid.RowDefinitions>
+    <Grid Grid.Row="0" Height="44">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="44" />
+        <ColumnDefinition Width="44" />
+        <ColumnDefinition Width="44" />
+        <ColumnDefinition Width="44" />
+        <ColumnDefinition Width="44" />
+      </Grid.ColumnDefinitions>
+      <AutoSuggestBox
+        x:Uid="/MainPage/SearchBox"
+        Grid.Column="0"
+        Margin="4,0"
+        HorizontalAlignment="Stretch"
+        VerticalAlignment="Center"
+        PlaceholderText="[Search Downloads]"
+        Text="{x:Bind SearchFilter, Mode=TwoWay}" />
+      <Button
+        x:Uid="/MainPage/NewTaskButton"
+        Grid.Column="1"
+        Width="44"
+        VerticalAlignment="Stretch"
+        AutomationProperties.Name="[New Task Button]"
+        Background="Transparent"
+        BorderBrush="Transparent"
+        Click="NewTaskButtonClick"
+        ToolTipService.ToolTip="[New Task]">
+        <Button.Content>
+          <SymbolIcon Symbol="Add" />
+        </Button.Content>
+      </Button>
+      <Button
+        x:Uid="/MainPage/StartAllButton"
+        Grid.Column="2"
+        Width="44"
+        VerticalAlignment="Stretch"
+        AutomationProperties.Name="[Start All Button]"
+        Background="Transparent"
+        BorderBrush="Transparent"
+        Click="StartAllButtonClick"
+        ToolTipService.ToolTip="[Start All]">
+        <Button.Content>
+          <SymbolIcon Symbol="Play" />
+        </Button.Content>
+      </Button>
+      <Button
+        x:Uid="/MainPage/PauseAllButton"
+        Grid.Column="3"
+        Width="44"
+        VerticalAlignment="Stretch"
+        AutomationProperties.Name="[Pause All Button]"
+        Background="Transparent"
+        BorderBrush="Transparent"
+        Click="PauseAllButtonClick"
+        ToolTipService.ToolTip="[Pause All]">
+        <Button.Content>
+          <SymbolIcon Symbol="Pause" />
+        </Button.Content>
+      </Button>
+      <Button
+        x:Uid="/MainPage/ClearListButton"
+        Grid.Column="4"
+        Width="44"
+        VerticalAlignment="Stretch"
+        AutomationProperties.Name="[Clear List Button]"
+        Background="Transparent"
+        BorderBrush="Transparent"
+        Click="ClearListButtonClick"
+        ToolTipService.ToolTip="[Clear List]">
+        <Button.Content>
+          <SymbolIcon Symbol="Delete" />
+        </Button.Content>
+      </Button>
+      <Button
+        x:Uid="/MainPage/MoreButton"
+        Grid.Column="5"
+        Width="44"
+        VerticalAlignment="Stretch"
+        AutomationProperties.Name="[More Button]"
+        Background="Transparent"
+        BorderBrush="Transparent"
+        ToolTipService.ToolTip="[More]">
+        <Button.Content>
+          <SymbolIcon Symbol="More" />
+        </Button.Content>
+        <Button.Flyout>
+          <MenuFlyout Placement="BottomEdgeAlignedRight">
+            <MenuFlyoutItem
+              x:Uid="/MainPage/OpenDownloadsFolderButton"
+              Click="OpenDownloadsFolderButtonClick"
+              Icon="Folder"
+              Text="[Open Downloads Folder]" />
+            <MenuFlyoutItem
+              x:Uid="/MainPage/SettingsButton"
+              Click="SettingsButtonClick"
+              Icon="Setting"
+              Text="[Settings]" />
+            <MenuFlyoutItem
+              x:Uid="/MainPage/AboutButton"
+              Click="AboutButtonClick"
+              Icon="Help"
+              Text="[About]" />
+          </MenuFlyout>
+        </Button.Flyout>
+      </Button>
+    </Grid>
+    <ListView
+      x:Name="TaskList"
+      Grid.Row="1"
+      ContainerContentChanging="TaskListContainerContentChanging">
+      <ListView.ItemContainerStyle>
+        <Style TargetType="ListViewItem">
+          <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+          <Setter Property="VerticalContentAlignment" Value="Stretch" />
+          <Setter Property="Padding" Value="1,0" />
+          <Setter Property="Margin" Value="-1,0,-1,-1" />
+          <Setter Property="BorderBrush" Value="Gray" />
+          <Setter Property="BorderThickness" Value="1" />
+        </Style>
+      </ListView.ItemContainerStyle>
+      <ListView.ItemTemplate>
+        <DataTemplate x:DataType="local:TaskItem">
+          <Grid Height="44">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+            <Grid
+              Grid.Column="0"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch">
               <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="4*" />
+                <ColumnDefinition Width="6*" />
+                <ColumnDefinition Width="44" />
+                <ColumnDefinition Width="44" />
               </Grid.ColumnDefinitions>
-              <Grid
+              <TextBlock
                 Grid.Column="0"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch">
-                <Grid.ColumnDefinitions>
-                  <ColumnDefinition Width="4*" />
-                  <ColumnDefinition Width="6*" />
-                  <ColumnDefinition Width="44" />
-                  <ColumnDefinition Width="44" />
-                </Grid.ColumnDefinitions>
-                <TextBlock
-                  Grid.Column="0"
-                  Margin="12,0"
-                  VerticalAlignment="Center"
-                  Text="{x:Bind Name, Mode=OneWay}"
-                  TextTrimming="CharacterEllipsis" />
-                <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                  <TextBlock Text="{x:Bind StatusText, Mode=OneWay}" />
-                  <ProgressBar
-                    Height="4"
-                    BorderThickness="0"
-                    Foreground="{x:Bind Status, Converter={StaticResource TaskItemConverter}, ConverterParameter=TaskStatusToProgressBarForegroundColor, Mode=OneWay}"
-                    Maximum="{x:Bind TotalBytesToReceive, Converter={StaticResource TaskItemConverter}, ConverterParameter=UInt64ToDouble, Mode=OneWay}"
-                    Value="{x:Bind BytesReceived, Converter={StaticResource TaskItemConverter}, ConverterParameter=UInt64ToDouble, Mode=OneWay}" />
-                </StackPanel>
-                <Button
-                  x:Uid="/TaskManagerGrid/TaskItemRetryButton"
-                  Grid.Column="2"
-                  VerticalAlignment="Stretch"
-                  AutomationProperties.Name="[Retry Button]"
-                  Background="Transparent"
-                  BorderBrush="Transparent"
-                  Click="TaskManagerGridTaskItemRetryButtonClick"
-                  ToolTipService.ToolTip="[Retry]"
-                  Visibility="{x:Bind Status, Converter={StaticResource TaskItemConverter}, ConverterParameter=TaskStatusToRetryButtonVisible, Mode=OneWay}">
-                  <Button.Content>
-                    <SymbolIcon Symbol="Refresh" />
-                  </Button.Content>
-                </Button>
-                <Button
-                  x:Uid="/TaskManagerGrid/TaskItemResumeButton"
-                  Grid.Column="2"
-                  VerticalAlignment="Stretch"
-                  AutomationProperties.Name="[Resume Button]"
-                  Background="Transparent"
-                  BorderBrush="Transparent"
-                  Click="TaskManagerGridTaskItemResumeButtonClick"
-                  ToolTipService.ToolTip="[Resume]"
-                  Visibility="{x:Bind Status, Converter={StaticResource TaskItemConverter}, ConverterParameter=TaskStatusToResumeButtonVisible, Mode=OneWay}">
-                  <Button.Content>
-                    <SymbolIcon Symbol="Play" />
-                  </Button.Content>
-                </Button>
-                <Button
-                  x:Uid="/TaskManagerGrid/TaskItemPauseButton"
-                  Grid.Column="2"
-                  VerticalAlignment="Stretch"
-                  AutomationProperties.Name="[Pause Button]"
-                  Background="Transparent"
-                  BorderBrush="Transparent"
-                  Click="TaskManagerGridTaskItemPauseButtonClick"
-                  ToolTipService.ToolTip="[Pause]"
-                  Visibility="{x:Bind Status, Converter={StaticResource TaskItemConverter}, ConverterParameter=TaskStatusToPauseButtonVisible, Mode=OneWay}">
-                  <Button.Content>
-                    <SymbolIcon Symbol="Pause" />
-                  </Button.Content>
-                </Button>
-                <Button
-                  x:Uid="/TaskManagerGrid/TaskItemMoreButton"
-                  Grid.Column="3"
-                  VerticalAlignment="Stretch"
-                  AutomationProperties.Name="[More Button]"
-                  Background="Transparent"
-                  BorderBrush="Transparent"
-                  ToolTipService.ToolTip="[More]">
-                  <Button.Content>
-                    <SymbolIcon Symbol="More" />
-                  </Button.Content>
-                  <Button.Flyout>
-                    <MenuFlyout Placement="BottomEdgeAlignedRight">
-                      <MenuFlyoutItem
-                        x:Uid="/TaskManagerGrid/TaskItemCopyLinkButton"
-                        Click="TaskManagerGridTaskItemCopyLinkButtonClick"
-                        Icon="Link"
-                        Text="[Copy Link]" />
-                      <!--<MenuFlyoutItem
-                        x:Uid="/TaskManagerGrid/TaskItemOpenFolderButton"
-                        Click="TaskManagerGridTaskItemOpenFolderButtonClick"
+                Margin="12,0"
+                VerticalAlignment="Center"
+                Text="{x:Bind Name, Mode=OneWay}"
+                TextTrimming="CharacterEllipsis" />
+              <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                <TextBlock Text="{x:Bind StatusText, Mode=OneWay}" />
+                <ProgressBar
+                  Height="4"
+                  BorderThickness="0"
+                  Foreground="{x:Bind Status, Converter={StaticResource TaskItemConverter}, ConverterParameter=TaskStatusToProgressBarForegroundColor, Mode=OneWay}"
+                  Maximum="{x:Bind TotalBytesToReceive, Converter={StaticResource TaskItemConverter}, ConverterParameter=UInt64ToDouble, Mode=OneWay}"
+                  Value="{x:Bind BytesReceived, Converter={StaticResource TaskItemConverter}, ConverterParameter=UInt64ToDouble, Mode=OneWay}" />
+              </StackPanel>
+              <Button
+                x:Uid="/MainPage/TaskItemRetryButton"
+                Grid.Column="2"
+                VerticalAlignment="Stretch"
+                AutomationProperties.Name="[Retry Button]"
+                Background="Transparent"
+                BorderBrush="Transparent"
+                Click="TaskItemRetryButtonClick"
+                ToolTipService.ToolTip="[Retry]"
+                Visibility="{x:Bind Status, Converter={StaticResource TaskItemConverter}, ConverterParameter=TaskStatusToRetryButtonVisible, Mode=OneWay}">
+                <Button.Content>
+                  <SymbolIcon Symbol="Refresh" />
+                </Button.Content>
+              </Button>
+              <Button
+                x:Uid="/MainPage/TaskItemResumeButton"
+                Grid.Column="2"
+                VerticalAlignment="Stretch"
+                AutomationProperties.Name="[Resume Button]"
+                Background="Transparent"
+                BorderBrush="Transparent"
+                Click="TaskItemResumeButtonClick"
+                ToolTipService.ToolTip="[Resume]"
+                Visibility="{x:Bind Status, Converter={StaticResource TaskItemConverter}, ConverterParameter=TaskStatusToResumeButtonVisible, Mode=OneWay}">
+                <Button.Content>
+                  <SymbolIcon Symbol="Play" />
+                </Button.Content>
+              </Button>
+              <Button
+                x:Uid="/MainPage/TaskItemPauseButton"
+                Grid.Column="2"
+                VerticalAlignment="Stretch"
+                AutomationProperties.Name="[Pause Button]"
+                Background="Transparent"
+                BorderBrush="Transparent"
+                Click="TaskItemPauseButtonClick"
+                ToolTipService.ToolTip="[Pause]"
+                Visibility="{x:Bind Status, Converter={StaticResource TaskItemConverter}, ConverterParameter=TaskStatusToPauseButtonVisible, Mode=OneWay}">
+                <Button.Content>
+                  <SymbolIcon Symbol="Pause" />
+                </Button.Content>
+              </Button>
+              <Button
+                x:Uid="/MainPage/TaskItemMoreButton"
+                Grid.Column="3"
+                VerticalAlignment="Stretch"
+                AutomationProperties.Name="[More Button]"
+                Background="Transparent"
+                BorderBrush="Transparent"
+                ToolTipService.ToolTip="[More]">
+                <Button.Content>
+                  <SymbolIcon Symbol="More" />
+                </Button.Content>
+                <Button.Flyout>
+                  <MenuFlyout Placement="BottomEdgeAlignedRight">
+                    <MenuFlyoutItem
+                      x:Uid="/MainPage/TaskItemCopyLinkButton"
+                      Click="TaskItemCopyLinkButtonClick"
+                      Icon="Link"
+                      Text="[Copy Link]" />
+                    <!--<MenuFlyoutItem
+                        x:Uid="/MainPage/TaskItemOpenFolderButton"
+                        Click="TaskItemOpenFolderButtonClick"
                         Icon="OpenLocal"
                         Text="[Open Folder]" />-->
-                      <MenuFlyoutItem
-                        x:Uid="/TaskManagerGrid/TaskItemCancelButton"
-                        Click="TaskManagerGridTaskItemCancelButtonClick"
-                        Icon="Cancel"
-                        Text="[Cancel]"
-                        Visibility="{x:Bind Status, Converter={StaticResource TaskItemConverter}, ConverterParameter=TaskStatusToCancelButtonVisible, Mode=OneWay}" />
-                      <MenuFlyoutItem
-                        x:Uid="/TaskManagerGrid/TaskItemRemoveButton"
-                        Click="TaskManagerGridTaskItemRemoveButtonClick"
-                        Icon="Delete"
-                        Text="[Remove]"
-                        Visibility="{x:Bind Status, Converter={StaticResource TaskItemConverter}, ConverterParameter=TaskStatusToRemoveButtonVisible, Mode=OneWay}" />
-                    </MenuFlyout>
-                  </Button.Flyout>
-                </Button>
-              </Grid>
+                    <MenuFlyoutItem
+                      x:Uid="/MainPage/TaskItemCancelButton"
+                      Click="TaskItemCancelButtonClick"
+                      Icon="Cancel"
+                      Text="[Cancel]"
+                      Visibility="{x:Bind Status, Converter={StaticResource TaskItemConverter}, ConverterParameter=TaskStatusToCancelButtonVisible, Mode=OneWay}" />
+                    <MenuFlyoutItem
+                      x:Uid="/MainPage/TaskItemRemoveButton"
+                      Click="TaskItemRemoveButtonClick"
+                      Icon="Delete"
+                      Text="[Remove]"
+                      Visibility="{x:Bind Status, Converter={StaticResource TaskItemConverter}, ConverterParameter=TaskStatusToRemoveButtonVisible, Mode=OneWay}" />
+                  </MenuFlyout>
+                </Button.Flyout>
+              </Button>
             </Grid>
-          </DataTemplate>
-        </ListView.ItemTemplate>
-      </ListView>
-      <TextBlock
-        x:Name="TaskManagerGridTaskListNoItemsTextBlock"
-        x:Uid="/TaskManagerGrid/TaskListNoItemsTextBlock"
-        Grid.Row="1"
-        Margin="16"
-        Text="[No Downloads]"
-        TextAlignment="Center" />
-      <TextBlock
-        x:Name="TaskManagerGridGlobalStatusTextBlock"
-        Grid.Row="2"
-        Height="32"
-        Padding="4"
-        VerticalAlignment="Bottom"
-        FontSize="15"
-        Text="&#x2193; 0 Byte/s &#x2191; 0 Byte/s" />
-    </Grid>
+          </Grid>
+        </DataTemplate>
+      </ListView.ItemTemplate>
+    </ListView>
+    <TextBlock
+      x:Name="TaskListNoItemsTextBlock"
+      x:Uid="/MainPage/TaskListNoItemsTextBlock"
+      Grid.Row="1"
+      Margin="16"
+      Text="[No Downloads]"
+      TextAlignment="Center" />
+    <TextBlock
+      x:Name="GlobalStatusTextBlock"
+      Grid.Row="2"
+      Height="32"
+      Padding="4"
+      VerticalAlignment="Bottom"
+      FontSize="15"
+      Text="&#x2193; 0 Byte/s &#x2191; 0 Byte/s" />
   </Grid>
 </Page>

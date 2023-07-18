@@ -57,7 +57,7 @@ namespace winrt::NanaGet::implementation
         }
     }
 
-    void MainPage::TaskManagerGridNewTaskButtonClick(
+    void MainPage::NewTaskButtonClick(
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
@@ -71,7 +71,7 @@ namespace winrt::NanaGet::implementation
             0);
     }
 
-    void MainPage::TaskManagerGridStartAllButtonClick(
+    void MainPage::StartAllButtonClick(
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
@@ -88,7 +88,7 @@ namespace winrt::NanaGet::implementation
         }
     }
 
-    void MainPage::TaskManagerGridPauseAllButtonClick(
+    void MainPage::PauseAllButtonClick(
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
@@ -105,7 +105,7 @@ namespace winrt::NanaGet::implementation
         }
     }
 
-    void MainPage::TaskManagerGridClearListButtonClick(
+    void MainPage::ClearListButtonClick(
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
@@ -122,7 +122,7 @@ namespace winrt::NanaGet::implementation
         }
     }
 
-    void MainPage::TaskManagerGridOpenDownloadsFolderButtonClick(
+    void MainPage::OpenDownloadsFolderButtonClick(
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
@@ -139,7 +139,7 @@ namespace winrt::NanaGet::implementation
         ::ShellExecuteExW(&ExecInfo);
     }
 
-    void MainPage::TaskManagerGridSettingsButtonClick(
+    void MainPage::SettingsButtonClick(
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
@@ -153,7 +153,7 @@ namespace winrt::NanaGet::implementation
             0);
     }
 
-    void MainPage::TaskManagerGridAboutButtonClick(
+    void MainPage::AboutButtonClick(
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
@@ -167,20 +167,20 @@ namespace winrt::NanaGet::implementation
             0);
     }
 
-    void MainPage::TaskManagerGridTaskListContainerContentChanging(
+    void MainPage::TaskListContainerContentChanging(
         ListViewBase const& sender,
         ContainerContentChangingEventArgs const& e)
     {
         UNREFERENCED_PARAMETER(sender);
         UNREFERENCED_PARAMETER(e);
 
-        this->TaskManagerGridTaskListNoItemsTextBlock().Visibility(
+        this->TaskListNoItemsTextBlock().Visibility(
             !sender.ItemsSource()
             ? Visibility::Visible
             : Visibility::Collapsed);
     }
 
-    void MainPage::TaskManagerGridTaskItemRetryButtonClick(
+    void MainPage::TaskItemRetryButtonClick(
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
@@ -200,7 +200,7 @@ namespace winrt::NanaGet::implementation
         }
     }
 
-    void MainPage::TaskManagerGridTaskItemResumeButtonClick(
+    void MainPage::TaskItemResumeButtonClick(
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
@@ -218,7 +218,7 @@ namespace winrt::NanaGet::implementation
         }
     }
 
-    void MainPage::TaskManagerGridTaskItemPauseButtonClick(
+    void MainPage::TaskItemPauseButtonClick(
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
@@ -236,7 +236,7 @@ namespace winrt::NanaGet::implementation
         }
     }
 
-    void MainPage::TaskManagerGridTaskItemCopyLinkButtonClick(
+    void MainPage::TaskItemCopyLinkButtonClick(
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
@@ -256,7 +256,7 @@ namespace winrt::NanaGet::implementation
         }
     }
 
-    /*void MainPage::TaskManagerGridTaskItemOpenFolderButtonClick(
+    /*void MainPage::TaskItemOpenFolderButtonClick(
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
@@ -270,7 +270,7 @@ namespace winrt::NanaGet::implementation
             0);
     }*/
 
-    void MainPage::TaskManagerGridTaskItemCancelButtonClick(
+    void MainPage::TaskItemCancelButtonClick(
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
@@ -288,7 +288,7 @@ namespace winrt::NanaGet::implementation
         }
     }
 
-    void MainPage::TaskManagerGridTaskItemRemoveButtonClick(
+    void MainPage::TaskItemRemoveButtonClick(
         IInspectable const& sender,
         RoutedEventArgs const& e)
     {
@@ -427,11 +427,11 @@ namespace winrt::NanaGet::implementation
             DispatcherQueuePriority::Normal,
             [&]()
         {
-            this->TaskManagerGridGlobalStatusTextBlock().Text(GlobalStatusText);
+            this->GlobalStatusTextBlock().Text(GlobalStatusText);
 
             if (NeedFullRefresh)
             {
-                this->TaskManagerGridTaskList().ItemsSource(this->m_Tasks);
+                this->TaskList().ItemsSource(this->m_Tasks);
             }
             else if(this->m_Tasks)
             {
@@ -444,7 +444,7 @@ namespace winrt::NanaGet::implementation
                 }
                 catch (...)
                 {
-                    
+
                 }
             }
 

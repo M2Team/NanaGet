@@ -32,63 +32,63 @@ namespace winrt::NanaGet::implementation
 
         ~MainPage();
 
-        void TaskManagerGridNewTaskButtonClick(
+        void NewTaskButtonClick(
             IInspectable const& sender,
             RoutedEventArgs const& e);
 
-        void TaskManagerGridStartAllButtonClick(
+        void StartAllButtonClick(
             IInspectable const& sender,
             RoutedEventArgs const& e);
 
-        void TaskManagerGridPauseAllButtonClick(
+        void PauseAllButtonClick(
             IInspectable const& sender,
             RoutedEventArgs const& e);
 
-        void TaskManagerGridClearListButtonClick(
+        void ClearListButtonClick(
             IInspectable const& sender,
             RoutedEventArgs const& e);
 
-        void TaskManagerGridOpenDownloadsFolderButtonClick(
+        void OpenDownloadsFolderButtonClick(
             IInspectable const& sender,
             RoutedEventArgs const& e);
 
-        void TaskManagerGridSettingsButtonClick(
+        void SettingsButtonClick(
             IInspectable const& sender,
             RoutedEventArgs const& e);
 
-        void TaskManagerGridAboutButtonClick(
+        void AboutButtonClick(
             IInspectable const& sender,
             RoutedEventArgs const& e);
 
-        void TaskManagerGridTaskListContainerContentChanging(
+        void TaskListContainerContentChanging(
             ListViewBase const& sender,
             ContainerContentChangingEventArgs const& e);
 
-        void TaskManagerGridTaskItemRetryButtonClick(
+        void TaskItemRetryButtonClick(
             IInspectable const& sender,
             RoutedEventArgs const& e);
 
-        void TaskManagerGridTaskItemResumeButtonClick(
+        void TaskItemResumeButtonClick(
             IInspectable const& sender,
             RoutedEventArgs const& e);
 
-        void TaskManagerGridTaskItemPauseButtonClick(
+        void TaskItemPauseButtonClick(
             IInspectable const& sender,
             RoutedEventArgs const& e);
 
-        void TaskManagerGridTaskItemCopyLinkButtonClick(
+        void TaskItemCopyLinkButtonClick(
             IInspectable const& sender,
             RoutedEventArgs const& e);
 
-        /*void TaskManagerGridTaskItemOpenFolderButtonClick(
+        /*void TaskItemOpenFolderButtonClick(
             IInspectable const& sender,
             RoutedEventArgs const& e);*/
 
-        void TaskManagerGridTaskItemCancelButtonClick(
+        void TaskItemCancelButtonClick(
             IInspectable const& sender,
             RoutedEventArgs const& e);
 
-        void TaskManagerGridTaskItemRemoveButtonClick(
+        void TaskItemRemoveButtonClick(
             IInspectable const& sender,
             RoutedEventArgs const& e);
 
