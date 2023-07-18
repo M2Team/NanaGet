@@ -157,7 +157,8 @@
                   Grid.Column="0"
                   Margin="12,0"
                   VerticalAlignment="Center"
-                  Text="{x:Bind Name, Mode=OneWay}" />
+                  Text="{x:Bind Name, Mode=OneWay}"
+                  TextTrimming="CharacterEllipsis" />
                 <StackPanel Grid.Column="1" VerticalAlignment="Center">
                   <TextBlock Text="{x:Bind StatusText, Mode=OneWay}" />
                   <ProgressBar
