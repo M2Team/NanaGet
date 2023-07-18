@@ -10,6 +10,8 @@ namespace winrt::NanaGet::implementation
 
     struct NewTaskPage : NewTaskPageT<NewTaskPage>
     {
+    public:
+
         NewTaskPage(
             _In_ HWND WindowHandle = nullptr);
 
