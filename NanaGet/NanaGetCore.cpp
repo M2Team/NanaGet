@@ -10,9 +10,7 @@
 
 #include "NanaGetCore.h"
 
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
-#endif
+#define _WINSOCKAPI_
 
 #include <Windows.h>
 #include <ShlObj.h>
@@ -890,11 +888,10 @@ std::uint16_t NanaGet::LocalAria2Instance::PickUnusedTcpPort()
 {
     std::uint16_t Result = 0;
 
-    WSADATA WSAData;
-    int Status = ::WSAStartup(
+    WSADATA WSAData = { 0 };
+    if (NO_ERROR == ::WSAStartup(
         MAKEWORD(2, 2),
-        &WSAData);
-    if (ERROR_SUCCESS == Status)
+        &WSAData))
     {
         SOCKET ListenSocket = ::socket(
             AF_INET,
@@ -906,22 +903,21 @@ std::uint16_t NanaGet::LocalAria2Instance::PickUnusedTcpPort()
             Service.sin_family = AF_INET;
             Service.sin_addr.s_addr = INADDR_ANY;
             Service.sin_port = ::htons(0);
-            Status = ::bind(
+            if (SOCKET_ERROR != ::bind(
                 ListenSocket,
                 reinterpret_cast<LPSOCKADDR>(&Service),
-                sizeof(Service));
-            if (ERROR_SUCCESS == Status)
+                sizeof(Service)))
             {
                 int NameLength = sizeof(Service);
-                Status = ::getsockname(
+                if (SOCKET_ERROR != ::getsockname(
                     ListenSocket,
                     reinterpret_cast<LPSOCKADDR>(&Service),
-                    &NameLength);
-                if (ERROR_SUCCESS == Status)
+                    &NameLength))
                 {
                     Result = ::ntohs(Service.sin_port);
                 }
             }
+
             ::closesocket(ListenSocket);
         }
 
