@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\Mile.Project.Windows\Mile.Project.Platform.x86.props" />
   <Import Project="..\Mile.Project.Windows\Mile.Project.Platform.x64.props" />
   <Import Project="..\Mile.Project.Windows\Mile.Project.Platform.ARM64.props" />
   <Import Project="..\Mile.Project.Windows\Mile.Project.Wap.props" />
@@ -14,7 +13,7 @@
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
-    <AppxBundlePlatforms>x86|x64|arm64</AppxBundlePlatforms>
+    <AppxBundlePlatforms>x64|arm64</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <AppxBundle>Always</AppxBundle>
     <AppxBundleAutoResourcePackageQualifiers>DXFeatureLevel</AppxBundleAutoResourcePackageQualifiers>
@@ -39,7 +38,6 @@
   <ItemGroup>
     <ProjectReference Include="..\NanaGet\NanaGet.vcxproj">
       <Project>{4C5F187E-4734-489E-9D80-200B3EF14DCA}</Project>
-      <SetPlatform Condition="'$(Platform)'=='x86'">Platform=Win32</SetPlatform>
     </ProjectReference>
   </ItemGroup>
   <Import Project="..\Mile.Project.Windows\Mile.Project.Wap.targets" />

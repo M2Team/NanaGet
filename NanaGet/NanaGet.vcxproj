@@ -25,7 +25,6 @@
     <MileProjectVersion>1.1.$([System.DateTime]::Today.Subtract($([System.DateTime]::Parse('2022-04-25'))).TotalDays).0</MileProjectVersion>
     <!-- <MileProjectVersionTag>Preview 1</MileProjectVersionTag> -->
   </PropertyGroup>
-  <Import Project="..\Mile.Project.Windows\Mile.Project.Platform.x86.props" />
   <Import Project="..\Mile.Project.Windows\Mile.Project.Platform.x64.props" />
   <Import Project="..\Mile.Project.Windows\Mile.Project.Platform.ARM64.props" />
   <Import Project="..\Mile.Project.Windows\Mile.Project.Cpp.Default.props" />
