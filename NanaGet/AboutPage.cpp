@@ -10,6 +10,8 @@
 
 #include <winrt/Windows.UI.Xaml.Documents.h>
 
+#include "NanaGetCore.h"
+
 using namespace winrt;
 using namespace Windows::UI::Xaml;
 
@@ -19,7 +21,10 @@ namespace winrt::NanaGet::implementation
         _In_ HWND WindowHandle) :
         m_WindowHandle(WindowHandle)
     {
-
+        ::SetWindowTextW(
+            this->m_WindowHandle,
+            NanaGet::GetLocalizedString(
+                L"AboutPage/GridTitleTextBlock/Text").c_str());
     }
 
     void AboutPage::InitializeComponent()

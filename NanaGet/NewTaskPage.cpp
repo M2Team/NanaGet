@@ -20,7 +20,10 @@ namespace winrt::NanaGet::implementation
         _In_ HWND WindowHandle) :
         m_WindowHandle(WindowHandle)
     {
-
+        ::SetWindowTextW(
+            this->m_WindowHandle,
+            NanaGet::GetLocalizedString(
+                L"NewTaskPage/GridTitleTextBlock/Text").c_str());
     }
 
     /*void NewTaskPage::DownloadSourceBrowseButtonClick(

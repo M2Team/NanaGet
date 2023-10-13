@@ -17,6 +17,7 @@
 #include <atlapp.h>
 #include <atlcrack.h>
 
+#include <Mile.Helpers.h>
 #include <Mile.Xaml.h>
 
 #include "NanaGetResources.h"
@@ -305,6 +306,13 @@ int NanaGet::MainWindow::ShowXamlDialog(
     _In_ LPVOID Content)
 {
     if (!WindowHandle)
+    {
+        return -1;
+    }
+
+    if (FAILED(::MileAllowNonClientDefaultDrawingForWindow(
+        WindowHandle,
+        FALSE)))
     {
         return -1;
     }

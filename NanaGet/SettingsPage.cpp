@@ -15,7 +15,10 @@ namespace winrt::NanaGet::implementation
         _In_ HWND WindowHandle) :
         m_WindowHandle(WindowHandle)
     {
-
+        ::SetWindowTextW(
+            this->m_WindowHandle,
+            NanaGet::GetLocalizedString(
+                L"SettingsPage/GridTitleTextBlock/Text").c_str());
     }
 
     void SettingsPage::CustomDownloadFolderBrowseButtonClick(
