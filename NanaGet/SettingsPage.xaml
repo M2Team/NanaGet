@@ -31,7 +31,8 @@
           <CheckBox
             x:Name="UseCustomFolderCheckBox"
             x:Uid="/SettingsPage/UseCustomFolderCheckBox"
-            Content="[Use custom folder instead of last used folder]" IsEnabled="False"/>
+            Content="[Use custom folder instead of last used folder]"
+            IsEnabled="False" />
           <TextBox
             x:Name="CustomDownloadFolderCheckBox"
             IsReadOnly="True"
