@@ -126,8 +126,8 @@
     <comment>Download</comment>
   </data>
   <data name="DownloadSourceBrowseButton.AutomationProperties.Name" xml:space="preserve">
-    <value>浏览 BitTorrent 或 Metalink 文件按钮</value>
-    <comment>Browse BitTorrent or Metalink file button</comment>
+    <value>浏览 BitTorrent 或 Metalink 文件</value>
+    <comment>Browse BitTorrent or Metalink file</comment>
   </data>
   <data name="DownloadSourceBrowseButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>浏览 BitTorrent 或 Metalink 文件</value>
@@ -154,8 +154,8 @@
     <comment>New Task</comment>
   </data>
   <data name="SaveFolderBrowseButton.AutomationProperties.Name" xml:space="preserve">
-    <value>浏览保存目录按钮</value>
-    <comment>Browse save folder button</comment>
+    <value>浏览保存目录</value>
+    <comment>Browse save folder</comment>
   </data>
   <data name="SaveFolderBrowseButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>浏览保存目录</value>

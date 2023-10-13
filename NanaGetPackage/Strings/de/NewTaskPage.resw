@@ -127,7 +127,7 @@
   </data>
   <data name="DownloadSourceBrowseButton.AutomationProperties.Name" xml:space="preserve">
     <value>Button für BitTorrent oder Metalink-Datei suchen</value>
-    <comment>Browse BitTorrent or Metalink file button</comment>
+    <comment>Browse BitTorrent or Metalink file</comment>
   </data>
   <data name="DownloadSourceBrowseButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>BitTorrent oder Metalink-Datei suchen</value>
@@ -155,7 +155,7 @@
   </data>
   <data name="SaveFolderBrowseButton.AutomationProperties.Name" xml:space="preserve">
     <value>Button für Speicherordner durchsuchen</value>
-    <comment>Browse save folder button</comment>
+    <comment>Browse save folder</comment>
   </data>
   <data name="SaveFolderBrowseButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Speicherordner durchsuchen</value>

@@ -122,24 +122,24 @@
     <comment>About</comment>
   </data>
   <data name="ClearListButton.AutomationProperties.Name" xml:space="preserve">
-    <value>リストをクリアするボタン</value>
-    <comment>Clear List Button</comment>
+    <value>リストをクリア</value>
+    <comment>Clear List</comment>
   </data>
   <data name="ClearListButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>リストをクリア</value>
     <comment>Clear List</comment>
   </data>
   <data name="MoreButton.AutomationProperties.Name" xml:space="preserve">
-    <value>More Button</value>
-    <comment>More Button</comment>
+    <value>More</value>
+    <comment>More</comment>
   </data>
   <data name="MoreButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>More</value>
     <comment>More</comment>
   </data>
   <data name="NewTaskButton.AutomationProperties.Name" xml:space="preserve">
-    <value>タスクを作成するボタン</value>
-    <comment>New Task Button</comment>
+    <value>タスクを作成</value>
+    <comment>New Task</comment>
   </data>
   <data name="NewTaskButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>タスクを作成</value>
@@ -150,8 +150,8 @@
     <comment>Open Downloads Folder</comment>
   </data>
   <data name="PauseAllButton.AutomationProperties.Name" xml:space="preserve">
-    <value>すべてを一時停止するボタン</value>
-    <comment>Pause All Button</comment>
+    <value>すべてを一時停止</value>
+    <comment>Pause All</comment>
   </data>
   <data name="PauseAllButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>すべてを一時停止</value>
@@ -166,8 +166,8 @@
     <comment>Settings</comment>
   </data>
   <data name="StartAllButton.AutomationProperties.Name" xml:space="preserve">
-    <value>すべてを開始するボタン</value>
-    <comment>Start All Button</comment>
+    <value>すべてを開始</value>
+    <comment>Start All</comment>
   </data>
   <data name="StartAllButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>すべてを開始</value>
@@ -182,8 +182,8 @@
     <comment>Copy Link</comment>
   </data>
   <data name="TaskItemMoreButton.AutomationProperties.Name" xml:space="preserve">
-    <value>More Button</value>
-    <comment>More Button</comment>
+    <value>More</value>
+    <comment>More</comment>
   </data>
   <data name="TaskItemMoreButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>More</value>
@@ -194,8 +194,8 @@
     <comment>Open Folder</comment>
   </data>
   <data name="TaskItemPauseButton.AutomationProperties.Name" xml:space="preserve">
-    <value>一時停止のボタン</value>
-    <comment>Pause Button</comment>
+    <value>一時停止</value>
+    <comment>Pause</comment>
   </data>
   <data name="TaskItemPauseButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>一時停止</value>
@@ -206,16 +206,16 @@
     <comment>Remove</comment>
   </data>
   <data name="TaskItemResumeButton.AutomationProperties.Name" xml:space="preserve">
-    <value>再開のボタン</value>
-    <comment>Resume Button</comment>
+    <value>再開</value>
+    <comment>Resume</comment>
   </data>
   <data name="TaskItemResumeButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>再開</value>
     <comment>Resume</comment>
   </data>
   <data name="TaskItemRetryButton.AutomationProperties.Name" xml:space="preserve">
-    <value>リトライのボタン</value>
-    <comment>Retry Button</comment>
+    <value>リトライ</value>
+    <comment>Retry</comment>
   </data>
   <data name="TaskItemRetryButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>リトライ</value>

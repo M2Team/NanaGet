@@ -122,24 +122,24 @@
     <comment>About</comment>
   </data>
   <data name="ClearListButton.AutomationProperties.Name" xml:space="preserve">
-    <value>Clear List Button</value>
-    <comment>Clear List Button</comment>
+    <value>Clear List</value>
+    <comment>Clear List</comment>
   </data>
   <data name="ClearListButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Clear List</value>
     <comment>Clear List</comment>
   </data>
   <data name="MoreButton.AutomationProperties.Name" xml:space="preserve">
-    <value>More Button</value>
-    <comment>More Button</comment>
+    <value>More</value>
+    <comment>More</comment>
   </data>
   <data name="MoreButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>More</value>
     <comment>More</comment>
   </data>
   <data name="NewTaskButton.AutomationProperties.Name" xml:space="preserve">
-    <value>New Task Button</value>
-    <comment>New Task Button</comment>
+    <value>New Task</value>
+    <comment>New Task</comment>
   </data>
   <data name="NewTaskButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>New Task</value>
@@ -150,8 +150,8 @@
     <comment>Open Downloads Folder</comment>
   </data>
   <data name="PauseAllButton.AutomationProperties.Name" xml:space="preserve">
-    <value>Pause All Button</value>
-    <comment>Pause All Button</comment>
+    <value>Pause All</value>
+    <comment>Pause All</comment>
   </data>
   <data name="PauseAllButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Pause All</value>
@@ -166,8 +166,8 @@
     <comment>Settings</comment>
   </data>
   <data name="StartAllButton.AutomationProperties.Name" xml:space="preserve">
-    <value>Start All Button</value>
-    <comment>Start All Button</comment>
+    <value>Start All</value>
+    <comment>Start All</comment>
   </data>
   <data name="StartAllButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Start All</value>
@@ -182,8 +182,8 @@
     <comment>Copy Link</comment>
   </data>
   <data name="TaskItemMoreButton.AutomationProperties.Name" xml:space="preserve">
-    <value>More Button</value>
-    <comment>More Button</comment>
+    <value>More</value>
+    <comment>More</comment>
   </data>
   <data name="TaskItemMoreButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>More</value>
@@ -194,8 +194,8 @@
     <comment>Open Folder</comment>
   </data>
   <data name="TaskItemPauseButton.AutomationProperties.Name" xml:space="preserve">
-    <value>Pause Button</value>
-    <comment>Pause Button</comment>
+    <value>Pause</value>
+    <comment>Pause</comment>
   </data>
   <data name="TaskItemPauseButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Pause</value>
@@ -206,16 +206,16 @@
     <comment>Remove</comment>
   </data>
   <data name="TaskItemResumeButton.AutomationProperties.Name" xml:space="preserve">
-    <value>Resume Button</value>
-    <comment>Resume Button</comment>
+    <value>Resume</value>
+    <comment>Resume</comment>
   </data>
   <data name="TaskItemResumeButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Resume</value>
     <comment>Resume</comment>
   </data>
   <data name="TaskItemRetryButton.AutomationProperties.Name" xml:space="preserve">
-    <value>Retry Button</value>
-    <comment>Retry Button</comment>
+    <value>Retry</value>
+    <comment>Retry</comment>
   </data>
   <data name="TaskItemRetryButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Retry</value>

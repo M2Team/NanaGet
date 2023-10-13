@@ -122,24 +122,24 @@
     <comment>About</comment>
   </data>
   <data name="ClearListButton.AutomationProperties.Name" xml:space="preserve">
-    <value>清除清單按鈕</value>
-    <comment>Clear List Button</comment>
+    <value>清除清單</value>
+    <comment>Clear List</comment>
   </data>
   <data name="ClearListButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>清除清單</value>
     <comment>Clear List</comment>
   </data>
   <data name="MoreButton.AutomationProperties.Name" xml:space="preserve">
-    <value>更多按鈕</value>
-    <comment>More Button</comment>
+    <value>更多</value>
+    <comment>More</comment>
   </data>
   <data name="MoreButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>更多</value>
     <comment>More</comment>
   </data>
   <data name="NewTaskButton.AutomationProperties.Name" xml:space="preserve">
-    <value>新建任務按鈕</value>
-    <comment>New Task Button</comment>
+    <value>新建任務</value>
+    <comment>New Task</comment>
   </data>
   <data name="NewTaskButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>新建任務</value>
@@ -150,8 +150,8 @@
     <comment>Open Downloads Folder</comment>
   </data>
   <data name="PauseAllButton.AutomationProperties.Name" xml:space="preserve">
-    <value>全部暫停按鈕</value>
-    <comment>Pause All Button</comment>
+    <value>全部暫停</value>
+    <comment>Pause All</comment>
   </data>
   <data name="PauseAllButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>全部暫停</value>
@@ -166,8 +166,8 @@
     <comment>Settings</comment>
   </data>
   <data name="StartAllButton.AutomationProperties.Name" xml:space="preserve">
-    <value>全部開始按鈕</value>
-    <comment>Start All Button</comment>
+    <value>全部開始</value>
+    <comment>Start All</comment>
   </data>
   <data name="StartAllButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>全部開始</value>
@@ -182,8 +182,8 @@
     <comment>Copy Link</comment>
   </data>
   <data name="TaskItemMoreButton.AutomationProperties.Name" xml:space="preserve">
-    <value>更多按鈕</value>
-    <comment>More Button</comment>
+    <value>更多</value>
+    <comment>More</comment>
   </data>
   <data name="TaskItemMoreButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>更多</value>
@@ -194,8 +194,8 @@
     <comment>Open Folder</comment>
   </data>
   <data name="TaskItemPauseButton.AutomationProperties.Name" xml:space="preserve">
-    <value>暫停按鈕</value>
-    <comment>Pause Button</comment>
+    <value>暫停</value>
+    <comment>Pause</comment>
   </data>
   <data name="TaskItemPauseButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>暫停</value>
@@ -206,16 +206,16 @@
     <comment>Remove</comment>
   </data>
   <data name="TaskItemResumeButton.AutomationProperties.Name" xml:space="preserve">
-    <value>恢復按鈕</value>
-    <comment>Resume Button</comment>
+    <value>恢復</value>
+    <comment>Resume</comment>
   </data>
   <data name="TaskItemResumeButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>恢復</value>
     <comment>Resume</comment>
   </data>
   <data name="TaskItemRetryButton.AutomationProperties.Name" xml:space="preserve">
-    <value>重試按鈕</value>
-    <comment>Retry Button</comment>
+    <value>重試</value>
+    <comment>Retry</comment>
   </data>
   <data name="TaskItemRetryButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>重試</value>

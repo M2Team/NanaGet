@@ -126,8 +126,8 @@
     <comment>Download</comment>
   </data>
   <data name="DownloadSourceBrowseButton.AutomationProperties.Name" xml:space="preserve">
-    <value>BitTorrent または Metalink ファイルを参照するボタン</value>
-    <comment>Browse BitTorrent or Metalink file button</comment>
+    <value>BitTorrent または Metalink ファイルを参照</value>
+    <comment>Browse BitTorrent or Metalink file</comment>
   </data>
   <data name="DownloadSourceBrowseButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>BitTorrent または Metalink ファイルを参照する</value>
@@ -154,8 +154,8 @@
     <comment>New Task</comment>
   </data>
   <data name="SaveFolderBrowseButton.AutomationProperties.Name" xml:space="preserve">
-    <value>保存フォルダを参照するボタン</value>
-    <comment>Browse save folder button</comment>
+    <value>保存フォルダを参照</value>
+    <comment>Browse save folder</comment>
   </data>
   <data name="SaveFolderBrowseButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>保存フォルダを参照する</value>
