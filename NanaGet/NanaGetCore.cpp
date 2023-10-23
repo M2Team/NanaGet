@@ -23,7 +23,6 @@
 
 #undef GetObject
 
-#include <winrt/Windows.ApplicationModel.Resources.Core.h>
 #include <winrt/Windows.Foundation.Collections.h>
 #include <winrt/Windows.Storage.h>
 #include <winrt/Windows.Storage.Streams.h>
@@ -130,8 +129,6 @@ namespace NanaGet
 
 namespace winrt
 {
-    using Windows::ApplicationModel::Resources::Core::ResourceManager;
-    using Windows::ApplicationModel::Resources::Core::ResourceMap;
     using Windows::Storage::ApplicationData;
     using Windows::Storage::Streams::IBuffer;
     using Windows::Web::Http::HttpResponseMessage;
@@ -347,37 +344,6 @@ bool NanaGet::FindSubString(
         nullptr,
         nullptr,
         0) >= 0);
-}
-
-winrt::hstring NanaGet::GetLocalizedString(
-    winrt::hstring const& ResourcePath,
-    winrt::hstring const& FallbackString)
-{
-    try
-    {
-        winrt::ResourceMap CurrentResourceMap =
-            winrt::ResourceManager::Current().MainResourceMap();
-
-        if (CurrentResourceMap.HasKey(ResourcePath))
-        {
-            return CurrentResourceMap.Lookup(
-                ResourcePath).Candidates().GetAt(0).ValueAsString();
-        }
-        else
-        {
-            return FallbackString;
-        }
-    }
-    catch (...)
-    {
-        return FallbackString;
-    }
-}
-
-winrt::hstring NanaGet::GetLocalizedString(
-    winrt::hstring const& ResourcePath)
-{
-    return NanaGet::GetLocalizedString(ResourcePath, ResourcePath);
 }
 
 NanaGet::Aria2Instance::Aria2Instance(

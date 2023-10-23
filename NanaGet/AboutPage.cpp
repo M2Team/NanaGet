@@ -23,7 +23,7 @@ namespace winrt::NanaGet::implementation
     {
         ::SetWindowTextW(
             this->m_WindowHandle,
-            NanaGet::GetLocalizedString(
+            Mile::WinRT::GetLocalizedString(
                 L"AboutPage/GridTitleTextBlock/Text").c_str());
     }
 

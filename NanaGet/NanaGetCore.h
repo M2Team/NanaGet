@@ -64,13 +64,6 @@ namespace NanaGet
         winrt::hstring const& SubString,
         bool IgnoreCase);
 
-    winrt::hstring GetLocalizedString(
-        winrt::hstring const& ResourcePath,
-        winrt::hstring const& FallbackString);
-
-    winrt::hstring GetLocalizedString(
-        winrt::hstring const& ResourcePath);
-
     struct Aria2GlobalStatus
     {
         std::uint64_t DownloadSpeed;
