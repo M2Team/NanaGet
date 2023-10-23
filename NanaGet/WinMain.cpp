@@ -332,7 +332,6 @@ int NanaGet::MainWindow::ShowXamlDialog(
         ::RemoveMenu(MenuHandle, SC_SIZE, MF_BYCOMMAND);
         ::RemoveMenu(MenuHandle, SC_MINIMIZE, MF_BYCOMMAND);
         ::RemoveMenu(MenuHandle, SC_MAXIMIZE, MF_BYCOMMAND);
-        ::RemoveMenu(MenuHandle, SC_TASKLIST, MF_BYCOMMAND);
     }
 
     UINT DpiValue = ::GetDpiForWindow(WindowHandle);
