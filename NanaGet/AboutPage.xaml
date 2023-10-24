@@ -11,6 +11,15 @@
       <RowDefinition Height="*" />
       <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
+    <Image
+      Grid.Row="0"
+      Width="192"
+      Height="192"
+      Margin="24,0"
+      HorizontalAlignment="Center"
+      VerticalAlignment="Center"
+      Opacity="0.2"
+      Source="ms-appx:///Assets/Square44x44Logo.targetsize-256.png" />
     <StackPanel Grid.Row="0" Padding="24,0">
       <TextBlock
         x:Uid="/AboutPage/GridTitleTextBlock"
