@@ -70,18 +70,6 @@ N/A.
 
 ## Development Roadmap
 
-- 1.0 (June 1, 2022)
-  - [x] Use aria2 as transfer engine.
-  - [x] Packaging with MSIX for modern deployment experience.
-  - [x] Modernize the UI with XAML Islands with dark and light mode support. 
-        (Dynamic dark and light mode switching is supported for Windows 11 and 
-        later.)
-  - [x] Add full High DPI and partial Accessibility support.
-- 1.1 (May 30, 2023)
-  - [x] Improve the Mile.Xaml implementations for providing more modern control
-        styles and keeping smaller binary size.
-  - [x] Try to build my aria2 binary instead of using offical one for providing
-        x64 and arm64 native support for aria2 part.
 - 1.x Series (T.B.D.)
   - [ ] Remote aria2 instance support.
   - [ ] Providing HASH value for downloaded files.
