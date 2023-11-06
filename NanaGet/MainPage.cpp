@@ -335,16 +335,17 @@ namespace winrt::NanaGet::implementation
             EVENT_ALL_ACCESS));
         winrt::check_bool(static_cast<bool>(EventHandle));
 
-        //winrt::slim_lock_guard LockGuard(NanaGet::LocalInstance->InstanceLock());
+        /*winrt::slim_lock_guard LockGuard(
+            NanaGet::LocalInstance->InstanceLock());*/
 
         NanaGet::LocalInstance->RefreshInformation();
 
-        winrt::hstring GlobalStatusText = NanaGet::FormatWindowsRuntimeString(
+        winrt::hstring GlobalStatusText = winrt::hstring(Mile::FormatWideString(
             L"\x2193 %s/s \x2191 %s/s",
             NanaGet::ConvertByteSizeToString(
                 NanaGet::LocalInstance->TotalDownloadSpeed()).data(),
             NanaGet::ConvertByteSizeToString(
-                NanaGet::LocalInstance->TotalUploadSpeed()).data());
+                NanaGet::LocalInstance->TotalUploadSpeed()).data()));
 
         winrt::hstring CurrentSearchFilter = this->m_SearchFilter;
 

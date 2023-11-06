@@ -33,9 +33,9 @@ namespace winrt::NanaGet::implementation
 
         if (!Information.InfoHash.empty())
         {
-            this->Source.Value = NanaGet::FormatWindowsRuntimeString(
-                L"magnet:?xt=urn:btih:%s",
-                winrt::to_hstring(Information.InfoHash).c_str());
+            this->Source.Value = winrt::to_hstring(Mile::FormatString(
+                "magnet:?xt=urn:btih:%s",
+                Information.InfoHash.c_str()));
         }
         else
         {
@@ -108,7 +108,7 @@ namespace winrt::NanaGet::implementation
         if (TaskStatus::Active == this->Status.Value ||
             TaskStatus::Paused == this->Status.Value)
         {
-            this->StatusText.Value = NanaGet::FormatWindowsRuntimeString(
+            this->StatusText.Value = winrt::hstring(Mile::FormatWideString(
                 L"%s %s / %s %s/s \x2193 %s/s \x2191",
                 NanaGet::ConvertSecondsToTimeString(
                     this->RemainTime.Value).data(),
@@ -119,7 +119,7 @@ namespace winrt::NanaGet::implementation
                 NanaGet::ConvertByteSizeToString(
                     this->DownloadSpeed.Value).data(),
                 NanaGet::ConvertByteSizeToString(
-                    this->UploadSpeed.Value).data());
+                    this->UploadSpeed.Value).data()));
         }
         else
         {

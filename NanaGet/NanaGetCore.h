@@ -45,14 +45,6 @@ namespace NanaGet
 
     winrt::hstring CreateGuidString();
 
-    winrt::hstring VFormatWindowsRuntimeString(
-        _In_z_ _Printf_format_string_ wchar_t const* const Format,
-        _In_z_ _Printf_format_string_ va_list ArgList);
-
-    winrt::hstring FormatWindowsRuntimeString(
-        _In_z_ _Printf_format_string_ wchar_t const* const Format,
-        ...);
-
     winrt::hstring ConvertByteSizeToString(
         std::uint64_t ByteSize);
 

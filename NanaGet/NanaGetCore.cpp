@@ -217,53 +217,6 @@ winrt::hstring NanaGet::CreateGuidString()
     return winrt::to_hstring(Result);
 }
 
-winrt::hstring NanaGet::VFormatWindowsRuntimeString(
-    _In_z_ _Printf_format_string_ wchar_t const* const Format,
-    _In_z_ _Printf_format_string_ va_list ArgList)
-{
-    // Check the argument list.
-    if (Format)
-    {
-        // Get the length of the format result.
-        size_t nLength =
-            static_cast<size_t>(::_vscwprintf(Format, ArgList)) + 1;
-
-        // Allocate for the format result.
-        std::wstring Buffer(nLength + 1, L'\0');
-
-        // Format the string.
-        int nWritten = ::_vsnwprintf_s(
-            &Buffer[0],
-            Buffer.size(),
-            nLength,
-            Format,
-            ArgList);
-
-        if (nWritten > 0)
-        {
-            // If succeed, resize to fit and return result.
-            Buffer.resize(nWritten);
-            return winrt::hstring(Buffer);
-        }
-    }
-
-    // If failed, return an empty string.
-    return winrt::hstring();
-}
-
-winrt::hstring NanaGet::FormatWindowsRuntimeString(
-    _In_z_ _Printf_format_string_ wchar_t const* const Format,
-    ...)
-{
-    va_list ArgList;
-    va_start(ArgList, Format);
-    winrt::hstring Result = NanaGet::VFormatWindowsRuntimeString(
-        Format,
-        ArgList);
-    va_end(ArgList);
-    return Result;
-}
-
 winrt::hstring NanaGet::ConvertByteSizeToString(
     std::uint64_t ByteSize)
 {
@@ -303,10 +256,10 @@ winrt::hstring NanaGet::ConvertByteSizeToString(
 
     }
 
-    return NanaGet::FormatWindowsRuntimeString(
+    return winrt::hstring(Mile::FormatWideString(
         nSystem ? L"%.2f %s" : L"%.0f %s",
         result,
-        Systems[nSystem]);
+        Systems[nSystem]));
 }
 
 winrt::hstring NanaGet::ConvertSecondsToTimeString(
@@ -321,11 +274,11 @@ winrt::hstring NanaGet::ConvertSecondsToTimeString(
     int Minute = static_cast<int>(Seconds / 60 % 60);
     int Second = static_cast<int>(Seconds % 60);
 
-    return NanaGet::FormatWindowsRuntimeString(
+    return winrt::hstring(Mile::FormatWideString(
         L"%d:%02d:%02d",
         Hour,
         Minute,
-        Second);
+        Second));
 }
 
 bool NanaGet::FindSubString(
@@ -1131,9 +1084,9 @@ void NanaGet::LocalAria2Instance::Startup()
     ::CloseHandle(ProcessInformation.hThread);
 
     this->UpdateInstance(
-        winrt::Uri(NanaGet::FormatWindowsRuntimeString(
+        winrt::Uri(winrt::hstring(Mile::FormatWideString(
             L"http://localhost:%d/jsonrpc",
-            ServerPort)),
+            ServerPort))),
         winrt::to_string(ServerToken));
 
     this->m_Available = true;
