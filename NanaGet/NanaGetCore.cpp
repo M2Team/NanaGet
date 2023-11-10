@@ -8,9 +8,9 @@
  * DEVELOPER: MouriNaruto (KurikoMouri@outlook.jp)
  */
 
-#include "NanaGetCore.h"
-
 #define _WINSOCKAPI_
+
+#include "NanaGetCore.h"
 
 #include <Windows.h>
 #include <ShlObj.h>
