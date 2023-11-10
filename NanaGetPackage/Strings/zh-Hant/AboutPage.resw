@@ -122,7 +122,7 @@
     <comment>Cancel</comment>
   </data>
   <data name="GridTitleTextBlock.Text" xml:space="preserve">
-    <value>關於</value>
-    <comment>About</comment>
+    <value>關於 NanaGet</value>
+    <comment>About NanaGet</comment>
   </data>
 </root>
