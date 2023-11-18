@@ -20,7 +20,7 @@
         Text="[Settings]" />
       <ScrollViewer
         MinWidth="300"
-        MaxHeight="200"
+        MaxHeight="140"
         Margin="-12,0"
         Padding="12,0">
         <StackPanel Orientation="Vertical">
