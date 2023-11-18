@@ -17,7 +17,7 @@
         Margin="0,0,0,12"
         FontSize="24"
         FontWeight="SemiBold"
-        Text="[About]" />
+        Text="[About NanaGet]" />
       <TextBlock>
         <Run x:Name="Version" />
         <LineBreak />

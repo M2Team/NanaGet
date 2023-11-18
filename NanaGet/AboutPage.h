@@ -4,10 +4,14 @@
 
 #include <Windows.h>
 
+namespace winrt
+{
+    using Windows::Foundation::IInspectable;
+    using Windows::UI::Xaml::RoutedEventArgs;
+}
+
 namespace winrt::NanaGet::implementation
 {
-    using Windows::UI::Xaml::RoutedEventArgs;
-
     struct AboutPage :
         AboutPageT<AboutPage>
     {
@@ -19,12 +23,12 @@ namespace winrt::NanaGet::implementation
         void InitializeComponent();
 
         void GitHubButtonClick(
-            IInspectable const& sender,
-            RoutedEventArgs const& e);
+            winrt::IInspectable const& sender,
+            winrt::RoutedEventArgs const& e);
 
         void CancelButtonClick(
-            IInspectable const& sender,
-            RoutedEventArgs const& e);
+            winrt::IInspectable const& sender,
+            winrt::RoutedEventArgs const& e);
 
     private:
 

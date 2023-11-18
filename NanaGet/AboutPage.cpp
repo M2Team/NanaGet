@@ -37,8 +37,8 @@ namespace winrt::NanaGet::implementation
     }
 
     void AboutPage::GitHubButtonClick(
-        IInspectable const& sender,
-        RoutedEventArgs const& e)
+        winrt::IInspectable const& sender,
+        winrt::RoutedEventArgs const& e)
     {
         UNREFERENCED_PARAMETER(sender);
         UNREFERENCED_PARAMETER(e);
@@ -52,8 +52,8 @@ namespace winrt::NanaGet::implementation
     }
 
     void AboutPage::CancelButtonClick(
-        IInspectable const& sender,
-        RoutedEventArgs const& e)
+        winrt::IInspectable const& sender,
+        winrt::RoutedEventArgs const& e)
     {
         UNREFERENCED_PARAMETER(sender);
         UNREFERENCED_PARAMETER(e);
