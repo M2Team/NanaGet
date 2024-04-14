@@ -46,6 +46,7 @@
       <DependentUpon>AboutPage.xaml</DependentUpon>
       <SubType>Code</SubType>
     </ClInclude>
+    <ClInclude Include="NanaGet.Aria2.h" />
     <ClInclude Include="NanaGetCore.h" />
     <ClInclude Include="NewTaskPage.h">
       <DependentUpon>NewTaskPage.xaml</DependentUpon>
@@ -89,6 +90,7 @@
       <DependentUpon>AboutPage.xaml</DependentUpon>
       <SubType>Code</SubType>
     </ClCompile>
+    <ClCompile Include="NanaGet.Aria2.cpp" />
     <ClCompile Include="NanaGetCore.cpp" />
     <ClCompile Include="NewTaskPage.cpp">
       <DependentUpon>NewTaskPage.xaml</DependentUpon>

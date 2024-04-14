@@ -23,6 +23,9 @@
     <ClCompile Include="NanaGetCore.cpp">
       <Filter>NanaGetCore</Filter>
     </ClCompile>
+    <ClCompile Include="NanaGet.Aria2.cpp">
+      <Filter>NanaGet.Aria2</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -31,6 +34,9 @@
     </ClInclude>
     <ClInclude Include="NanaGetResources.h">
       <Filter>NanaGetResources</Filter>
+    </ClInclude>
+    <ClInclude Include="NanaGet.Aria2.h">
+      <Filter>NanaGet.Aria2</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -45,6 +51,9 @@
     </Filter>
     <Filter Include="NanaGetResources">
       <UniqueIdentifier>{127202e5-0ebb-47cb-bf8b-34f8cc717ba1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NanaGet.Aria2">
+      <UniqueIdentifier>{50457ad9-e3ba-42ea-a7cc-b62c284bdda0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
