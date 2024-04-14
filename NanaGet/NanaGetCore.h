@@ -19,6 +19,7 @@
 #error "[NanaGetCore] You should use a C++ compiler with the C++17 standard."
 #endif
 
+#include <Mile.Helpers.CppBase.h>
 #include <Mile.Helpers.CppWinRT.h>
 
 #include <winrt/Windows.Foundation.h>
