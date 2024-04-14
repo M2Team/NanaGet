@@ -46,8 +46,14 @@ namespace NanaGet
 
 namespace winrt
 {
+    //using Windows::Networking::Sockets::MessageWebSocketReceiveMode;
+    //using Windows::Networking::Sockets::SocketMessageType;
     using Windows::Storage::ApplicationData;
+    //using Windows::Storage::Streams::Buffer;
+    //using Windows::Storage::Streams::DataReader;
     using Windows::Storage::Streams::IBuffer;
+    //using Windows::Storage::Streams::IInputStream;
+    //using Windows::Storage::Streams::InputStreamOptions;
     using Windows::Web::Http::HttpResponseMessage;
     using Windows::Web::Http::HttpStringContent;
 }
@@ -573,7 +579,125 @@ void NanaGet::Aria2Instance::UpdateInstance(
 {
     this->m_ServerUri = ServerUri;
     this->m_ServerToken = ServerToken;
+
+    /*this->CloseMessageWebSocket();
+
+    if (!this->m_ServerUri)
+    {
+        return;
+    }
+
+    this->m_MessageWebSocket = winrt::MessageWebSocket();
+
+    this->m_MessageWebSocket.Control().MessageType(
+        winrt::SocketMessageType::Utf8);
+    this->m_MessageWebSocket.Control().ReceiveMode(
+        winrt::MessageWebSocketReceiveMode::FullMessage);
+    this->m_MessageWebSocket.MessageReceived(
+        { this, &NanaGet::Aria2Instance::MessageWebSocketMessageReceived });
+    this->m_MessageWebSocket.Closed(
+        { this, &NanaGet::Aria2Instance::WebSocketClosed });
+
+    this->m_MessageWebSocket.ConnectAsync(
+        winrt::Uri(winrt::hstring(Mile::FormatWideString(
+            L"ws://%s:%d/jsonrpc",
+            this->ServerUri().Host().c_str(),
+            this->ServerUri().Port())))).get();*/
 }
+
+//void NanaGet::Aria2Instance::CloseMessageWebSocket()
+//{
+//    if (this->m_MessageWebSocket)
+//    {
+//        this->m_MessageWebSocket.Close();
+//        this->m_MessageWebSocket = nullptr;
+//    }
+//}
+//
+//std::string ReadFromInputStream(
+//    winrt::IInputStream const& Stream)
+//{
+//    std::string Result;
+//
+//    winrt::Buffer ResultBuffer(4096);
+//    do
+//    {
+//        Stream.ReadAsync(ResultBuffer,
+//            ResultBuffer.Capacity(),
+//            winrt::InputStreamOptions::Partial).get();
+//        Result += std::string(
+//            reinterpret_cast<char*>(ResultBuffer.data()),
+//            ResultBuffer.Length());
+//    } while (ResultBuffer.Length() > 0);
+//
+//    return Result;
+//}
+//
+//void NanaGet::Aria2Instance::MessageWebSocketMessageReceived(
+//    winrt::MessageWebSocket const& sender,
+//    winrt::MessageWebSocketMessageReceivedEventArgs const& e)
+//{
+//    UNREFERENCED_PARAMETER(sender);
+//
+//    std::string Message;
+//    try
+//    {
+//        Message = ::ReadFromInputStream(e.GetDataStream());
+//    }
+//    catch (...)
+//    {
+//        this->CloseMessageWebSocket();
+//        return;
+//    }
+//
+//    try
+//    {
+//
+//    }
+//    catch (const std::exception&)
+//    {
+//
+//    }
+//
+//
+//    /*nlohmann::json ResponseJson;
+//    try
+//    {
+//        ResponseJson = nlohmann::json::parse(ResponseString);
+//    }
+//    catch (std::exception const& ex)
+//    {
+//        throw winrt::hresult_illegal_method_call(winrt::to_hstring(ex.what()));
+//    }
+//
+//    if ("2.0" != ResponseJson["jsonrpc"].get<std::string>() ||
+//        Identifier != ResponseJson["id"].get<std::string>())
+//    {
+//        throw winrt::hresult_illegal_method_call();
+//    }
+//
+//    if (ResponseJson.end() != ResponseJson.find("error"))
+//    {
+//        throw winrt::hresult_illegal_method_call(
+//            winrt::to_hstring(ResponseJson["error"].get<std::string>()));
+//    }
+//ResponseJson["result"].dump(2);*/
+//    
+//
+//    ::OutputDebugStringW(Mile::FormatWideString(
+//        L"\r\n\r\n%s\r\n\r\n",
+//        winrt::to_hstring(Message).c_str()).c_str());
+//}
+//
+//void NanaGet::Aria2Instance::WebSocketClosed(
+//    winrt::IWebSocket const& sender,
+//    winrt::WebSocketClosedEventArgs const& e)
+//{
+//    UNREFERENCED_PARAMETER(sender);
+//    UNREFERENCED_PARAMETER(e);
+//
+//    this->CloseMessageWebSocket();
+//}
 
 NanaGet::Aria2UriInformation NanaGet::Aria2Instance::ParseUriInformation(
     nlohmann::json const& Value)

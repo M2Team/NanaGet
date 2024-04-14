@@ -23,9 +23,11 @@
 #include <Mile.Helpers.CppWinRT.h>
 
 #include <winrt/Windows.Foundation.h>
+//#include <winrt/Windows.Networking.Sockets.h>
 #include <winrt/Windows.Web.Http.h>
 
 #include <filesystem>
+//#include <map>
 #include <set>
 
 #include <json.hpp>
@@ -35,6 +37,16 @@ namespace winrt
     using Windows::Foundation::Uri;
     using Windows::Web::Http::HttpClient;
 }
+
+//namespace winrt
+//{
+//    namespace WNS = Windows::Networking::Sockets;
+//
+//    using WNS::IWebSocket;
+//    using WNS::MessageWebSocket;
+//    using WNS::MessageWebSocketMessageReceivedEventArgs;
+//    using WNS::WebSocketClosedEventArgs;
+//}
 
 namespace NanaGet
 {
@@ -185,6 +197,19 @@ namespace NanaGet
 
         winrt::Uri m_ServerUri = nullptr;
         std::string m_ServerToken;
+
+        /*winrt::MessageWebSocket m_MessageWebSocket = nullptr;
+        std::map<std::string, std::string> m_MessageResults;
+
+        void CloseMessageWebSocket();
+
+        void MessageWebSocketMessageReceived(
+            winrt::MessageWebSocket const& sender,
+            winrt::MessageWebSocketMessageReceivedEventArgs const& e);
+
+        void WebSocketClosed(
+            winrt::IWebSocket const& sender,
+            winrt::WebSocketClosedEventArgs const& e);*/
 
         winrt::HttpClient m_HttpClient;
 
