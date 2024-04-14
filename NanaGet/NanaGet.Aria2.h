@@ -22,6 +22,8 @@
 #include <string>
 #include <vector>
 
+#include <json.hpp>
+
 namespace NanaGet::Aria2
 {
     /**
@@ -35,6 +37,9 @@ namespace NanaGet::Aria2
      *        unique among others.
      */
     using DownloadGid = std::uint64_t;
+
+    DownloadGid ToDownloadGid(
+        nlohmann::json const& Value);
 
     /**
      * @brief The status of download item.
@@ -67,6 +72,9 @@ namespace NanaGet::Aria2
         Removed,
     };
 
+    DownloadStatus ToDownloadStatus(
+        nlohmann::json const& Value);
+
     /**
      * @brief The status of URI.
      */
@@ -82,6 +90,9 @@ namespace NanaGet::Aria2
         Waiting,
     };
 
+    UriStatus ToUriStatus(
+        nlohmann::json const& Value);
+
     /**
      * @brief The information of URI and its status.
      */
@@ -96,6 +107,9 @@ namespace NanaGet::Aria2
          */
         UriStatus Status;
     };
+
+    UriInformation ToUriInformation(
+        nlohmann::json const& Value);
 
     /**
      * @brief The information of file to download.
