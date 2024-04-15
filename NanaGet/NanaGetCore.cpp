@@ -673,125 +673,71 @@ void NanaGet::Aria2Instance::UpdateInstance(
 //    this->CloseMessageWebSocket();
 //}
 
-NanaGet::Aria2UriInformation NanaGet::Aria2Instance::ParseUriInformation(
-    nlohmann::json const& Value)
-{
-    NanaGet::Aria2UriInformation Result;
-
-    Result.Uri = Value["uri"].get<std::string>();
-    Result.Status = Value["status"].get<NanaGet::Aria2UriStatus>();
-
-    return Result;
-}
-
-NanaGet::Aria2FileInformation NanaGet::Aria2Instance::ParseFileInformation(
-    nlohmann::json const& Value)
-{
-    NanaGet::Aria2FileInformation Result;
-
-    Result.Index = std::strtoull(
-        Value["index"].get<std::string>().c_str(),
-        nullptr,
-        10);
-
-    Result.Path = Value["path"].get<std::string>();
-
-    Result.Length = std::strtoull(
-        Value["length"].get<std::string>().c_str(),
-        nullptr,
-        10);
-
-    Result.CompletedLength = std::strtoull(
-        Value["completedLength"].get<std::string>().c_str(),
-        nullptr,
-        10);
-
-    std::string Selected = Value["selected"].get<std::string>();
-    if (0 == std::strcmp(Selected.c_str(), "true"))
-    {
-        Result.Selected = true;
-    }
-    else if (0 == std::strcmp(Selected.c_str(), "false"))
-    {
-        Result.Selected = false;
-    }
-    else
-    {
-        throw winrt::hresult_out_of_bounds();
-    }
-
-    nlohmann::json Uris = Value["uris"];
-    for (nlohmann::json const& Uri : Uris)
-    {
-        Result.Uris.emplace_back(this->ParseUriInformation(Uri));
-    }
-
-    return Result;
-}
-
 NanaGet::Aria2TaskInformation NanaGet::Aria2Instance::ParseTaskInformation(
     nlohmann::json const& Value)
 {
+    NanaGet::Aria2::DownloadInformation Information =
+        NanaGet::Aria2::ToDownloadInformation(Value);
+
     NanaGet::Aria2TaskInformation Result;
 
     Result.Gid = Value["gid"].get<std::string>();
 
     Result.Status = Value["status"].get<NanaGet::Aria2TaskStatus>();
 
-    Result.TotalLength = std::strtoull(
-        Value["totalLength"].get<std::string>().c_str(),
-        nullptr,
-        10);
-
-    Result.CompletedLength = std::strtoull(
-        Value["completedLength"].get<std::string>().c_str(),
-        nullptr,
-        10);
-
-    Result.DownloadSpeed = std::strtoull(
-        Value["downloadSpeed"].get<std::string>().c_str(),
-        nullptr,
-        10);
-
-    Result.UploadSpeed = std::strtoull(
-        Value["uploadSpeed"].get<std::string>().c_str(),
-        nullptr,
-        10);
-
-    if (Value.contains("infoHash"))
-    {
-        Result.InfoHash = Value["infoHash"].get<std::string>();
-    }
-
-    Result.Dir = Value["dir"].get<std::string>();
+    Result.TotalLength = Information.TotalLength;
+    Result.CompletedLength = Information.CompletedLength;
+    Result.DownloadSpeed = Information.DownloadSpeed;
+    Result.UploadSpeed = Information.UploadSpeed;
+    Result.InfoHash = Information.InfoHash;
+    Result.Dir = Information.Dir;
 
     nlohmann::json Files = Value["files"];
-    for (nlohmann::json const& File : Files)
+    for (NanaGet::Aria2::FileInformation const& File : Information.Files)
     {
-        Result.Files.emplace_back(this->ParseFileInformation(File));
+        NanaGet::Aria2FileInformation Current;
+        Current.Index = File.Index;
+        Current.Path = File.Path;
+        Current.Length = File.Length;
+        Current.CompletedLength = File.CompletedLength;
+        Current.Selected = File.Selected;
+        for (NanaGet::Aria2::UriInformation const& Uri : File.Uris)
+        {
+            NanaGet::Aria2UriInformation InnerCurrent;
+            InnerCurrent.Uri = Uri.Uri;
+            switch (Uri.Status)
+            {
+            case NanaGet::Aria2::UriStatus::Waiting:
+                InnerCurrent.Status = NanaGet::Aria2UriStatus::Waiting;
+                break;
+            default:
+                InnerCurrent.Status = NanaGet::Aria2UriStatus::Used;
+                break;
+            }
+            
+            Current.Uris.emplace_back(InnerCurrent);
+        }
+        Result.Files.emplace_back(Current);
     }
 
-    if (Value.contains("bittorrent") &&
-        Value["bittorrent"].contains("info") &&
-        Value["bittorrent"]["info"].contains("name"))
+    if (!Information.BitTorrent.Info.Name.empty())
     {
-        Result.FriendlyName =
-            Value["bittorrent"]["info"]["name"].get<std::string>();
+        Result.FriendlyName = Information.BitTorrent.Info.Name;
     }
 
     if (Result.FriendlyName.empty())
     {
-        if (!Result.Files.empty())
+        if (!Information.Files.empty())
         {
             const char* Candidate = nullptr;
 
-            if (!Result.Files[0].Path.empty())
+            if (!Information.Files[0].Path.empty())
             {
-                Candidate = Result.Files[0].Path.c_str();
+                Candidate = Information.Files[0].Path.c_str();
             }
-            else if (!Result.Files[0].Uris.empty())
+            else if (!Information.Files[0].Uris.empty())
             {
-                Candidate = Result.Files[0].Uris[0].Uri.c_str();
+                Candidate = Information.Files[0].Uris[0].Uri.c_str();
             }
 
             const char* RawName = std::strrchr(Candidate, L'/');

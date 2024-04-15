@@ -208,12 +208,6 @@ namespace NanaGet
         winrt::slim_mutex m_InstanceLock;
         NanaGet::Aria2::GlobalStatusInformation m_GlobalStatus;
 
-        Aria2UriInformation ParseUriInformation(
-            nlohmann::json const& Value);
-
-        Aria2FileInformation ParseFileInformation(
-            nlohmann::json const& Value);
-
         Aria2TaskInformation ParseTaskInformation(
             nlohmann::json const& Value);
     };
