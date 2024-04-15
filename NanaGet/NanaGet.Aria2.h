@@ -307,7 +307,7 @@ namespace NanaGet::Aria2
          * @brief The (hopefully) human readable error message associated to
          *        "ErrorCode".
          */
-        std::string ErrorMessage = 0;
+        std::string ErrorMessage;
         /**
          * @brief List of GIDs which are generated as the result of this
          *        download. For example, when aria2 downloads a Metalink file,
