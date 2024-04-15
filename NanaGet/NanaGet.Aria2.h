@@ -105,7 +105,7 @@ namespace NanaGet::Aria2
         /**
          * @brief The status of URI.
          */
-        UriStatus Status;
+        UriStatus Status = UriStatus::Used;
     };
 
     UriInformation ToUriInformation(
@@ -120,7 +120,7 @@ namespace NanaGet::Aria2
          * @brief Index of the file, starting at 1, in the same order as files
          *        appear in the multi-file torrent.
          */
-        std::size_t Index;
+        std::size_t Index = 0;
         /**
          * @brief File path.
          */
@@ -128,7 +128,7 @@ namespace NanaGet::Aria2
         /**
          * @brief File size in bytes.
          */
-        std::size_t Length;
+        std::size_t Length = 0;
         /**
          * @brief Completed length of this file in bytes. Please note that it is
          *        possible that sum of "CompletedLength" is less than the
@@ -138,20 +138,23 @@ namespace NanaGet::Aria2
          *        "CompletedLength" in "aria2.tellStatus()" also includes
          *        partially completed pieces.
          */
-        std::size_t CompletedLength;
+        std::size_t CompletedLength = 0;
         /**
          * @brief true if this file is selected by "--select-file" option. If
          *        "--select-file" is not specified or this is single-file
          *        torrent or not a torrent download at all, this value is always
          *        true. Otherwise false.
          */
-        bool Selected;
+        bool Selected = true;
         /**
          * @brief Returns a list of URIs for this file. The element type is the
          *        same struct used in the "aria2.getUris()" method.
          */
         std::vector<UriInformation> Uris;
     };
+
+    FileInformation ToFileInformation(
+        nlohmann::json const& Value);
 
     /**
      * @brief The file mode of the torrent.
@@ -172,11 +175,15 @@ namespace NanaGet::Aria2
          */
         Multi,
     };
+
+    BitTorrentFileMode ToBitTorrentFileMode(
+        nlohmann::json const& Value);
+
     /**
      * @brief The Info dictionary information retrieved from the .torrent
      *        (file).
      */
-    struct BitTorrentInfoDictionaryInformation
+    struct BitTorrentInfoDictionary
     {
         /**
          * @brief "name" in "info" dictionary. "name.utf-8" is used if
@@ -184,6 +191,9 @@ namespace NanaGet::Aria2
          */
         std::string Name;
     };
+
+    BitTorrentInfoDictionary ToBitTorrentInfoDictionary(
+        nlohmann::json const& Value);
 
     /**
      * @brief The information retrieved from the .torrent (file).
@@ -205,16 +215,19 @@ namespace NanaGet::Aria2
          * @brief The creation time of the torrent. The value is an integer
          *        since the epoch, measured in seconds.
          */
-        std::time_t CreationDate;
+        std::time_t CreationDate = 0;
         /**
          * @brief File mode of the torrent.
          */
-        BitTorrentFileMode Mode;
+        BitTorrentFileMode Mode = BitTorrentFileMode::None;
         /**
          * @brief Returns the information retrieved from the Info dictionary.
          */
-        BitTorrentInfoDictionaryInformation Info;
+        BitTorrentInfoDictionary Info;
     };
+
+    BitTorrentInformation ToBitTorrentInformation(
+        nlohmann::json const& Value);
 
     /**
      * @brief The information of download item.
@@ -224,23 +237,23 @@ namespace NanaGet::Aria2
         /**
          * @brief GID of the download.
          */
-        DownloadGid Gid;
+        DownloadGid Gid = 0;
         /**
          * @brief Status of the download.
          */
-        DownloadStatus Status;
+        DownloadStatus Status = DownloadStatus::Error;
         /**
          * @brief Total length of the download in bytes.
          */
-        std::size_t TotalLength;
+        std::size_t TotalLength = 0;
         /**
          * @brief Completed length of the download in bytes.
          */
-        std::size_t CompletedLength;
+        std::size_t CompletedLength = 0;
         /**
          * @brief Uploaded length of the download in bytes.
          */
-        std::size_t UploadLength;
+        std::size_t UploadLength = 0;
         /**
          * @brief Hexadecimal representation of the download progress. The
          *        highest bit corresponds to the piece at index 0. Any set bits
@@ -253,11 +266,11 @@ namespace NanaGet::Aria2
         /**
          * @brief Download speed of this download measured in bytes/sec.
          */
-        std::size_t DownloadSpeed;
+        std::size_t DownloadSpeed = 0;
         /**
          * @brief Upload speed of this download measured in bytes/sec.
          */
-        std::size_t UploadSpeed;
+        std::size_t UploadSpeed = 0;
         /**
          * @brief InfoHash. BitTorrent only.
          */
@@ -265,36 +278,36 @@ namespace NanaGet::Aria2
         /**
          * @brief The number of seeders aria2 has connected to. BitTorrent only.
          */
-        std::size_t NumSeeders;
+        std::size_t NumSeeders = 0;
         /**
          * @brief true if the local endpoint is a seeder. Otherwise false.
          *        BitTorrent only.
          */
-        bool Seeder;
+        bool Seeder = false;
         /**
          * @brief Piece length in bytes.
          */
-        std::size_t PieceLength;
+        std::size_t PieceLength = 0;
         /**
          * @brief The number of pieces.
          */
-        std::size_t NumPieces;
+        std::size_t NumPieces = 0;
         /**
          * @brief The number of peers/servers aria2 has connected to.
          */
-        std::int32_t Connections;
+        std::int32_t Connections = 0;
         /**
          * @brief The code of the last error for this item, if any. The value
          *        is a string. The error codes are defined in the EXIT STATUS
          *        section. This value is only available for stopped/completed
          *        downloads.
          */
-        std::int32_t ErrorCode;
+        std::int32_t ErrorCode = 0;
         /**
          * @brief The (hopefully) human readable error message associated to
          *        "ErrorCode".
          */
-        std::string ErrorMessage;
+        std::string ErrorMessage = 0;
         /**
          * @brief List of GIDs which are generated as the result of this
          *        download. For example, when aria2 downloads a Metalink file,
@@ -308,7 +321,7 @@ namespace NanaGet::Aria2
          * @brief The reverse link for "FollowedBy". A download included in
          *        "FollowedBy" has this object's GID in its "Following" value.
          */
-        DownloadGid Following;
+        DownloadGid Following = 0;
         /**
          * @brief GID of a parent download. Some downloads are a part of another
          *        download. For example, if a file in a Metalink has BitTorrent
@@ -316,7 +329,7 @@ namespace NanaGet::Aria2
          *        parent. If this download has no parent, this key will not be
          *        included in the response.
          */
-        DownloadGid BelongsTo;
+        DownloadGid BelongsTo = 0;
         /**
          * @brief Directory to save files.
          */
@@ -336,14 +349,17 @@ namespace NanaGet::Aria2
          *        being hash checked. This key exists only when this download is
          *        being hash checked.
          */
-        std::size_t VerifiedLength;
+        std::size_t VerifiedLength = 0;
         /**
          * @brief true if this download is waiting for the hash check in a
          *        queue. This key exists only when this download is in the
          *        queue.
          */
-        bool VerifyIntegrityPending;
+        bool VerifyIntegrityPending = false;
     };
+
+    DownloadInformation ToDownloadInformation(
+        nlohmann::json const& Value);
 
     /**
      * @brief The information of peers of the download.
@@ -361,7 +377,7 @@ namespace NanaGet::Aria2
         /**
          * @brief Port number of the peer.
          */
-        std::uint16_t Port;
+        std::uint16_t Port = 0;
         /**
          * @brief Hexadecimal representation of the download progress of the
          *        peer. The highest bit corresponds to the piece at index 0. Set
@@ -373,25 +389,28 @@ namespace NanaGet::Aria2
         /**
          * @brief true if aria2 is choking the peer. Otherwise false.
          */
-        bool AmChoking;
+        bool AmChoking = false;
         /**
          * @brief true if the peer is choking aria2. Otherwise false.
          */
-        bool PeerChoking;
+        bool PeerChoking = false;
         /**
          * @brief Download speed (byte/sec) that this client obtains from the
          *        peer.
          */
-        std::size_t DownloadSpeed;
+        std::size_t DownloadSpeed = 0;
         /**
          * @brief Upload speed(byte/sec) that this client uploads to the peer.
          */
-        std::size_t UploadSpeed;
+        std::size_t UploadSpeed = 0;
         /**
          * @brief true if this peer is a seeder. Otherwise false.
          */
-        bool Seeder;
+        bool Seeder = false;
     };
+
+    PeerInformation ToPeerInformation(
+        nlohmann::json const& Value);
 
     /**
      * @brief The information of currently connected HTTP(S)/FTP/SFTP server of
@@ -411,8 +430,11 @@ namespace NanaGet::Aria2
         /**
          * @brief Download speed (byte/sec).
          */
-        std::size_t DownloadSpeed;
+        std::size_t DownloadSpeed = 0;
     };
+
+    ServerInformation ToServerInformation(
+        nlohmann::json const& Value);
 
     /**
      * @brief The information of currently connected HTTP(S)/FTP/SFTP servers of
@@ -424,13 +446,16 @@ namespace NanaGet::Aria2
          * @brief Index of the file, starting at 1, in the same order as files
          *        appear in the multi-file metalink.
          */
-        std::size_t Index;
+        std::size_t Index = 0;
         /**
          * @brief A list of the information of currently connected
          *        HTTP(S)/FTP/SFTP server of the download.
          */
         std::vector<ServerInformation> Servers;
     };
+
+    ServersInformation ToServersInformation(
+        nlohmann::json const& Value);
 
     /**
      * @brief The information of global statistics of current aria2 session.
@@ -440,30 +465,33 @@ namespace NanaGet::Aria2
         /**
          * @brief Overall download speed (byte/sec).
          */
-        std::size_t DownloadSpeed;
+        std::size_t DownloadSpeed = 0;
         /**
          * @brief Overall upload speed(byte/sec).
          */
-        std::size_t UploadSpeed;
+        std::size_t UploadSpeed = 0;
         /**
          * @brief The number of active downloads.
          */
-        std::size_t NumActive;
+        std::size_t NumActive = 0;
         /**
          * @brief The number of waiting downloads.
          */
-        std::size_t NumWaiting;
+        std::size_t NumWaiting = 0;
         /**
          * @brief The number of stopped downloads in the current session. This
          *        value is capped by the "--max-download-result" option.
          */
-        std::size_t NumStopped;
+        std::size_t NumStopped = 0;
         /**
          * @brief The number of stopped downloads in the current session and not
          *        capped by the "--max-download-result" option.
          */
-        std::size_t NumStoppedTotal;
+        std::size_t NumStoppedTotal = 0;
     };
+
+    GlobalStatusInformation ToGlobalStatusInformation(
+        nlohmann::json const& Value);
 
     /**
      * @brief The information of the version of aria2 and the list of enabled
@@ -480,6 +508,9 @@ namespace NanaGet::Aria2
          */
         std::vector<std::string> EnabledFeatures;
     };
+
+    VersionInformation ToVersionInformation(
+        nlohmann::json const& Value);
     
     /**
      * @brief The information of current aria2 session.
@@ -492,6 +523,9 @@ namespace NanaGet::Aria2
          */
         std::string SessionId;
     };
+
+    SessionInformation ToSessionInformation(
+        nlohmann::json const& Value);
 }
 
 #endif // !NANAGET_ARIA2
