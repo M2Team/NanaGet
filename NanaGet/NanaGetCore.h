@@ -32,6 +32,8 @@
 
 #include <json.hpp>
 
+#include "NanaGet.Aria2.h"
+
 namespace winrt
 {
     using Windows::Foundation::Uri;
@@ -68,16 +70,6 @@ namespace NanaGet
         winrt::hstring const& SourceString,
         winrt::hstring const& SubString,
         bool IgnoreCase);
-
-    struct Aria2GlobalStatus
-    {
-        std::uint64_t DownloadSpeed;
-        std::uint64_t UploadSpeed;
-        std::uint64_t NumActive;
-        std::uint64_t NumWaiting;
-        std::uint64_t NumStopped;
-        std::uint64_t NumStoppedTotal;
-    };
 
     enum class Aria2UriStatus : std::int32_t
     {
@@ -214,8 +206,7 @@ namespace NanaGet
         winrt::HttpClient m_HttpClient;
 
         winrt::slim_mutex m_InstanceLock;
-        std::uint64_t m_TotalDownloadSpeed = 0;
-        std::uint64_t m_TotalUploadSpeed = 0;
+        NanaGet::Aria2::GlobalStatusInformation m_GlobalStatus;
 
         Aria2UriInformation ParseUriInformation(
             nlohmann::json const& Value);

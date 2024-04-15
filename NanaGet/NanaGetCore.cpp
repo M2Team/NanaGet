@@ -377,19 +377,17 @@ winrt::slim_mutex& NanaGet::Aria2Instance::InstanceLock()
 
 std::uint64_t NanaGet::Aria2Instance::TotalDownloadSpeed()
 {
-    return this->m_TotalDownloadSpeed;
+    return this->m_GlobalStatus.DownloadSpeed;
 }
 
 std::uint64_t NanaGet::Aria2Instance::TotalUploadSpeed()
 {
-    return this->m_TotalUploadSpeed;
+    return this->m_GlobalStatus.UploadSpeed;
 }
 
 void NanaGet::Aria2Instance::RefreshInformation()
 {
-    this->m_TotalDownloadSpeed = 0;
-    this->m_TotalUploadSpeed = 0;
-
+    try
     {
         nlohmann::json Parameters;
         Parameters.push_back("token:" + this->m_ServerToken);
@@ -397,15 +395,12 @@ void NanaGet::Aria2Instance::RefreshInformation()
         nlohmann::json ResponseJson = nlohmann::json::parse(
             this->SimpleJsonRpcCall("aria2.getGlobalStat", Parameters.dump(2)));
 
-        this->m_TotalDownloadSpeed = std::strtoull(
-            ResponseJson["downloadSpeed"].get<std::string>().c_str(),
-            nullptr,
-            10);
+        this->m_GlobalStatus =
+            NanaGet::Aria2::ToGlobalStatusInformation(ResponseJson);
+    }
+    catch (...)
+    {
 
-        this->m_TotalUploadSpeed = std::strtoull(
-            ResponseJson["uploadSpeed"].get<std::string>().c_str(),
-            nullptr,
-            10);
     }
 }
 
@@ -425,27 +420,6 @@ NanaGet::Aria2TaskInformation NanaGet::Aria2Instance::GetTaskInformation(
 std::vector<std::string> NanaGet::Aria2Instance::GetTaskList()
 {
     std::vector<std::string> Result;
-
-    std::uint64_t NumWaiting = 0;
-    std::uint64_t NumStopped = 0;
-
-    {
-        nlohmann::json Parameters;
-        Parameters.push_back("token:" + this->m_ServerToken);
-
-        nlohmann::json ResponseJson = nlohmann::json::parse(
-            this->SimpleJsonRpcCall("aria2.getGlobalStat", Parameters.dump(2)));
-
-        NumWaiting = std::strtoull(
-            ResponseJson["numWaiting"].get<std::string>().c_str(),
-            nullptr,
-            10);
-
-        NumStopped = std::strtoull(
-            ResponseJson["numStopped"].get<std::string>().c_str(),
-            nullptr,
-            10);
-    }
 
     {
         nlohmann::json Parameters;
@@ -467,7 +441,7 @@ std::vector<std::string> NanaGet::Aria2Instance::GetTaskList()
         nlohmann::json Parameters;
         Parameters.emplace_back("token:" + this->m_ServerToken);
         Parameters.emplace_back(0);
-        Parameters.emplace_back(static_cast<double>(NumWaiting));
+        Parameters.emplace_back(this->m_GlobalStatus.NumWaiting);
         nlohmann::json Keys;
         Keys.emplace_back("gid");
         Parameters.emplace_back(Keys);
@@ -485,7 +459,7 @@ std::vector<std::string> NanaGet::Aria2Instance::GetTaskList()
         nlohmann::json Parameters;
         Parameters.emplace_back("token:" + this->m_ServerToken);
         Parameters.emplace_back(0);
-        Parameters.emplace_back(static_cast<double>(NumStopped));
+        Parameters.emplace_back(this->m_GlobalStatus.NumStopped);
         nlohmann::json Keys;
         Keys.emplace_back("gid");
         Parameters.emplace_back(Keys);
