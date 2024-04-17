@@ -10,6 +10,8 @@
 
 #include "NanaGet.Aria2.h"
 
+#include <Mile.Helpers.CppBase.h>
+
 namespace NanaGet::Aria2
 {
     NLOHMANN_JSON_SERIALIZE_ENUM(NanaGet::Aria2::DownloadStatus, {
@@ -30,6 +32,12 @@ namespace NanaGet::Aria2
        { NanaGet::Aria2::BitTorrentFileMode::Single, "single" },
        { NanaGet::Aria2::BitTorrentFileMode::Multi, "multi" }
     });
+}
+
+std::string NanaGet::Aria2::FromDownloadGid(
+    NanaGet::Aria2::DownloadGid const& Value)
+{
+    return Mile::FormatString("%016llX", Value);
 }
 
 NanaGet::Aria2::DownloadGid NanaGet::Aria2::ToDownloadGid(
@@ -556,6 +564,40 @@ NanaGet::Aria2::DownloadInformation NanaGet::Aria2::ToDownloadInformation(
     }
 
     return Result;
+}
+
+std::string NanaGet::Aria2::ToFriendlyName(
+    NanaGet::Aria2::DownloadInformation const& Value)
+{
+    if (!Value.BitTorrent.Info.Name.empty())
+    {
+        return Value.BitTorrent.Info.Name;
+    }
+
+    if (!Value.Files.empty())
+    {
+        const char* Candidate = nullptr;
+
+        if (!Value.Files[0].Path.empty())
+        {
+            Candidate = Value.Files[0].Path.c_str();
+        }
+        else if (!Value.Files[0].Uris.empty())
+        {
+            Candidate = Value.Files[0].Uris[0].Uri.c_str();
+        }
+
+        if (Candidate)
+        {
+            const char* RawName = std::strrchr(Candidate, L'/');
+            return std::string(
+                (RawName && RawName != Candidate)
+                ? &RawName[1]
+                : Candidate);
+        }
+    }
+
+    return NanaGet::Aria2::FromDownloadGid(Value.Gid);
 }
 
 NanaGet::Aria2::PeerInformation NanaGet::Aria2::ToPeerInformation(

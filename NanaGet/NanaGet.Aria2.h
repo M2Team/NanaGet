@@ -38,6 +38,9 @@ namespace NanaGet::Aria2
      */
     using DownloadGid = std::uint64_t;
 
+    std::string FromDownloadGid(
+        DownloadGid const& Value);
+
     DownloadGid ToDownloadGid(
         nlohmann::json const& Value);
 
@@ -360,6 +363,9 @@ namespace NanaGet::Aria2
 
     DownloadInformation ToDownloadInformation(
         nlohmann::json const& Value);
+
+    std::string ToFriendlyName(
+        DownloadInformation const& Value);
 
     /**
      * @brief The information of peers of the download.

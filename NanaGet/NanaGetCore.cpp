@@ -681,18 +681,34 @@ NanaGet::Aria2TaskInformation NanaGet::Aria2Instance::ParseTaskInformation(
 
     NanaGet::Aria2TaskInformation Result;
 
-    Result.Gid = Value["gid"].get<std::string>();
-
-    Result.Status = Value["status"].get<NanaGet::Aria2TaskStatus>();
-
+    Result.Gid = NanaGet::Aria2::FromDownloadGid(Information.Gid);
+    switch (Information.Status)
+    {
+    case NanaGet::Aria2::DownloadStatus::Active:
+        Result.Status = NanaGet::Aria2TaskStatus::Active;
+        break;
+    case NanaGet::Aria2::DownloadStatus::Waiting:
+        Result.Status = NanaGet::Aria2TaskStatus::Waiting;
+        break;
+    case NanaGet::Aria2::DownloadStatus::Paused:
+        Result.Status = NanaGet::Aria2TaskStatus::Paused;
+        break;
+    case NanaGet::Aria2::DownloadStatus::Complete:
+        Result.Status = NanaGet::Aria2TaskStatus::Complete;
+        break;
+    case NanaGet::Aria2::DownloadStatus::Removed:
+        Result.Status = NanaGet::Aria2TaskStatus::Removed;
+        break;
+    default:
+        Result.Status = NanaGet::Aria2TaskStatus::Error;
+        break;
+    }
     Result.TotalLength = Information.TotalLength;
     Result.CompletedLength = Information.CompletedLength;
     Result.DownloadSpeed = Information.DownloadSpeed;
     Result.UploadSpeed = Information.UploadSpeed;
     Result.InfoHash = Information.InfoHash;
     Result.Dir = Information.Dir;
-
-    nlohmann::json Files = Value["files"];
     for (NanaGet::Aria2::FileInformation const& File : Information.Files)
     {
         NanaGet::Aria2FileInformation Current;
@@ -719,38 +735,7 @@ NanaGet::Aria2TaskInformation NanaGet::Aria2Instance::ParseTaskInformation(
         }
         Result.Files.emplace_back(Current);
     }
-
-    if (!Information.BitTorrent.Info.Name.empty())
-    {
-        Result.FriendlyName = Information.BitTorrent.Info.Name;
-    }
-
-    if (Result.FriendlyName.empty())
-    {
-        if (!Information.Files.empty())
-        {
-            const char* Candidate = nullptr;
-
-            if (!Information.Files[0].Path.empty())
-            {
-                Candidate = Information.Files[0].Path.c_str();
-            }
-            else if (!Information.Files[0].Uris.empty())
-            {
-                Candidate = Information.Files[0].Uris[0].Uri.c_str();
-            }
-
-            const char* RawName = std::strrchr(Candidate, L'/');
-            Result.FriendlyName = std::string(
-                (RawName && RawName != Candidate)
-                ? &RawName[1]
-                : Candidate);
-        }
-    }
-    if (Result.FriendlyName.empty())
-    {
-        Result.FriendlyName = Result.Gid;
-    }
+    Result.FriendlyName = NanaGet::Aria2::ToFriendlyName(Information);
 
     return Result;
 }
