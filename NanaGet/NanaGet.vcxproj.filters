@@ -26,6 +26,9 @@
     <ClCompile Include="NanaGet.Aria2.cpp">
       <Filter>NanaGet.Aria2</Filter>
     </ClCompile>
+    <ClCompile Include="NanaGet.JsonRpc2.cpp">
+      <Filter>NanaGet.JsonRpc2</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -37,6 +40,9 @@
     </ClInclude>
     <ClInclude Include="NanaGet.Aria2.h">
       <Filter>NanaGet.Aria2</Filter>
+    </ClInclude>
+    <ClInclude Include="NanaGet.JsonRpc2.h">
+      <Filter>NanaGet.JsonRpc2</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -54,6 +60,9 @@
     </Filter>
     <Filter Include="NanaGet.Aria2">
       <UniqueIdentifier>{50457ad9-e3ba-42ea-a7cc-b62c284bdda0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="NanaGet.JsonRpc2">
+      <UniqueIdentifier>{efcdc2b5-0e81-4be5-93c2-924c532eabde}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

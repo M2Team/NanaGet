@@ -14,7 +14,7 @@
 #if (defined(__cplusplus) && __cplusplus >= 201703L)
 #elif (defined(_MSVC_LANG) && _MSVC_LANG >= 201703L)
 #else
-#error "[NanaGetCore] You should use a C++ compiler with the C++17 standard."
+#error "[NanaGet.Aria2] You should use a C++ compiler with the C++17 standard."
 #endif
 
 #include <cstdint>
