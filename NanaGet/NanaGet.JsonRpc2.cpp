@@ -39,7 +39,7 @@ std::string NanaGet::JsonRpc2::FromErrorMessage(
         nlohmann::json ResultJson;
         ResultJson["code"] = Value.Code;
         ResultJson["message"] = Value.Message;
-        ResultJson["data"] = Value.Data;
+        ResultJson["data"] = nlohmann::json::parse(Value.Data);
         return ResultJson.dump(2);
     }
     catch (...)
@@ -73,7 +73,7 @@ NanaGet::JsonRpc2::ErrorMessage NanaGet::JsonRpc2::ToErrorMessage(
 
     try
     {
-        Result.Data = Value.at("data").get<std::string>();
+        Result.Data = Value.at("data").dump(2);
     }
     catch (...)
     {
