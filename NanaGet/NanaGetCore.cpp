@@ -12,6 +12,8 @@
 
 #include "NanaGetCore.h"
 
+#include "NanaGet.JsonRpc2.h"
+
 #include <Windows.h>
 #include <ShlObj.h>
 #include <objbase.h>
@@ -500,46 +502,35 @@ std::string NanaGet::Aria2Instance::SimpleJsonRpcCall(
     std::string const& MethodName,
     std::string const& Parameters)
 {
-    std::string Identifier = winrt::to_string(NanaGet::CreateGuidString());
-
-    nlohmann::json RequestJson;
-    try
+    NanaGet::JsonRpc2::RequestMessage Request;
+    Request.IsNotification = false;
+    Request.Method = MethodName;
+    Request.Parameters = Parameters;
+    Request.Identifier = winrt::to_string(NanaGet::CreateGuidString());
+    std::string RawRequest = NanaGet::JsonRpc2::FromRequestMessage(Request);
+    if (RawRequest.empty())
     {
-        RequestJson["jsonrpc"] = "2.0";
-        RequestJson["method"] = MethodName;
-        RequestJson["params"] = nlohmann::json::parse(Parameters);
-        RequestJson["id"] = Identifier;
-    }
-    catch (std::exception const& ex)
-    {
-        throw winrt::hresult_invalid_argument(winrt::to_hstring(ex.what()));
+        throw winrt::hresult_invalid_argument(
+            L"Invalid JSON-RPC 2.0 request message.");
     }
 
-    std::string ResponseString = this->SimplePost(RequestJson.dump(2));
-
-    nlohmann::json ResponseJson;
-    try
-    {
-        ResponseJson = nlohmann::json::parse(ResponseString);
-    }
-    catch (std::exception const& ex)
-    {
-        throw winrt::hresult_illegal_method_call(winrt::to_hstring(ex.what()));
-    }
-
-    if ("2.0" != ResponseJson["jsonrpc"].get<std::string>() ||
-        Identifier != ResponseJson["id"].get<std::string>())
-    {
-        throw winrt::hresult_illegal_method_call();
-    }
-
-    if (ResponseJson.end() != ResponseJson.find("error"))
+    NanaGet::JsonRpc2::ResponseMessage Response;
+    if (!NanaGet::JsonRpc2::ToResponseMessage(
+        this->SimplePost(RawRequest),
+        Response) ||
+        Response.Identifier != Request.Identifier)
     {
         throw winrt::hresult_illegal_method_call(
-            winrt::to_hstring(ResponseJson["error"].get<std::string>()));
+            L"Invalid JSON-RPC 2.0 response message.");
     }
 
-    return ResponseJson["result"].dump(2);
+    if (!Response.IsSucceeded)
+    {
+        throw winrt::hresult_illegal_method_call(
+            winrt::to_hstring(Response.Message));
+    }
+
+    return Response.Message;
 }
 
 NanaGet::Aria2Instance::Aria2Instance()
