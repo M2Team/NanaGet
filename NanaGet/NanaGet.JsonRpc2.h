@@ -110,8 +110,9 @@ namespace NanaGet::JsonRpc2
         std::string Identifier;
     };
 
-    ResponseMessage ToResponseMessage(
-        nlohmann::json const& Value);
+    bool ToResponseMessage(
+        std::string const& Source,
+        ResponseMessage& Destination);
 }
 
 #endif // !NANAGET_JSONRPC2

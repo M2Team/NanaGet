@@ -83,44 +83,46 @@ NanaGet::JsonRpc2::ErrorMessage NanaGet::JsonRpc2::ToErrorMessage(
     return Result;
 }
 
-NanaGet::JsonRpc2::ResponseMessage NanaGet::JsonRpc2::ToResponseMessage(
-    nlohmann::json const& Value)
+bool NanaGet::JsonRpc2::ToResponseMessage(
+    std::string const& Source,
+    NanaGet::JsonRpc2::ResponseMessage& Destination)
 {
-    NanaGet::JsonRpc2::ResponseMessage Result;
+    nlohmann::json SourceJson;
 
-    if (Value.contains("jsonrpc") &&
-        "2.0" == Value["jsonrpc"].get<std::string>())
+    try
     {
-        Result.IsSucceeded = Value.contains("result");
-        if (Result.IsSucceeded)
-        {
-            try
-            {
-                Result.Message = Value.at("result").get<std::string>();
-            }
-            catch (...)
-            {
+        SourceJson = nlohmann::json::parse(Source);
+    }
+    catch (...)
+    {
+        return false;
+    }
 
-            }
-        }
-        else
-        {
-            try
-            {
-                Result.Message = Value.at("error").get<std::string>();
-            }
-            catch (...)
-            {
-                NanaGet::JsonRpc2::ErrorMessage Error;
-                Error.Code = -32603;
-                Error.Message = "Unspecified error.";
-                Result.Message = NanaGet::JsonRpc2::FromErrorMessage(Error);
-            }
-        }
+    if (!SourceJson.contains("jsonrpc"))
+    {
+        return false;
+    }
 
+    if ("2.0" != SourceJson["jsonrpc"].get<std::string>())
+    {
+        return false;
+    }
+
+    try
+    {
+        Destination.Identifier = SourceJson.at("id").get<std::string>();
+    }
+    catch (...)
+    {
+        return false;
+    }
+
+    Destination.IsSucceeded = SourceJson.contains("result");
+    if (Destination.IsSucceeded)
+    {
         try
         {
-            Result.Identifier = Value.at("id").get<std::string>();
+            Destination.Message = SourceJson.at("result").dump(2);
         }
         catch (...)
         {
@@ -129,11 +131,15 @@ NanaGet::JsonRpc2::ResponseMessage NanaGet::JsonRpc2::ToResponseMessage(
     }
     else
     {
-        NanaGet::JsonRpc2::ErrorMessage Error;
-        Error.Code = -32603;
-        Error.Message = "Invalid JSON-RPC 2.0 response message.";
-        Result.Message = NanaGet::JsonRpc2::FromErrorMessage(Error);
+        try
+        {
+            Destination.Message = SourceJson.at("error").dump(2);
+        }
+        catch (...)
+        {
+            return false;
+        }
     }
 
-    return Result;
+    return true;
 }
