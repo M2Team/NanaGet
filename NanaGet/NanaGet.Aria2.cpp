@@ -48,7 +48,7 @@ NanaGet::Aria2::DownloadGid NanaGet::Aria2::ToDownloadGid(
         return std::strtoull(
             Value.get<std::string>().c_str(),
             nullptr,
-            10);
+            16);
     }
     catch (...)
     {
