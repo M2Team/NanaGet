@@ -45,10 +45,7 @@ NanaGet::Aria2::DownloadGid NanaGet::Aria2::ToDownloadGid(
 {
     try
     {
-        return std::strtoull(
-            Value.get<std::string>().c_str(),
-            nullptr,
-            16);
+        return Mile::ToUInt64(Value.get<std::string>(), 16);
     }
     catch (...)
     {
@@ -115,10 +112,8 @@ NanaGet::Aria2::FileInformation NanaGet::Aria2::ToFileInformation(
 
     try
     {
-        Result.Index = std::strtoull(
-            Value.at("index").get<std::string>().c_str(),
-            nullptr,
-            10);
+        Result.Index = Mile::ToUInt64(
+            Value.at("index").get<std::string>());
     }
     catch (...)
     {
@@ -136,10 +131,8 @@ NanaGet::Aria2::FileInformation NanaGet::Aria2::ToFileInformation(
 
     try
     {
-        Result.Length = std::strtoull(
-            Value.at("length").get<std::string>().c_str(),
-            nullptr,
-            10);
+        Result.Length = Mile::ToUInt64(
+            Value.at("length").get<std::string>());
     }
     catch (...)
     {
@@ -148,10 +141,8 @@ NanaGet::Aria2::FileInformation NanaGet::Aria2::ToFileInformation(
 
     try
     {
-        Result.CompletedLength = std::strtoull(
-            Value.at("completedLength").get<std::string>().c_str(),
-            nullptr,
-            10);
+        Result.CompletedLength = Mile::ToUInt64(
+            Value.at("completedLength").get<std::string>());
     }
     catch (...)
     {
@@ -253,10 +244,8 @@ NanaGet::Aria2::BitTorrentInformation NanaGet::Aria2::ToBitTorrentInformation(
 
     try
     {
-        Result.CreationDate = std::strtoull(
-            Value.at("creationDate").get<std::string>().c_str(),
-            nullptr,
-            10);
+        Result.CreationDate = Mile::ToUInt64(
+            Value.at("creationDate").get<std::string>());
     }
     catch (...)
     {
@@ -310,10 +299,8 @@ NanaGet::Aria2::DownloadInformation NanaGet::Aria2::ToDownloadInformation(
 
     try
     {
-        Result.TotalLength = std::strtoull(
-            Value.at("totalLength").get<std::string>().c_str(),
-            nullptr,
-            10);
+        Result.TotalLength = Mile::ToUInt64(
+            Value.at("totalLength").get<std::string>());
     }
     catch (...)
     {
@@ -322,10 +309,8 @@ NanaGet::Aria2::DownloadInformation NanaGet::Aria2::ToDownloadInformation(
 
     try
     {
-        Result.CompletedLength = std::strtoull(
-            Value.at("completedLength").get<std::string>().c_str(),
-            nullptr,
-            10);
+        Result.CompletedLength = Mile::ToUInt64(
+            Value.at("completedLength").get<std::string>());
     }
     catch (...)
     {
@@ -334,10 +319,8 @@ NanaGet::Aria2::DownloadInformation NanaGet::Aria2::ToDownloadInformation(
 
     try
     {
-        Result.UploadLength = std::strtoull(
-            Value.at("uploadLength").get<std::string>().c_str(),
-            nullptr,
-            10);
+        Result.UploadLength = Mile::ToUInt64(
+            Value.at("uploadLength").get<std::string>());
     }
     catch (...)
     {
@@ -355,10 +338,8 @@ NanaGet::Aria2::DownloadInformation NanaGet::Aria2::ToDownloadInformation(
 
     try
     {
-        Result.DownloadSpeed = std::strtoull(
-            Value.at("downloadSpeed").get<std::string>().c_str(),
-            nullptr,
-            10);
+        Result.DownloadSpeed = Mile::ToUInt64(
+            Value.at("downloadSpeed").get<std::string>());
     }
     catch (...)
     {
@@ -367,10 +348,8 @@ NanaGet::Aria2::DownloadInformation NanaGet::Aria2::ToDownloadInformation(
 
     try
     {
-        Result.UploadSpeed = std::strtoull(
-            Value.at("uploadSpeed").get<std::string>().c_str(),
-            nullptr,
-            10);
+        Result.UploadSpeed = Mile::ToUInt64(
+            Value.at("uploadSpeed").get<std::string>());
     }
     catch (...)
     {
@@ -388,10 +367,8 @@ NanaGet::Aria2::DownloadInformation NanaGet::Aria2::ToDownloadInformation(
 
     try
     {
-        Result.NumSeeders = std::strtoull(
-            Value.at("numSeeders").get<std::string>().c_str(),
-            nullptr,
-            10);
+        Result.NumSeeders = Mile::ToUInt64(
+            Value.at("numSeeders").get<std::string>());
     }
     catch (...)
     {
@@ -417,10 +394,8 @@ NanaGet::Aria2::DownloadInformation NanaGet::Aria2::ToDownloadInformation(
 
     try
     {
-        Result.PieceLength = std::strtoull(
-            Value.at("pieceLength").get<std::string>().c_str(),
-            nullptr,
-            10);
+        Result.PieceLength = Mile::ToUInt64(
+            Value.at("pieceLength").get<std::string>());
     }
     catch (...)
     {
@@ -429,10 +404,8 @@ NanaGet::Aria2::DownloadInformation NanaGet::Aria2::ToDownloadInformation(
 
     try
     {
-        Result.NumPieces = std::strtoull(
-            Value.at("numPieces").get<std::string>().c_str(),
-            nullptr,
-            10);
+        Result.NumPieces = Mile::ToUInt64(
+            Value.at("numPieces").get<std::string>());
     }
     catch (...)
     {
@@ -441,10 +414,8 @@ NanaGet::Aria2::DownloadInformation NanaGet::Aria2::ToDownloadInformation(
 
     try
     {
-        Result.Connections = std::strtol(
-            Value.at("connections").get<std::string>().c_str(),
-            nullptr,
-            10);
+        Result.Connections = Mile::ToInt32(
+            Value.at("connections").get<std::string>());
     }
     catch (...)
     {
@@ -453,10 +424,8 @@ NanaGet::Aria2::DownloadInformation NanaGet::Aria2::ToDownloadInformation(
 
     try
     {
-        Result.ErrorCode = std::strtol(
-            Value.at("errorCode").get<std::string>().c_str(),
-            nullptr,
-            10);
+        Result.ErrorCode = Mile::ToInt32(
+            Value.at("errorCode").get<std::string>());
     }
     catch (...)
     {
@@ -535,10 +504,8 @@ NanaGet::Aria2::DownloadInformation NanaGet::Aria2::ToDownloadInformation(
 
     try
     {
-        Result.VerifiedLength = std::strtoull(
-            Value.at("verifiedLength").get<std::string>().c_str(),
-            nullptr,
-            10);
+        Result.VerifiedLength = Mile::ToUInt64(
+            Value.at("verifiedLength").get<std::string>());
     }
     catch (...)
     {
@@ -625,10 +592,8 @@ NanaGet::Aria2::PeerInformation NanaGet::Aria2::ToPeerInformation(
 
     try
     {
-        Result.Port = static_cast<std::uint16_t>(std::strtoul(
-            Value.at("port").get<std::string>().c_str(),
-            nullptr,
-            10));
+        Result.Port = static_cast<std::uint16_t>(Mile::ToUInt32(
+            Value.at("port").get<std::string>()));
     }
     catch (...)
     {
@@ -682,10 +647,8 @@ NanaGet::Aria2::PeerInformation NanaGet::Aria2::ToPeerInformation(
 
     try
     {
-        Result.DownloadSpeed = std::strtoull(
-            Value.at("downloadSpeed").get<std::string>().c_str(),
-            nullptr,
-            10);
+        Result.DownloadSpeed = Mile::ToUInt64(
+            Value.at("downloadSpeed").get<std::string>());
     }
     catch (...)
     {
@@ -694,10 +657,8 @@ NanaGet::Aria2::PeerInformation NanaGet::Aria2::ToPeerInformation(
 
     try
     {
-        Result.UploadSpeed = std::strtoull(
-            Value.at("uploadSpeed").get<std::string>().c_str(),
-            nullptr,
-            10);
+        Result.UploadSpeed = Mile::ToUInt64(
+            Value.at("uploadSpeed").get<std::string>());
     }
     catch (...)
     {
@@ -749,10 +710,8 @@ NanaGet::Aria2::ServerInformation NanaGet::Aria2::ToServerInformation(
 
     try
     {
-        Result.DownloadSpeed = std::strtoull(
-            Value.at("downloadSpeed").get<std::string>().c_str(),
-            nullptr,
-            10);
+        Result.DownloadSpeed = Mile::ToUInt64(
+            Value.at("downloadSpeed").get<std::string>());
     }
     catch (...)
     {
@@ -769,10 +728,8 @@ NanaGet::Aria2::ServersInformation NanaGet::Aria2::ToServersInformation(
 
     try
     {
-        Result.Index = std::strtoull(
-            Value.at("index").get<std::string>().c_str(),
-            nullptr,
-            10);
+        Result.Index = Mile::ToUInt64(
+            Value.at("index").get<std::string>());
     }
     catch (...)
     {
@@ -802,10 +759,8 @@ NanaGet::Aria2::GlobalStatusInformation NanaGet::Aria2::ToGlobalStatusInformatio
 
     try
     {
-        Result.DownloadSpeed = std::strtoull(
-            Value.at("downloadSpeed").get<std::string>().c_str(),
-            nullptr,
-            10);
+        Result.DownloadSpeed = Mile::ToUInt64(
+            Value.at("downloadSpeed").get<std::string>());
     }
     catch (...)
     {
@@ -814,10 +769,8 @@ NanaGet::Aria2::GlobalStatusInformation NanaGet::Aria2::ToGlobalStatusInformatio
 
     try
     {
-        Result.UploadSpeed = std::strtoull(
-            Value.at("uploadSpeed").get<std::string>().c_str(),
-            nullptr,
-            10);
+        Result.UploadSpeed = Mile::ToUInt64(
+            Value.at("uploadSpeed").get<std::string>());
     }
     catch (...)
     {
@@ -826,10 +779,8 @@ NanaGet::Aria2::GlobalStatusInformation NanaGet::Aria2::ToGlobalStatusInformatio
 
     try
     {
-        Result.NumActive = std::strtoull(
-            Value.at("numActive").get<std::string>().c_str(),
-            nullptr,
-            10);
+        Result.NumActive = Mile::ToUInt64(
+            Value.at("numActive").get<std::string>());
     }
     catch (...)
     {
@@ -838,10 +789,8 @@ NanaGet::Aria2::GlobalStatusInformation NanaGet::Aria2::ToGlobalStatusInformatio
 
     try
     {
-        Result.NumWaiting = std::strtoull(
-            Value.at("numWaiting").get<std::string>().c_str(),
-            nullptr,
-            10);
+        Result.NumWaiting = Mile::ToUInt64(
+            Value.at("numWaiting").get<std::string>());
     }
     catch (...)
     {
@@ -850,10 +799,8 @@ NanaGet::Aria2::GlobalStatusInformation NanaGet::Aria2::ToGlobalStatusInformatio
 
     try
     {
-        Result.NumStopped = std::strtoull(
-            Value.at("numStopped").get<std::string>().c_str(),
-            nullptr,
-            10);
+        Result.NumStopped = Mile::ToUInt64(
+            Value.at("numStopped").get<std::string>());
     }
     catch (...)
     {
@@ -862,10 +809,8 @@ NanaGet::Aria2::GlobalStatusInformation NanaGet::Aria2::ToGlobalStatusInformatio
 
     try
     {
-        Result.NumStoppedTotal = std::strtoull(
-            Value.at("numStoppedTotal").get<std::string>().c_str(),
-            nullptr,
-            10);
+        Result.NumStoppedTotal = Mile::ToUInt64(
+            Value.at("numStoppedTotal").get<std::string>());
     }
     catch (...)
     {
