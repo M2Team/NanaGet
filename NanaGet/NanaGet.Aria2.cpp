@@ -12,6 +12,77 @@
 
 #include <Mile.Helpers.CppBase.h>
 
+namespace NanaGet::Json
+{
+    nlohmann::json GetPrimitiveValue(
+        nlohmann::json const& Current)
+    {
+        return Current.is_primitive()
+            ? Current
+            : nlohmann::json();
+    }
+
+    nlohmann::json GetPrimitiveValue(
+        nlohmann::json const& Root,
+        std::string const& Key)
+    {
+        return Root.contains(Key)
+            ? GetPrimitiveValue(Root.at(Key))
+            : nlohmann::json();
+    }
+
+    nlohmann::json GetArrayValue(
+        nlohmann::json const& Current)
+    {
+        return Current.is_array()
+            ? Current
+            : nlohmann::json::array();
+    }
+
+    nlohmann::json GetArrayValue(
+        nlohmann::json const& Root,
+        std::string const& Key)
+    {
+        return Root.contains(Key)
+            ? GetArrayValue(Root.at(Key))
+            : nlohmann::json::array();
+    }
+
+    nlohmann::json GetObjectValue(
+        nlohmann::json const& Current)
+    {
+        return Current.is_object()
+            ? Current
+            : nlohmann::json::object();
+    }
+
+    nlohmann::json GetObjectValue(
+        nlohmann::json const& Root,
+        std::string const& Key)
+    {
+        return Root.contains(Key)
+            ? GetObjectValue(Root.at(Key))
+            : nlohmann::json::object();
+    }
+
+    std::string GetStringValue(
+        nlohmann::json const& Current)
+    {
+        return Current.is_string()
+            ? Current.get<std::string>()
+            : std::string();
+    }
+
+    std::string GetStringValue(
+        nlohmann::json const& Root,
+        std::string const& Key)
+    {
+        return Root.contains(Key)
+            ? GetStringValue(Root.at(Key))
+            : std::string();
+    }
+}
+
 namespace NanaGet::Aria2
 {
     NLOHMANN_JSON_SERIALIZE_ENUM(NanaGet::Aria2::DownloadStatus, {
@@ -43,14 +114,7 @@ std::string NanaGet::Aria2::FromDownloadGid(
 NanaGet::Aria2::DownloadGid NanaGet::Aria2::ToDownloadGid(
     nlohmann::json const& Value)
 {
-    try
-    {
-        return Mile::ToUInt64(Value.get<std::string>(), 16);
-    }
-    catch (...)
-    {
-        return 0;
-    }
+    return Mile::ToUInt64(NanaGet::Json::GetStringValue(Value), 16);
 }
 
 NanaGet::Aria2::DownloadStatus NanaGet::Aria2::ToDownloadStatus(
@@ -84,23 +148,10 @@ NanaGet::Aria2::UriInformation NanaGet::Aria2::ToUriInformation(
 {
     NanaGet::Aria2::UriInformation Result;
 
-    try
-    {
-        Result.Uri = Value.at("uri").get<std::string>();
-    }
-    catch (...)
-    {
+    Result.Uri = NanaGet::Json::GetStringValue(Value, "uri");
 
-    }
-
-    try
-    {
-        Result.Status = NanaGet::Aria2::ToUriStatus(Value.at("status"));
-    }
-    catch (...)
-    {
-
-    }
+    Result.Status = NanaGet::Aria2::ToUriStatus(
+        NanaGet::Json::GetPrimitiveValue(Value, "status"));
 
     return Result;
 }
@@ -110,72 +161,33 @@ NanaGet::Aria2::FileInformation NanaGet::Aria2::ToFileInformation(
 {
     NanaGet::Aria2::FileInformation Result;
 
-    try
-    {
-        Result.Index = Mile::ToUInt64(
-            Value.at("index").get<std::string>());
-    }
-    catch (...)
-    {
+    Result.Index = Mile::ToUInt64(
+        NanaGet::Json::GetStringValue(Value, "index"));
 
-    }
+    Result.Path = NanaGet::Json::GetStringValue(Value, "path");
 
-    try
-    {
-        Result.Path = Value.at("path").get<std::string>();
-    }
-    catch (...)
-    {
+    Result.Length = Mile::ToUInt64(
+        NanaGet::Json::GetStringValue(Value, "length"));
 
-    }
+    Result.CompletedLength = Mile::ToUInt64(
+        NanaGet::Json::GetStringValue(Value, "completedLength"));
 
-    try
+    std::string Selected = NanaGet::Json::GetStringValue(Value, "selected");
+    if (0 == std::strcmp(Selected.c_str(), "true"))
     {
-        Result.Length = Mile::ToUInt64(
-            Value.at("length").get<std::string>());
+        Result.Selected = true;
     }
-    catch (...)
+    else if (0 == std::strcmp(Selected.c_str(), "false"))
     {
-
+        Result.Selected = false;
     }
 
-    try
+    for (nlohmann::json const& Uri : NanaGet::Json::GetArrayValue(
+        Value,
+        "uris"))
     {
-        Result.CompletedLength = Mile::ToUInt64(
-            Value.at("completedLength").get<std::string>());
-    }
-    catch (...)
-    {
-
-    }
-
-    try
-    {
-        std::string Selected = Value.at("selected").get<std::string>();
-        if (0 == std::strcmp(Selected.c_str(), "true"))
-        {
-            Result.Selected = true;
-        }
-        else if (0 == std::strcmp(Selected.c_str(), "false"))
-        {
-            Result.Selected = false;
-        }
-    }
-    catch (...)
-    {
-
-    }
-
-    try
-    {
-        for (nlohmann::json const& Uri : Value.at("uris"))
-        {
-            Result.Uris.emplace_back(NanaGet::Aria2::ToUriInformation(Uri));
-        }
-    }
-    catch (...)
-    {
-
+        Result.Uris.emplace_back(NanaGet::Aria2::ToUriInformation(
+            NanaGet::Json::GetObjectValue(Uri)));
     }
 
     return Result;
@@ -199,14 +211,7 @@ NanaGet::Aria2::BitTorrentInfoDictionary NanaGet::Aria2::ToBitTorrentInfoDiction
 {
     NanaGet::Aria2::BitTorrentInfoDictionary Result;
 
-    try
-    {
-        Result.Name = Value.at("name").get<std::string>();
-    }
-    catch (...)
-    {
-
-    }
+    Result.Name = NanaGet::Json::GetStringValue(Value, "name");
 
     return Result;
 }
@@ -216,60 +221,28 @@ NanaGet::Aria2::BitTorrentInformation NanaGet::Aria2::ToBitTorrentInformation(
 {
     NanaGet::Aria2::BitTorrentInformation Result;
 
-    try
+    for (nlohmann::json const& Array : NanaGet::Json::GetArrayValue(
+        Value,
+        "announceList"))
     {
-        for (nlohmann::json const& Item : Value.at("announceList"))
+        std::vector<std::string> Content;
+        for (nlohmann::json const& Item : NanaGet::Json::GetArrayValue(Array))
         {
-            std::vector<std::string> Content;
-            for (nlohmann::json const& InnerItem : Item)
-            {
-                Content.emplace_back(InnerItem.get<std::string>());
-            }
-            Result.AnnounceList.emplace_back(Content);
+            Content.emplace_back(NanaGet::Json::GetStringValue(Item));
         }
-    }
-    catch (...)
-    {
-
+        Result.AnnounceList.emplace_back(Content);
     }
 
-    try
-    {
-        Result.Comment = Value.at("comment").get<std::string>();
-    }
-    catch (...)
-    {
+    Result.Comment = NanaGet::Json::GetStringValue(Value, "comment");
 
-    }
+    Result.CreationDate = Mile::ToUInt64(
+        NanaGet::Json::GetStringValue(Value, "creationDate"));
 
-    try
-    {
-        Result.CreationDate = Mile::ToUInt64(
-            Value.at("creationDate").get<std::string>());
-    }
-    catch (...)
-    {
+    Result.Mode = NanaGet::Aria2::ToBitTorrentFileMode(
+        NanaGet::Json::GetPrimitiveValue(Value, "mode"));
 
-    }
-
-    try
-    {
-        Result.Mode = NanaGet::Aria2::ToBitTorrentFileMode(Value.at("mode"));
-    }
-    catch (...)
-    {
-
-    }
-
-    try
-    {
-        Result.Info = NanaGet::Aria2::ToBitTorrentInfoDictionary(
-            Value.at("info"));
-    }
-    catch (...)
-    {
-
-    }
+    Result.Info = NanaGet::Aria2::ToBitTorrentInfoDictionary(
+        NanaGet::Json::GetObjectValue(Value, "info"));
 
     return Result;
 }
@@ -279,255 +252,97 @@ NanaGet::Aria2::DownloadInformation NanaGet::Aria2::ToDownloadInformation(
 {
     NanaGet::Aria2::DownloadInformation Result;
 
-    try
-    {
-        Result.Gid = NanaGet::Aria2::ToDownloadGid(Value.at("gid"));
-    }
-    catch (...)
-    {
+    Result.Gid = NanaGet::Aria2::ToDownloadGid(
+        NanaGet::Json::GetPrimitiveValue(Value, "gid"));
 
-    }
+    Result.Status = NanaGet::Aria2::ToDownloadStatus(
+        NanaGet::Json::GetPrimitiveValue(Value, "status"));
 
-    try
-    {
-        Result.Status = NanaGet::Aria2::ToDownloadStatus(Value.at("status"));
-    }
-    catch (...)
-    {
+    Result.TotalLength = Mile::ToUInt64(
+        NanaGet::Json::GetStringValue(Value, "totalLength"));
 
-    }
+    Result.CompletedLength = Mile::ToUInt64(
+        NanaGet::Json::GetStringValue(Value, "completedLength"));
 
-    try
-    {
-        Result.TotalLength = Mile::ToUInt64(
-            Value.at("totalLength").get<std::string>());
-    }
-    catch (...)
-    {
+    Result.UploadLength = Mile::ToUInt64(
+        NanaGet::Json::GetStringValue(Value, "uploadLength"));
 
-    }
+    Result.Bitfield = NanaGet::Json::GetStringValue(Value, "bitfield");
 
-    try
-    {
-        Result.CompletedLength = Mile::ToUInt64(
-            Value.at("completedLength").get<std::string>());
-    }
-    catch (...)
-    {
+    Result.DownloadSpeed = Mile::ToUInt64(
+        NanaGet::Json::GetStringValue(Value, "downloadSpeed"));
 
-    }
+    Result.UploadSpeed = Mile::ToUInt64(
+        NanaGet::Json::GetStringValue(Value, "uploadSpeed"));
 
-    try
-    {
-        Result.UploadLength = Mile::ToUInt64(
-            Value.at("uploadLength").get<std::string>());
-    }
-    catch (...)
-    {
+    Result.InfoHash = NanaGet::Json::GetStringValue(Value, "infoHash");
 
+    Result.NumSeeders = Mile::ToUInt64(
+        NanaGet::Json::GetStringValue(Value, "numSeeders"));
+
+    std::string Seeder = NanaGet::Json::GetStringValue(Value, "seeder");
+    if (0 == std::strcmp(Seeder.c_str(), "true"))
+    {
+        Result.Seeder = true;
+    }
+    else if (0 == std::strcmp(Seeder.c_str(), "false"))
+    {
+        Result.Seeder = false;
     }
 
-    try
-    {
-        Result.Bitfield = Value.at("bitfield").get<std::string>();
-    }
-    catch (...)
-    {
+    Result.PieceLength = Mile::ToUInt64(
+        NanaGet::Json::GetStringValue(Value, "pieceLength"));
 
-    }
+    Result.NumPieces = Mile::ToUInt64(
+        NanaGet::Json::GetStringValue(Value, "numPieces"));
 
-    try
-    {
-        Result.DownloadSpeed = Mile::ToUInt64(
-            Value.at("downloadSpeed").get<std::string>());
-    }
-    catch (...)
-    {
+    Result.Connections = Mile::ToInt32(
+        NanaGet::Json::GetStringValue(Value, "connections"));
 
-    }
+    Result.ErrorCode = Mile::ToInt32(
+        NanaGet::Json::GetStringValue(Value, "errorCode"));
 
-    try
-    {
-        Result.UploadSpeed = Mile::ToUInt64(
-            Value.at("uploadSpeed").get<std::string>());
-    }
-    catch (...)
-    {
+    Result.ErrorMessage =
+        NanaGet::Json::GetStringValue(Value, "errorMessage");
 
+    for (nlohmann::json const& Item : NanaGet::Json::GetArrayValue(
+        Value,
+        "followedBy"))
+    {
+        Result.FollowedBy.emplace_back(NanaGet::Aria2::ToDownloadGid(Item));
     }
 
-    try
-    {
-        Result.InfoHash = Value.at("infoHash").get<std::string>();
-    }
-    catch (...)
-    {
+    Result.Following = NanaGet::Aria2::ToDownloadGid(
+        NanaGet::Json::GetPrimitiveValue(Value, "following"));
 
-    }
+    Result.BelongsTo = NanaGet::Aria2::ToDownloadGid(
+        NanaGet::Json::GetPrimitiveValue(Value, "belongsTo"));
 
-    try
-    {
-        Result.NumSeeders = Mile::ToUInt64(
-            Value.at("numSeeders").get<std::string>());
-    }
-    catch (...)
-    {
+    Result.Dir = NanaGet::Json::GetStringValue(Value, "dir");
 
+    for (nlohmann::json const& File : NanaGet::Json::GetArrayValue(
+        Value,
+        "files"))
+    {
+        Result.Files.emplace_back(NanaGet::Aria2::ToFileInformation(
+            NanaGet::Json::GetObjectValue(File)));
     }
 
-    try
-    {
-        std::string Seeder = Value.at("seeder").get<std::string>();
-        if (0 == std::strcmp(Seeder.c_str(), "true"))
-        {
-            Result.Seeder = true;
-        }
-        else if (0 == std::strcmp(Seeder.c_str(), "false"))
-        {
-            Result.Seeder = false;
-        }
-    }
-    catch (...)
-    {
+    Result.BitTorrent = NanaGet::Aria2::ToBitTorrentInformation(
+        NanaGet::Json::GetObjectValue(Value, "bittorrent"));
 
-    }
+    Result.VerifiedLength = Mile::ToUInt64(
+        NanaGet::Json::GetStringValue(Value, "verifiedLength"));
 
-    try
+    std::string VerifyIntegrityPending =
+        NanaGet::Json::GetStringValue(Value, "verifyIntegrityPending");
+    if (0 == std::strcmp(VerifyIntegrityPending.c_str(), "true"))
     {
-        Result.PieceLength = Mile::ToUInt64(
-            Value.at("pieceLength").get<std::string>());
+        Result.VerifyIntegrityPending = true;
     }
-    catch (...)
+    else if (0 == std::strcmp(VerifyIntegrityPending.c_str(), "false"))
     {
-
-    }
-
-    try
-    {
-        Result.NumPieces = Mile::ToUInt64(
-            Value.at("numPieces").get<std::string>());
-    }
-    catch (...)
-    {
-
-    }
-
-    try
-    {
-        Result.Connections = Mile::ToInt32(
-            Value.at("connections").get<std::string>());
-    }
-    catch (...)
-    {
-
-    }
-
-    try
-    {
-        Result.ErrorCode = Mile::ToInt32(
-            Value.at("errorCode").get<std::string>());
-    }
-    catch (...)
-    {
-
-    }
-
-    try
-    {
-        Result.ErrorMessage = Value.at("errorMessage").get<std::string>();
-    }
-    catch (...)
-    {
-
-    }
-
-    try
-    {
-        for (nlohmann::json const& Item : Value.at("followedBy"))
-        {
-            Result.FollowedBy.emplace_back(NanaGet::Aria2::ToDownloadGid(Item));
-        }
-    }
-    catch (...)
-    {
-
-    }
-
-    try
-    {
-        Result.Following = NanaGet::Aria2::ToDownloadGid(Value.at("following"));
-    }
-    catch (...)
-    {
-
-    }
-
-    try
-    {
-        Result.BelongsTo = NanaGet::Aria2::ToDownloadGid(Value.at("belongsTo"));
-    }
-    catch (...)
-    {
-
-    }
-
-    try
-    {
-        Result.Dir = Value.at("dir").get<std::string>();
-    }
-    catch (...)
-    {
-
-    }
-
-    try
-    {
-        for (nlohmann::json const& File : Value.at("files"))
-        {
-            Result.Files.emplace_back(NanaGet::Aria2::ToFileInformation(File));
-        }
-    }
-    catch (...)
-    {
-
-    }
-
-    try
-    {
-        Result.BitTorrent = NanaGet::Aria2::ToBitTorrentInformation(
-            Value.at("bittorrent"));
-    }
-    catch (...)
-    {
-
-    }
-
-    try
-    {
-        Result.VerifiedLength = Mile::ToUInt64(
-            Value.at("verifiedLength").get<std::string>());
-    }
-    catch (...)
-    {
-
-    }
-
-    try
-    {
-        std::string VerifyIntegrityPending =
-            Value.at("verifyIntegrityPending").get<std::string>();
-        if (0 == std::strcmp(VerifyIntegrityPending.c_str(), "true"))
-        {
-            Result.VerifyIntegrityPending = true;
-        }
-        else if (0 == std::strcmp(VerifyIntegrityPending.c_str(), "false"))
-        {
-            Result.VerifyIntegrityPending = false;
-        }
-    }
-    catch (...)
-    {
-
+        Result.VerifyIntegrityPending = false;
     }
 
     return Result;
@@ -572,114 +387,51 @@ NanaGet::Aria2::PeerInformation NanaGet::Aria2::ToPeerInformation(
 {
     NanaGet::Aria2::PeerInformation Result;
 
-    try
-    {
-        Result.PeerId = Value.at("peerId").get<std::string>();
-    }
-    catch (...)
-    {
+    Result.PeerId = NanaGet::Json::GetStringValue(Value, "peerId");
 
-    }
+    Result.Ip = NanaGet::Json::GetStringValue(Value, "ip");
 
-    try
-    {
-        Result.Ip = Value.at("ip").get<std::string>();
-    }
-    catch (...)
-    {
+    Result.Port = static_cast<std::uint16_t>(Mile::ToUInt32(
+        NanaGet::Json::GetStringValue(Value, "port")));
 
-    }
+    Result.Bitfield = NanaGet::Json::GetStringValue(Value, "bitfield");
 
-    try
+    std::string AmChoking =
+        NanaGet::Json::GetStringValue(Value, "amChoking");
+    if (0 == std::strcmp(AmChoking.c_str(), "true"))
     {
-        Result.Port = static_cast<std::uint16_t>(Mile::ToUInt32(
-            Value.at("port").get<std::string>()));
+        Result.AmChoking = true;
     }
-    catch (...)
+    else if (0 == std::strcmp(AmChoking.c_str(), "false"))
     {
-
+        Result.AmChoking = false;
     }
 
-    try
+    std::string PeerChoking =
+        NanaGet::Json::GetStringValue(Value, "peerChoking");
+    if (0 == std::strcmp(PeerChoking.c_str(), "true"))
     {
-        Result.Bitfield = Value.at("bitfield").get<std::string>();
+        Result.PeerChoking = true;
     }
-    catch (...)
+    else if (0 == std::strcmp(PeerChoking.c_str(), "false"))
     {
-
-    }
-
-    try
-    {
-        std::string AmChoking =
-            Value.at("amChoking").get<std::string>();
-        if (0 == std::strcmp(AmChoking.c_str(), "true"))
-        {
-            Result.AmChoking = true;
-        }
-        else if (0 == std::strcmp(AmChoking.c_str(), "false"))
-        {
-            Result.AmChoking = false;
-        }
-    }
-    catch (...)
-    {
-
+        Result.PeerChoking = false;
     }
 
-    try
-    {
-        std::string PeerChoking =
-            Value.at("peerChoking").get<std::string>();
-        if (0 == std::strcmp(PeerChoking.c_str(), "true"))
-        {
-            Result.PeerChoking = true;
-        }
-        else if (0 == std::strcmp(PeerChoking.c_str(), "false"))
-        {
-            Result.PeerChoking = false;
-        }
-    }
-    catch (...)
-    {
+    Result.DownloadSpeed = Mile::ToUInt64(
+        NanaGet::Json::GetStringValue(Value, "downloadSpeed"));
 
-    }
+    Result.UploadSpeed = Mile::ToUInt64(
+        NanaGet::Json::GetStringValue(Value, "uploadSpeed"));
 
-    try
+    std::string Seeder = NanaGet::Json::GetStringValue(Value, "seeder");
+    if (0 == std::strcmp(Seeder.c_str(), "true"))
     {
-        Result.DownloadSpeed = Mile::ToUInt64(
-            Value.at("downloadSpeed").get<std::string>());
+        Result.Seeder = true;
     }
-    catch (...)
+    else if (0 == std::strcmp(Seeder.c_str(), "false"))
     {
-
-    }
-
-    try
-    {
-        Result.UploadSpeed = Mile::ToUInt64(
-            Value.at("uploadSpeed").get<std::string>());
-    }
-    catch (...)
-    {
-
-    }
-
-    try
-    {
-        std::string Seeder = Value.at("seeder").get<std::string>();
-        if (0 == std::strcmp(Seeder.c_str(), "true"))
-        {
-            Result.Seeder = true;
-        }
-        else if (0 == std::strcmp(Seeder.c_str(), "false"))
-        {
-            Result.Seeder = false;
-        }
-    }
-    catch (...)
-    {
-
+        Result.Seeder = false;
     }
 
     return Result;
@@ -690,33 +442,12 @@ NanaGet::Aria2::ServerInformation NanaGet::Aria2::ToServerInformation(
 {
     NanaGet::Aria2::ServerInformation Result;
 
-    try
-    {
-        Result.Uri = Value.at("uri").get<std::string>();
-    }
-    catch (...)
-    {
+    Result.Uri = NanaGet::Json::GetStringValue(Value, "uri");
 
-    }
+    Result.CurrentUri = NanaGet::Json::GetStringValue(Value, "currentUri");
 
-    try
-    {
-        Result.CurrentUri = Value.at("currentUri").get<std::string>();
-    }
-    catch (...)
-    {
-
-    }
-
-    try
-    {
-        Result.DownloadSpeed = Mile::ToUInt64(
-            Value.at("downloadSpeed").get<std::string>());
-    }
-    catch (...)
-    {
-
-    }
+    Result.DownloadSpeed = Mile::ToUInt64(
+        NanaGet::Json::GetStringValue(Value, "downloadSpeed"));
 
     return Result;
 }
@@ -726,27 +457,15 @@ NanaGet::Aria2::ServersInformation NanaGet::Aria2::ToServersInformation(
 {
     NanaGet::Aria2::ServersInformation Result;
 
-    try
-    {
-        Result.Index = Mile::ToUInt64(
-            Value.at("index").get<std::string>());
-    }
-    catch (...)
-    {
+    Result.Index = Mile::ToUInt64(
+        NanaGet::Json::GetStringValue(Value, "index"));
 
-    }
-
-    try
+    for (nlohmann::json const& Server : NanaGet::Json::GetArrayValue(
+        Value,
+        "servers"))
     {
-        for (nlohmann::json const& Server : Value.at("servers"))
-        {
-            Result.Servers.emplace_back(
-                NanaGet::Aria2::ToServerInformation(Server));
-        }
-    }
-    catch (...)
-    {
-
+        Result.Servers.emplace_back(NanaGet::Aria2::ToServerInformation(
+            NanaGet::Json::GetObjectValue(Server)));
     }
 
     return Result;
@@ -757,65 +476,23 @@ NanaGet::Aria2::GlobalStatusInformation NanaGet::Aria2::ToGlobalStatusInformatio
 {
     NanaGet::Aria2::GlobalStatusInformation Result;
 
-    try
-    {
-        Result.DownloadSpeed = Mile::ToUInt64(
-            Value.at("downloadSpeed").get<std::string>());
-    }
-    catch (...)
-    {
+    Result.DownloadSpeed = Mile::ToUInt64(
+        NanaGet::Json::GetStringValue(Value, "downloadSpeed"));
 
-    }
+    Result.UploadSpeed = Mile::ToUInt64(
+        NanaGet::Json::GetStringValue(Value, "uploadSpeed"));
 
-    try
-    {
-        Result.UploadSpeed = Mile::ToUInt64(
-            Value.at("uploadSpeed").get<std::string>());
-    }
-    catch (...)
-    {
+    Result.NumActive = Mile::ToUInt64(
+        NanaGet::Json::GetStringValue(Value, "numActive"));
 
-    }
+    Result.NumWaiting = Mile::ToUInt64(
+        NanaGet::Json::GetStringValue(Value, "numWaiting"));
 
-    try
-    {
-        Result.NumActive = Mile::ToUInt64(
-            Value.at("numActive").get<std::string>());
-    }
-    catch (...)
-    {
+    Result.NumStopped = Mile::ToUInt64(
+        NanaGet::Json::GetStringValue(Value, "numStopped"));
 
-    }
-
-    try
-    {
-        Result.NumWaiting = Mile::ToUInt64(
-            Value.at("numWaiting").get<std::string>());
-    }
-    catch (...)
-    {
-
-    }
-
-    try
-    {
-        Result.NumStopped = Mile::ToUInt64(
-            Value.at("numStopped").get<std::string>());
-    }
-    catch (...)
-    {
-
-    }
-
-    try
-    {
-        Result.NumStoppedTotal = Mile::ToUInt64(
-            Value.at("numStoppedTotal").get<std::string>());
-    }
-    catch (...)
-    {
-
-    }
+    Result.NumStoppedTotal = Mile::ToUInt64(
+        NanaGet::Json::GetStringValue(Value, "numStoppedTotal"));
 
     return Result;
 }
@@ -825,26 +502,14 @@ NanaGet::Aria2::VersionInformation NanaGet::Aria2::ToVersionInformation(
 {
     VersionInformation Result;
 
-    try
-    {
-        Result.Version = Value.at("version").get<std::string>();
-    }
-    catch (...)
-    {
+    Result.Version = NanaGet::Json::GetStringValue(Value, "version");
 
-    }
-
-    try
+    for (nlohmann::json const& EnabledFeature : NanaGet::Json::GetArrayValue(
+        Value,
+        "enabledFeatures"))
     {
-        for (nlohmann::json const& EnabledFeature : Value.at("enabledFeatures"))
-        {
-            Result.EnabledFeatures.emplace_back(
-                EnabledFeature.get<std::string>());
-        }
-    }
-    catch (...)
-    {
-
+        Result.EnabledFeatures.emplace_back(
+            EnabledFeature.get<std::string>());
     }
 
     return Result;
@@ -855,14 +520,7 @@ NanaGet::Aria2::SessionInformation NanaGet::Aria2::ToSessionInformation(
 {
     NanaGet::Aria2::SessionInformation Result;
 
-    try
-    {
-        Result.SessionId = Value.at("sessionId").get<std::string>();
-    }
-    catch (...)
-    {
-
-    }
+    Result.SessionId = NanaGet::Json::GetStringValue(Value, "sessionId");
 
     return Result;
 }
