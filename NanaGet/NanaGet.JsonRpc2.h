@@ -20,7 +20,7 @@
 #include <cstdint>
 #include <string>
 
-#include <json.hpp>
+#include <Mile.Json.h>
 
 namespace NanaGet::JsonRpc2
 {

@@ -22,7 +22,7 @@
 #include <string>
 #include <vector>
 
-#include <json.hpp>
+#include <Mile.Json.h>
 
 namespace NanaGet::Aria2
 {
@@ -517,7 +517,7 @@ namespace NanaGet::Aria2
 
     VersionInformation ToVersionInformation(
         nlohmann::json const& Value);
-    
+
     /**
      * @brief The information of current aria2 session.
      */
