@@ -160,6 +160,9 @@
     <PackageReference Include="wtl">
       <Version>10.0.10320</Version>
     </PackageReference>
+    <PackageReference Include="Mile.Json">
+      <Version>1.0.658</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="..\Mile.Project.Windows\Mile.Project.Cpp.targets" />
 </Project>
