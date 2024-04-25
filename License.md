@@ -464,7 +464,6 @@ Creative Commons may be contacted at creativecommons.org.
 ### The third-party libraries used in NanaGet
 
 - C++/WinRT, https://github.com/microsoft/cppwinrt
-- JSON for Modern C++, https://github.com/nlohmann/json
 - Mile.Aria2, https://github.com/ProjectMile/Mile.Aria2
 - Mile.Json, https://github.com/ProjectMile/Mile.Json
 - Mile.Project.Windows, https://github.com/ProjectMile/Mile.Project.Windows
