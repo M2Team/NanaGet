@@ -14,57 +14,6 @@
 
 namespace NanaGet::Json
 {
-    nlohmann::json GetPrimitiveValue(
-        nlohmann::json const& Current)
-    {
-        return Current.is_primitive()
-            ? Current
-            : nlohmann::json();
-    }
-
-    nlohmann::json GetPrimitiveValue(
-        nlohmann::json const& Root,
-        std::string const& Key)
-    {
-        return Root.contains(Key)
-            ? GetPrimitiveValue(Root.at(Key))
-            : nlohmann::json();
-    }
-
-    nlohmann::json GetArrayValue(
-        nlohmann::json const& Current)
-    {
-        return Current.is_array()
-            ? Current
-            : nlohmann::json::array();
-    }
-
-    nlohmann::json GetArrayValue(
-        nlohmann::json const& Root,
-        std::string const& Key)
-    {
-        return Root.contains(Key)
-            ? GetArrayValue(Root.at(Key))
-            : nlohmann::json::array();
-    }
-
-    nlohmann::json GetObjectValue(
-        nlohmann::json const& Current)
-    {
-        return Current.is_object()
-            ? Current
-            : nlohmann::json::object();
-    }
-
-    nlohmann::json GetObjectValue(
-        nlohmann::json const& Root,
-        std::string const& Key)
-    {
-        return Root.contains(Key)
-            ? GetObjectValue(Root.at(Key))
-            : nlohmann::json::object();
-    }
-
     std::string GetStringValue(
         nlohmann::json const& Current)
     {
@@ -77,9 +26,7 @@ namespace NanaGet::Json
         nlohmann::json const& Root,
         std::string const& Key)
     {
-        return Root.contains(Key)
-            ? GetStringValue(Root.at(Key))
-            : std::string();
+        return GetStringValue(Mile::Json::GetSubKey(Root, Key));
     }
 }
 
@@ -151,7 +98,7 @@ NanaGet::Aria2::UriInformation NanaGet::Aria2::ToUriInformation(
     Result.Uri = NanaGet::Json::GetStringValue(Value, "uri");
 
     Result.Status = NanaGet::Aria2::ToUriStatus(
-        NanaGet::Json::GetPrimitiveValue(Value, "status"));
+        Mile::Json::ToPrimitive(Mile::Json::GetSubKey(Value, "status")));
 
     return Result;
 }
@@ -182,12 +129,11 @@ NanaGet::Aria2::FileInformation NanaGet::Aria2::ToFileInformation(
         Result.Selected = false;
     }
 
-    for (nlohmann::json const& Uri : NanaGet::Json::GetArrayValue(
-        Value,
-        "uris"))
+    for (nlohmann::json const& Uri : Mile::Json::ToArray(
+        Mile::Json::GetSubKey(Value, "uris")))
     {
         Result.Uris.emplace_back(NanaGet::Aria2::ToUriInformation(
-            NanaGet::Json::GetObjectValue(Uri)));
+            Mile::Json::ToObject(Uri)));
     }
 
     return Result;
@@ -221,12 +167,11 @@ NanaGet::Aria2::BitTorrentInformation NanaGet::Aria2::ToBitTorrentInformation(
 {
     NanaGet::Aria2::BitTorrentInformation Result;
 
-    for (nlohmann::json const& Array : NanaGet::Json::GetArrayValue(
-        Value,
-        "announceList"))
+    for (nlohmann::json const& Array : Mile::Json::ToArray(
+        Mile::Json::GetSubKey(Value, "announceList")))
     {
         std::vector<std::string> Content;
-        for (nlohmann::json const& Item : NanaGet::Json::GetArrayValue(Array))
+        for (nlohmann::json const& Item : Mile::Json::ToArray(Array))
         {
             Content.emplace_back(NanaGet::Json::GetStringValue(Item));
         }
@@ -239,10 +184,10 @@ NanaGet::Aria2::BitTorrentInformation NanaGet::Aria2::ToBitTorrentInformation(
         NanaGet::Json::GetStringValue(Value, "creationDate"));
 
     Result.Mode = NanaGet::Aria2::ToBitTorrentFileMode(
-        NanaGet::Json::GetPrimitiveValue(Value, "mode"));
+        Mile::Json::ToPrimitive(Mile::Json::GetSubKey(Value, "mode")));
 
     Result.Info = NanaGet::Aria2::ToBitTorrentInfoDictionary(
-        NanaGet::Json::GetObjectValue(Value, "info"));
+        Mile::Json::ToObject(Mile::Json::GetSubKey(Value, "info")));
 
     return Result;
 }
@@ -253,10 +198,10 @@ NanaGet::Aria2::DownloadInformation NanaGet::Aria2::ToDownloadInformation(
     NanaGet::Aria2::DownloadInformation Result;
 
     Result.Gid = NanaGet::Aria2::ToDownloadGid(
-        NanaGet::Json::GetPrimitiveValue(Value, "gid"));
+        Mile::Json::ToPrimitive(Mile::Json::GetSubKey(Value, "gid")));
 
     Result.Status = NanaGet::Aria2::ToDownloadStatus(
-        NanaGet::Json::GetPrimitiveValue(Value, "status"));
+        Mile::Json::ToPrimitive(Mile::Json::GetSubKey(Value, "status")));
 
     Result.TotalLength = Mile::ToUInt64(
         NanaGet::Json::GetStringValue(Value, "totalLength"));
@@ -305,31 +250,29 @@ NanaGet::Aria2::DownloadInformation NanaGet::Aria2::ToDownloadInformation(
     Result.ErrorMessage =
         NanaGet::Json::GetStringValue(Value, "errorMessage");
 
-    for (nlohmann::json const& Item : NanaGet::Json::GetArrayValue(
-        Value,
-        "followedBy"))
+    for (nlohmann::json const& Item : Mile::Json::ToArray(
+        Mile::Json::GetSubKey(Value, "followedBy")))
     {
         Result.FollowedBy.emplace_back(NanaGet::Aria2::ToDownloadGid(Item));
     }
 
     Result.Following = NanaGet::Aria2::ToDownloadGid(
-        NanaGet::Json::GetPrimitiveValue(Value, "following"));
+        Mile::Json::ToPrimitive(Mile::Json::GetSubKey(Value, "following")));
 
     Result.BelongsTo = NanaGet::Aria2::ToDownloadGid(
-        NanaGet::Json::GetPrimitiveValue(Value, "belongsTo"));
+        Mile::Json::ToPrimitive(Mile::Json::GetSubKey(Value, "belongsTo")));
 
     Result.Dir = NanaGet::Json::GetStringValue(Value, "dir");
 
-    for (nlohmann::json const& File : NanaGet::Json::GetArrayValue(
-        Value,
-        "files"))
+    for (nlohmann::json const& File : Mile::Json::ToArray(
+        Mile::Json::GetSubKey(Value, "files")))
     {
         Result.Files.emplace_back(NanaGet::Aria2::ToFileInformation(
-            NanaGet::Json::GetObjectValue(File)));
+            Mile::Json::ToObject(File)));
     }
 
     Result.BitTorrent = NanaGet::Aria2::ToBitTorrentInformation(
-        NanaGet::Json::GetObjectValue(Value, "bittorrent"));
+        Mile::Json::ToObject(Mile::Json::GetSubKey(Value, "bittorrent")));
 
     Result.VerifiedLength = Mile::ToUInt64(
         NanaGet::Json::GetStringValue(Value, "verifiedLength"));
@@ -460,12 +403,11 @@ NanaGet::Aria2::ServersInformation NanaGet::Aria2::ToServersInformation(
     Result.Index = Mile::ToUInt64(
         NanaGet::Json::GetStringValue(Value, "index"));
 
-    for (nlohmann::json const& Server : NanaGet::Json::GetArrayValue(
-        Value,
-        "servers"))
+    for (nlohmann::json const& Server : Mile::Json::ToArray(
+        Mile::Json::GetSubKey(Value, "servers")))
     {
         Result.Servers.emplace_back(NanaGet::Aria2::ToServerInformation(
-            NanaGet::Json::GetObjectValue(Server)));
+            Mile::Json::ToObject(Server)));
     }
 
     return Result;
@@ -504,9 +446,8 @@ NanaGet::Aria2::VersionInformation NanaGet::Aria2::ToVersionInformation(
 
     Result.Version = NanaGet::Json::GetStringValue(Value, "version");
 
-    for (nlohmann::json const& EnabledFeature : NanaGet::Json::GetArrayValue(
-        Value,
-        "enabledFeatures"))
+    for (nlohmann::json const& EnabledFeature : Mile::Json::ToArray(
+        Mile::Json::GetSubKey(Value, "enabledFeatures")))
     {
         Result.EnabledFeatures.emplace_back(
             EnabledFeature.get<std::string>());
