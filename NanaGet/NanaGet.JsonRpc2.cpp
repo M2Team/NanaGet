@@ -53,31 +53,16 @@ NanaGet::JsonRpc2::ErrorMessage NanaGet::JsonRpc2::ToErrorMessage(
 {
     NanaGet::JsonRpc2::ErrorMessage Result;
 
-    try
-    {
-        Result.Code = Value.at("code").get<std::int64_t>();
-    }
-    catch (...)
-    {
+    Result.Code = Mile::Json::ToInt64(
+        Mile::Json::GetSubKey(Value, "code"));
 
-    }
+    Result.Message = Mile::Json::ToString(
+        Mile::Json::GetSubKey(Value, "message"));
 
-    try
+    nlohmann::json Data = Mile::Json::GetSubKey(Value, "data");
+    if (!Data.is_null())
     {
-        Result.Message = Value.at("message").get<std::string>();
-    }
-    catch (...)
-    {
-
-    }
-
-    try
-    {
-        Result.Data = Value.at("data").dump(2);
-    }
-    catch (...)
-    {
-
+        Result.Data = Data.dump(2);
     }
 
     return Result;
@@ -98,48 +83,32 @@ bool NanaGet::JsonRpc2::ToResponseMessage(
         return false;
     }
 
-    if (!SourceJson.contains("jsonrpc"))
+    std::string JsonRpc = Mile::Json::ToString(
+        Mile::Json::GetSubKey(SourceJson, "jsonrpc"));
+    if ("2.0" != JsonRpc)
     {
         return false;
     }
 
-    if ("2.0" != SourceJson["jsonrpc"].get<std::string>())
+    nlohmann::json Identifier = Mile::Json::GetSubKey(SourceJson, "id");
+    if (Identifier.is_null())
     {
         return false;
     }
+    Destination.Identifier = Mile::Json::ToString(Identifier);
 
-    try
+    nlohmann::json Message = Mile::Json::GetSubKey(SourceJson, "result");
+    Destination.IsSucceeded = !Message.is_null();
+    if (!Destination.IsSucceeded)
     {
-        Destination.Identifier = SourceJson.at("id").get<std::string>();
-    }
-    catch (...)
-    {
-        return false;
-    }
-
-    Destination.IsSucceeded = SourceJson.contains("result");
-    if (Destination.IsSucceeded)
-    {
-        try
-        {
-            Destination.Message = SourceJson.at("result").dump(2);
-        }
-        catch (...)
-        {
-
-        }
-    }
-    else
-    {
-        try
-        {
-            Destination.Message = SourceJson.at("error").dump(2);
-        }
-        catch (...)
+        Message = Mile::Json::GetSubKey(SourceJson, "error");
+        if (Message.is_null())
         {
             return false;
         }
+
     }
+    Destination.Message = Message.dump(2);
 
     return true;
 }
