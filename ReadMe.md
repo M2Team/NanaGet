@@ -16,6 +16,17 @@ NanaGet is a lightweight file transfer utility based on aria2 and XAML Islands.
 **All kinds of contributions will be appreciated. All suggestions, pull 
 requests, and issues are welcome.**
 
+If you want to sponsor the development of NanaGet, please read the document of
+[NanaGet Sponsor Edition](Documents/SponsorEdition.md). It's free for all
+NanaGet source code repository contributors.
+
+In general, NanaGet Sponsor Edition is more like contributor's edition, but
+we provide a way to buy the honor and make someone look like a source code
+contributor, because NanaGet is always a community-friendly open-source project.
+
+If you'd like me to add features or improvements ahead of time, please use
+[paid services](https://github.com/MouriNaruto/MouriNaruto/blob/main/PaidServices.md).
+
 ## Features
 
 - Currently based on Mile.Aria2 (https://github.com/ProjectMile/Mile.Aria2), 
@@ -94,3 +105,4 @@ N/A.
 - [Release Notes](Documents/ReleaseNotes.md)
 - [Versioning](Documents/Versioning.md)
 - [My Digital Life Forums](https://forums.mydigitallife.net/threads/76241)
+- [NanaGet Sponsor Edition](Documents/SponsorEdition.md)
