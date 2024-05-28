@@ -14,7 +14,7 @@
 NanaGet is a lightweight file transfer utility based on aria2 and XAML Islands.
 
 **All kinds of contributions will be appreciated. All suggestions, pull 
-requests and issues are welcome.**
+requests, and issues are welcome.**
 
 ## Features
 
