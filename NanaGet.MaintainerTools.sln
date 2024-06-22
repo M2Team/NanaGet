@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevelopmentChannelSwitcher"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NanaGet.ProjectAssetsGenerator", "NanaGet.ProjectAssetsGenerator\NanaGet.ProjectAssetsGenerator.csproj", "{B22CBFB2-2D15-4435-889B-F222E23C685B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NanaGet.RefreshPackageVersion", "NanaGet.RefreshPackageVersion\NanaGet.RefreshPackageVersion.csproj", "{0028ABC9-1078-4497-84E4-5B7178BF5644}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{B22CBFB2-2D15-4435-889B-F222E23C685B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B22CBFB2-2D15-4435-889B-F222E23C685B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B22CBFB2-2D15-4435-889B-F222E23C685B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0028ABC9-1078-4497-84E4-5B7178BF5644}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0028ABC9-1078-4497-84E4-5B7178BF5644}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0028ABC9-1078-4497-84E4-5B7178BF5644}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0028ABC9-1078-4497-84E4-5B7178BF5644}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
