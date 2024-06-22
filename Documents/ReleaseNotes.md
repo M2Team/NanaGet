@@ -1,5 +1,26 @@
 ﻿# NanaGet Release Notes
 
+**NanaGet 1.2 (1.2.789.0)**
+
+- Fix no label issue in Tile mode when using Windows 10's Start. (Thanks to
+  hl2guide.)
+- Continue to fix "Layout cycle detected. Layout could not complete." issue.
+- Remove 32-bit x86 support because supported 32-bit x86 Windows versions don't
+  support running on 32-bit only x86 processors.
+- Update Mile.Xaml to 2.1.661.
+- Update Mile.Aria2 to 1.0.230.
+- Use WINRT_NO_SOURCE_LOCATION to reduce the binary size.
+- Use WTL NuGet package instead of ThirdParty\WindowsTemplateLibrary project.
+- Update Mile.Windows.Helpers to 1.0.534.
+- Use Mile.Json to 1.0.659 instead of JSON for Modern C++.
+- Backport the documentation changes from https://github.com/M2Team/NanaZip/pull/435.
+  (Thanks to sirredbeard.)
+- Ignore the text scale factor for solving the UI layout issues like
+  https://github.com/M2Team/NanaBox/issues/10. (Feedbacked by prakharb5.)
+- Improve maintainer tools for introducing automatic packaging support when
+  building all targets for NanaGet.
+- Improve several implementations.
+
 **NanaGet 1.1 (1.1.400.0)**
 
 - Add German translation. (Contributed by uDEV2019.)
