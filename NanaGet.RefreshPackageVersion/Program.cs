@@ -1,4 +1,5 @@
 ﻿using Mile.Project.Helpers;
+using System.Text;
 using System.Xml;
 
 namespace NanaGet.RefreshPackageVersion
@@ -49,9 +50,76 @@ namespace NanaGet.RefreshPackageVersion
             }
         }
 
+        static void ReplaceFileContentViaStringList(
+            string FilePath,
+            List<string> FromList,
+            List<string> ToList)
+        {
+            if (FromList.Count != ToList.Count)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+
+            string Content = File.ReadAllText(FilePath, Encoding.UTF8);
+
+            for (int Index = 0; Index < FromList.Count; ++Index)
+            {
+                Content = Content.Replace(FromList[Index], ToList[Index]);
+            }
+
+            if (Path.GetExtension(FilePath) == ".rc")
+            {
+                File.WriteAllText(FilePath, Content, Encoding.Unicode);
+            }
+            else
+            {
+                FileUtilities.SaveTextToFileAsUtf8Bom(FilePath, Content);
+            }
+        }
+
+        static bool SwitchToPreview = true;
+
+        static List<string> ReleaseStringList = new List<string>
+        {
+            "DisplayName=\"NanaGet\"",
+            "Name=\"40174MouriNaruto.NanaGet\"",
+            "<DisplayName>NanaGet</DisplayName>",
+            "<Content Include=\"..\\Assets\\PackageAssets\\**\\*\">",
+            "NanaGet.ico",
+        };
+
+        static List<string> PreviewStringList = new List<string>
+        {
+            "DisplayName=\"NanaGet Preview\"",
+            "Name=\"40174MouriNaruto.NanaGetPreview\"",
+            "<DisplayName>NanaGet Preview</DisplayName>",
+            "<Content Include=\"..\\Assets\\PreviewPackageAssets\\**\\*\">",
+            "NanaGetPreview.ico",
+        };
+
+        static List<string> FileList = new List<string>
+        {
+            @"{0}\NanaGetPackage\Package.appxmanifest",
+            @"{0}\NanaGetPackage\NanaGetPackage.wapproj",
+            @"{0}\NanaGet\NanaGetResources.rc",
+        };
+
+        static void SwitchDevelopmentChannel()
+        {
+            foreach (var FilePath in FileList)
+            {
+                ReplaceFileContentViaStringList(
+                    string.Format(FilePath, RepositoryRoot),
+                    SwitchToPreview ? ReleaseStringList : PreviewStringList,
+                    SwitchToPreview ? PreviewStringList : ReleaseStringList);
+            }
+        }
+
         static void Main(string[] args)
         {
             RefreshAppxManifestVersion();
+
+            SwitchDevelopmentChannel();
 
             Console.WriteLine(
                 "NanaGet.RefreshPackageVersion task has been completed.");
