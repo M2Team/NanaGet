@@ -163,5 +163,27 @@
       <Version>1.0.659</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup>
+    <PRIResource Include="Strings\de\AboutPage.resw" />
+    <PRIResource Include="Strings\de\MainPage.resw" />
+    <PRIResource Include="Strings\de\NewTaskPage.resw" />
+    <PRIResource Include="Strings\de\SettingsPage.resw" />
+    <PRIResource Include="Strings\en\AboutPage.resw" />
+    <PRIResource Include="Strings\en\MainPage.resw" />
+    <PRIResource Include="Strings\en\NewTaskPage.resw" />
+    <PRIResource Include="Strings\en\SettingsPage.resw" />
+    <PRIResource Include="Strings\ja\AboutPage.resw" />
+    <PRIResource Include="Strings\ja\MainPage.resw" />
+    <PRIResource Include="Strings\ja\NewTaskPage.resw" />
+    <PRIResource Include="Strings\ja\SettingsPage.resw" />
+    <PRIResource Include="Strings\zh-Hans\AboutPage.resw" />
+    <PRIResource Include="Strings\zh-Hans\MainPage.resw" />
+    <PRIResource Include="Strings\zh-Hans\NewTaskPage.resw" />
+    <PRIResource Include="Strings\zh-Hans\SettingsPage.resw" />
+    <PRIResource Include="Strings\zh-Hant\AboutPage.resw" />
+    <PRIResource Include="Strings\zh-Hant\MainPage.resw" />
+    <PRIResource Include="Strings\zh-Hant\NewTaskPage.resw" />
+    <PRIResource Include="Strings\zh-Hant\SettingsPage.resw" />
+  </ItemGroup>
   <Import Project="..\Mile.Project.Windows\Mile.Project.Cpp.targets" />
 </Project>

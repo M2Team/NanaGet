@@ -30,10 +30,6 @@
       <DeploymentContent>true</DeploymentContent>
       <Link>Assets\%(RecursiveDir)%(FileName)%(Extension)</Link>
     </Content>
-    <!-- Internationalization Support -->
-    <PRIResource Include="Strings\**\*">
-      <Link>Strings\%(RecursiveDir)%(FileName)%(Extension)</Link>
-    </PRIResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NanaGet\NanaGet.vcxproj">

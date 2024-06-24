@@ -64,10 +64,90 @@
     <Filter Include="NanaGet.JsonRpc2">
       <UniqueIdentifier>{efcdc2b5-0e81-4be5-93c2-924c532eabde}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Strings">
+      <UniqueIdentifier>{33f4e89c-57a0-4ab4-8f57-0dc5d477ece8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Strings\de">
+      <UniqueIdentifier>{2fdb8067-3d03-4dbb-a5f9-cb6cd48c4b5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Strings\en">
+      <UniqueIdentifier>{9d409f21-9bdf-4b6f-8d55-6a071f71e8fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Strings\ja">
+      <UniqueIdentifier>{9ea66d82-b2b9-415f-b0a4-dcaad7d2362c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Strings\zh-Hans">
+      <UniqueIdentifier>{424eacd8-288e-4012-bbb9-f398f53e4a89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Strings\zh-Hant">
+      <UniqueIdentifier>{77821fc8-8d27-4d8f-a507-07b33578ffe4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="NanaGetResources.rc">
       <Filter>NanaGetResources</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <PRIResource Include="Strings\de\AboutPage.resw">
+      <Filter>Strings\de</Filter>
+    </PRIResource>
+    <PRIResource Include="Strings\de\MainPage.resw">
+      <Filter>Strings\de</Filter>
+    </PRIResource>
+    <PRIResource Include="Strings\de\NewTaskPage.resw">
+      <Filter>Strings\de</Filter>
+    </PRIResource>
+    <PRIResource Include="Strings\de\SettingsPage.resw">
+      <Filter>Strings\de</Filter>
+    </PRIResource>
+    <PRIResource Include="Strings\en\AboutPage.resw">
+      <Filter>Strings\en</Filter>
+    </PRIResource>
+    <PRIResource Include="Strings\en\MainPage.resw">
+      <Filter>Strings\en</Filter>
+    </PRIResource>
+    <PRIResource Include="Strings\en\NewTaskPage.resw">
+      <Filter>Strings\en</Filter>
+    </PRIResource>
+    <PRIResource Include="Strings\en\SettingsPage.resw">
+      <Filter>Strings\en</Filter>
+    </PRIResource>
+    <PRIResource Include="Strings\ja\AboutPage.resw">
+      <Filter>Strings\ja</Filter>
+    </PRIResource>
+    <PRIResource Include="Strings\ja\MainPage.resw">
+      <Filter>Strings\ja</Filter>
+    </PRIResource>
+    <PRIResource Include="Strings\ja\NewTaskPage.resw">
+      <Filter>Strings\ja</Filter>
+    </PRIResource>
+    <PRIResource Include="Strings\ja\SettingsPage.resw">
+      <Filter>Strings\ja</Filter>
+    </PRIResource>
+    <PRIResource Include="Strings\zh-Hans\AboutPage.resw">
+      <Filter>Strings\zh-Hans</Filter>
+    </PRIResource>
+    <PRIResource Include="Strings\zh-Hans\MainPage.resw">
+      <Filter>Strings\zh-Hans</Filter>
+    </PRIResource>
+    <PRIResource Include="Strings\zh-Hans\NewTaskPage.resw">
+      <Filter>Strings\zh-Hans</Filter>
+    </PRIResource>
+    <PRIResource Include="Strings\zh-Hans\SettingsPage.resw">
+      <Filter>Strings\zh-Hans</Filter>
+    </PRIResource>
+    <PRIResource Include="Strings\zh-Hant\AboutPage.resw">
+      <Filter>Strings\zh-Hant</Filter>
+    </PRIResource>
+    <PRIResource Include="Strings\zh-Hant\MainPage.resw">
+      <Filter>Strings\zh-Hant</Filter>
+    </PRIResource>
+    <PRIResource Include="Strings\zh-Hant\NewTaskPage.resw">
+      <Filter>Strings\zh-Hant</Filter>
+    </PRIResource>
+    <PRIResource Include="Strings\zh-Hant\SettingsPage.resw">
+      <Filter>Strings\zh-Hant</Filter>
+    </PRIResource>
   </ItemGroup>
 </Project>
