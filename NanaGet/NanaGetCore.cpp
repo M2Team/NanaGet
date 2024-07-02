@@ -29,23 +29,6 @@
 #include <winrt/Windows.Storage.h>
 #include <winrt/Windows.Storage.Streams.h>
 
-namespace NanaGet
-{
-    NLOHMANN_JSON_SERIALIZE_ENUM(NanaGet::Aria2UriStatus, {
-        { NanaGet::Aria2UriStatus::Used, "used" },
-        { NanaGet::Aria2UriStatus::Waiting, "waiting" }
-    })
-
-    NLOHMANN_JSON_SERIALIZE_ENUM(NanaGet::Aria2TaskStatus, {
-        { NanaGet::Aria2TaskStatus::Active, "active" },
-        { NanaGet::Aria2TaskStatus::Waiting, "waiting" },
-        { NanaGet::Aria2TaskStatus::Paused, "paused" },
-        { NanaGet::Aria2TaskStatus::Error, "error" },
-        { NanaGet::Aria2TaskStatus::Complete, "complete" },
-        { NanaGet::Aria2TaskStatus::Removed, "removed" }
-    })
-}
-
 namespace winrt
 {
     //using Windows::Networking::Sockets::MessageWebSocketReceiveMode;
