@@ -89,11 +89,13 @@ namespace NanaGet::JsonRpc2
          * @brief A number that indicates the error type that occurred.
          */
         std::int64_t Code;
+
         /**
          * @brief A string providing a short description of the error. The
          *        message SHOULD be limited to a concise single sentence.
          */
         std::string Message;
+
         /**
          * @brief A primitive or structured JSON value that contains additional
          *        information about the error. This may be omitted. The value
@@ -118,12 +120,14 @@ namespace NanaGet::JsonRpc2
          * @brief true if this JSON-RPC 2.0 call is succeed. Otherwise false.
          */
         bool IsSucceeded = false;
+
         /**
          * @brief The value of this member is determined by the method invoked
          *        on the Server if IsSucceeded is true, or return a JSON string
          *        which represents ErrorMessage.
          */
         std::string Message;
+
         /**
          * @brief It MUST be the same as the value of the id member in the
          *        request message. If there was an error in detecting the id
