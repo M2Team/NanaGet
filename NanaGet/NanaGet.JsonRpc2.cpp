@@ -31,6 +31,33 @@ std::string NanaGet::JsonRpc2::FromRequestMessage(
     }
 }
 
+bool NanaGet::JsonRpc2::ToNotificationMessage(
+    std::string const& Source,
+    NanaGet::JsonRpc2::NotificationMessage& Destination)
+{
+    nlohmann::json SourceJson;
+
+    try
+    {
+        SourceJson = nlohmann::json::parse(Source);
+    }
+    catch (...)
+    {
+        return false;
+    }
+
+    Destination.Method = Mile::Json::ToString(
+        Mile::Json::GetSubKey(SourceJson, "method"));
+
+    nlohmann::json Parameters = Mile::Json::GetSubKey(SourceJson, "params");
+    if (!Parameters.is_null())
+    {
+        Destination.Parameters = Parameters.dump(2);
+    }
+
+    return true;
+}
+
 std::string NanaGet::JsonRpc2::FromErrorMessage(
     NanaGet::JsonRpc2::ErrorMessage const& Value)
 {

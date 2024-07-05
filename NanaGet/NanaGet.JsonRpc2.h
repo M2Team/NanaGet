@@ -58,6 +58,31 @@ namespace NanaGet::JsonRpc2
         RequestMessage const& Value);
 
     /**
+     * @brief The notification message of a JSON-RPC 2.0 call.
+     */
+    struct NotificationMessage
+    {
+        /**
+         * @brief A string containing the name of the method to be invoked.
+         *        method names that begin with the word rpc followed by a period
+         *        character (U+002E or ASCII 46) are reserved for rpc-internal
+         *        methods and extensions and MUST NOT be used for anything else.
+         */
+        std::string Method;
+
+        /**
+         * @brief A structured JSON value that holds the parameter values to be
+         *        used during the invocation of the method. This member MAY be
+         *        omitted.
+         */
+        std::string Parameters;
+    };
+
+    bool ToNotificationMessage(
+        std::string const& Source,
+        NotificationMessage& Destination);
+
+    /**
      * @brief The message returned when a JSON-RPC 2.0 call encounters an error.
      */
     struct ErrorMessage
