@@ -71,49 +71,17 @@ namespace NanaGet
         winrt::hstring const& SubString,
         bool IgnoreCase);
 
-    enum class Aria2UriStatus : std::int32_t
-    {
-        Used = 0,
-        Waiting = 1,
-    };
-
-    struct Aria2UriInformation
-    {
-        std::string Uri;
-        Aria2UriStatus Status;
-    };
-
-    struct Aria2FileInformation
-    {
-        std::uint64_t Index;
-        std::string Path;
-        std::uint64_t Length;
-        std::uint64_t CompletedLength;
-        bool Selected;
-        std::vector<Aria2UriInformation> Uris;
-    };
-
-    enum class Aria2TaskStatus : std::int32_t
-    {
-        Active = 0,
-        Waiting = 1,
-        Paused = 2,
-        Error = 3,
-        Complete = 4,
-        Removed = 5,
-    };
-
     struct Aria2TaskInformation
     {
         std::string Gid;
-        Aria2TaskStatus Status;
+        NanaGet::Aria2::DownloadStatus Status;
         std::uint64_t TotalLength;
         std::uint64_t CompletedLength;
         std::uint64_t DownloadSpeed;
         std::uint64_t UploadSpeed;
         std::string InfoHash;
         std::string Dir;
-        std::vector<Aria2FileInformation> Files;
+        std::vector<NanaGet::Aria2::FileInformation> Files;
         std::string FriendlyName;
     };
 

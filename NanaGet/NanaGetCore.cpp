@@ -655,59 +655,14 @@ NanaGet::Aria2TaskInformation NanaGet::Aria2Instance::ParseTaskInformation(
     NanaGet::Aria2TaskInformation Result;
 
     Result.Gid = NanaGet::Aria2::FromDownloadGid(Information.Gid);
-    switch (Information.Status)
-    {
-    case NanaGet::Aria2::DownloadStatus::Active:
-        Result.Status = NanaGet::Aria2TaskStatus::Active;
-        break;
-    case NanaGet::Aria2::DownloadStatus::Waiting:
-        Result.Status = NanaGet::Aria2TaskStatus::Waiting;
-        break;
-    case NanaGet::Aria2::DownloadStatus::Paused:
-        Result.Status = NanaGet::Aria2TaskStatus::Paused;
-        break;
-    case NanaGet::Aria2::DownloadStatus::Complete:
-        Result.Status = NanaGet::Aria2TaskStatus::Complete;
-        break;
-    case NanaGet::Aria2::DownloadStatus::Removed:
-        Result.Status = NanaGet::Aria2TaskStatus::Removed;
-        break;
-    default:
-        Result.Status = NanaGet::Aria2TaskStatus::Error;
-        break;
-    }
+    Result.Status = Information.Status;
     Result.TotalLength = Information.TotalLength;
     Result.CompletedLength = Information.CompletedLength;
     Result.DownloadSpeed = Information.DownloadSpeed;
     Result.UploadSpeed = Information.UploadSpeed;
     Result.InfoHash = Information.InfoHash;
     Result.Dir = Information.Dir;
-    for (NanaGet::Aria2::FileInformation const& File : Information.Files)
-    {
-        NanaGet::Aria2FileInformation Current;
-        Current.Index = File.Index;
-        Current.Path = File.Path;
-        Current.Length = File.Length;
-        Current.CompletedLength = File.CompletedLength;
-        Current.Selected = File.Selected;
-        for (NanaGet::Aria2::UriInformation const& Uri : File.Uris)
-        {
-            NanaGet::Aria2UriInformation InnerCurrent;
-            InnerCurrent.Uri = Uri.Uri;
-            switch (Uri.Status)
-            {
-            case NanaGet::Aria2::UriStatus::Waiting:
-                InnerCurrent.Status = NanaGet::Aria2UriStatus::Waiting;
-                break;
-            default:
-                InnerCurrent.Status = NanaGet::Aria2UriStatus::Used;
-                break;
-            }
-            
-            Current.Uris.emplace_back(InnerCurrent);
-        }
-        Result.Files.emplace_back(Current);
-    }
+    Result.Files = Information.Files;
     Result.FriendlyName = NanaGet::Aria2::ToFriendlyName(Information);
 
     return Result;

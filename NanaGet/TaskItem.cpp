@@ -42,9 +42,9 @@ namespace winrt::NanaGet::implementation
             hstring Result;
 
             std::set<hstring> Uris;
-            for (Aria2FileInformation const& File : Information.Files)
+            for (NanaGet::Aria2::FileInformation const& File : Information.Files)
             {
-                for (Aria2UriInformation const& Item : File.Uris)
+                for (NanaGet::Aria2::UriInformation const& Item : File.Uris)
                 {
                     Uris.emplace(winrt::to_hstring(Item.Uri));
                 }
@@ -62,22 +62,22 @@ namespace winrt::NanaGet::implementation
 
         switch (Information.Status)
         {
-        case Aria2TaskStatus::Active:
+        case NanaGet::Aria2::DownloadStatus::Active:
             this->Status.Value = TaskStatus::Active;
             break;
-        case Aria2TaskStatus::Waiting:
+        case NanaGet::Aria2::DownloadStatus::Waiting:
             this->Status.Value = TaskStatus::Waiting;
             break;
-        case Aria2TaskStatus::Paused:
+        case NanaGet::Aria2::DownloadStatus::Paused:
             this->Status.Value = TaskStatus::Paused;
             break;
-        case Aria2TaskStatus::Error:
+        case NanaGet::Aria2::DownloadStatus::Error:
             this->Status.Value = TaskStatus::Error;
             break;
-        case Aria2TaskStatus::Complete:
+        case NanaGet::Aria2::DownloadStatus::Complete:
             this->Status.Value = TaskStatus::Complete;
             break;
-        case Aria2TaskStatus::Removed:
+        case NanaGet::Aria2::DownloadStatus::Removed:
             this->Status.Value = TaskStatus::Removed;
             break;
         default:
