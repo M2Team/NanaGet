@@ -486,7 +486,6 @@ std::string NanaGet::Aria2Instance::SimpleJsonRpcCall(
     std::string const& Parameters)
 {
     NanaGet::JsonRpc2::RequestMessage Request;
-    Request.IsNotification = false;
     Request.Method = MethodName;
     Request.Parameters = Parameters;
     Request.Identifier = winrt::to_string(NanaGet::CreateGuidString());

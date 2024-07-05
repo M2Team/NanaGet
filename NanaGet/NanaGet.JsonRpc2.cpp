@@ -19,10 +19,7 @@ std::string NanaGet::JsonRpc2::FromRequestMessage(
         ResultJson["jsonrpc"] = "2.0";
         ResultJson["method"] = Value.Method;
         ResultJson["params"] = nlohmann::json::parse(Value.Parameters);
-        if (!Value.IsNotification)
-        {
-            ResultJson["id"] = Value.Identifier;
-        }
+        ResultJson["id"] = Value.Identifier;
         return ResultJson.dump(2);
     }
     catch (...)

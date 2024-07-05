@@ -30,22 +30,20 @@ namespace NanaGet::JsonRpc2
     struct RequestMessage
     {
         /**
-         * @brief true if this request is a notification. Otherwise false.
-         */
-        bool IsNotification = false;
-        /**
          * @brief A string containing the name of the method to be invoked.
          *        method names that begin with the word rpc followed by a period
          *        character (U+002E or ASCII 46) are reserved for rpc-internal
          *        methods and extensions and MUST NOT be used for anything else.
          */
         std::string Method;
+
         /**
          * @brief A structured JSON value that holds the parameter values to be
          *        used during the invocation of the method. This member MAY be
          *        omitted.
          */
         std::string Parameters;
+
         /**
          * @brief An identifier established by the client. If it is not included
          *        it is assumed to be a notification. The value SHOULD normally
