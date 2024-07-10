@@ -10,7 +10,7 @@ namespace winrt::NanaGet::implementation
     using Windows::UI::Xaml::Visibility;
 
     TaskItem::TaskItem(
-        Aria2TaskInformation const& Information)
+        Aria2::DownloadInformation const& Information)
     {
         this->Update(Information);
     }
@@ -25,11 +25,13 @@ namespace winrt::NanaGet::implementation
     }
 
     void TaskItem::Update(
-        Aria2TaskInformation const& Information)
+        Aria2::DownloadInformation const& Information)
     {
-        this->Gid.Value = winrt::to_hstring(Information.Gid);
+        this->Gid.Value = winrt::to_hstring(
+            NanaGet::Aria2::FromDownloadGid(Information.Gid));
 
-        this->Name.Value = winrt::to_hstring(Information.FriendlyName);
+        this->Name.Value = winrt::to_hstring(
+            NanaGet::Aria2::ToFriendlyName(Information));
 
         if (!Information.InfoHash.empty())
         {

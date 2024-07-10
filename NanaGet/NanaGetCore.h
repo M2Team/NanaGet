@@ -71,20 +71,6 @@ namespace NanaGet
         winrt::hstring const& SubString,
         bool IgnoreCase);
 
-    struct Aria2TaskInformation
-    {
-        std::string Gid;
-        Aria2::DownloadStatus Status;
-        std::uint64_t TotalLength;
-        std::uint64_t CompletedLength;
-        std::uint64_t DownloadSpeed;
-        std::uint64_t UploadSpeed;
-        std::string InfoHash;
-        std::string Dir;
-        std::vector<Aria2::FileInformation> Files;
-        std::string FriendlyName;
-    };
-
     class Aria2Instance
     {
     public:
@@ -133,7 +119,7 @@ namespace NanaGet
 
         void RefreshInformation();
 
-        Aria2TaskInformation GetTaskInformation(
+        Aria2::DownloadInformation GetTaskInformation(
             std::string const& Gid);
 
         std::vector<std::string> GetTaskList();
@@ -174,10 +160,7 @@ namespace NanaGet
         winrt::HttpClient m_HttpClient;
 
         winrt::slim_mutex m_InstanceLock;
-        NanaGet::Aria2::GlobalStatusInformation m_GlobalStatus;
-
-        Aria2TaskInformation ParseTaskInformation(
-            nlohmann::json const& Value);
+        Aria2::GlobalStatusInformation m_GlobalStatus;
     };
 
     class LocalAria2Instance : public Aria2Instance

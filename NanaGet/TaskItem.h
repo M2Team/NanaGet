@@ -22,12 +22,12 @@ namespace winrt::NanaGet::implementation
     public:
 
         TaskItem(
-            Aria2TaskInformation const& Information);
+            Aria2::DownloadInformation const& Information);
 
         void Notify();
 
         void Update(
-            Aria2TaskInformation const& Information);
+            Aria2::DownloadInformation const& Information);
 
         Mile::WinRT::Property<hstring> Gid;
         Mile::WinRT::Property<hstring> Name;

@@ -349,7 +349,7 @@ namespace winrt::NanaGet::implementation
 
         winrt::hstring CurrentSearchFilter = this->m_SearchFilter;
 
-        std::vector<Aria2TaskInformation> Tasks;
+        std::vector<Aria2::DownloadInformation> Tasks;
 
         for (std::string const& Gid : NanaGet::LocalInstance->GetTaskList())
         {
@@ -357,17 +357,18 @@ namespace winrt::NanaGet::implementation
         }
 
         std::set<winrt::hstring> Gids;
-        for (Aria2TaskInformation const& Task : Tasks)
+        for (Aria2::DownloadInformation const& Task : Tasks)
         {
             if (!NanaGet::FindSubString(
-                winrt::to_hstring(Task.FriendlyName),
+                winrt::to_hstring(NanaGet::Aria2::ToFriendlyName(Task)),
                 CurrentSearchFilter,
                 true))
             {
                 continue;
             }
 
-            Gids.emplace(winrt::to_hstring(Task.Gid));
+            Gids.emplace(winrt::to_hstring(
+                NanaGet::Aria2::FromDownloadGid(Task.Gid)));
         }
 
         bool NeedFullRefresh = false;
@@ -381,10 +382,10 @@ namespace winrt::NanaGet::implementation
         else if (this->m_Gids != Gids)
         {
             std::vector<NanaGet::TaskItem> RawTasks;
-            for (Aria2TaskInformation const& Task : Tasks)
+            for (Aria2::DownloadInformation const& Task : Tasks)
             {
                 if (!NanaGet::FindSubString(
-                    winrt::to_hstring(Task.FriendlyName),
+                    winrt::to_hstring(NanaGet::Aria2::ToFriendlyName(Task)),
                     CurrentSearchFilter,
                     true))
                 {
@@ -405,11 +406,11 @@ namespace winrt::NanaGet::implementation
 
         if (!NeedFullRefresh && this->m_Tasks)
         {
-            std::map<winrt::hstring, Aria2TaskInformation> RawTasks;
-            for (Aria2TaskInformation const& Task : Tasks)
+            std::map<winrt::hstring, Aria2::DownloadInformation> RawTasks;
+            for (Aria2::DownloadInformation const& Task : Tasks)
             {
                 RawTasks.emplace(std::pair(
-                    winrt::to_hstring(Task.Gid),
+                    winrt::to_hstring(NanaGet::Aria2::FromDownloadGid(Task.Gid)),
                     Task));
             }
 

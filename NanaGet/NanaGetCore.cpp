@@ -389,7 +389,7 @@ void NanaGet::Aria2Instance::RefreshInformation()
     }
 }
 
-NanaGet::Aria2TaskInformation NanaGet::Aria2Instance::GetTaskInformation(
+NanaGet::Aria2::DownloadInformation NanaGet::Aria2Instance::GetTaskInformation(
     std::string const& Gid)
 {
     nlohmann::json Parameters;
@@ -399,7 +399,7 @@ NanaGet::Aria2TaskInformation NanaGet::Aria2Instance::GetTaskInformation(
     nlohmann::json ResponseJson = nlohmann::json::parse(
         this->SimpleJsonRpcCall("aria2.tellStatus", Parameters.dump(2)));
 
-    return this->ParseTaskInformation(ResponseJson);
+    return NanaGet::Aria2::ToDownloadInformation(ResponseJson);
 }
 
 std::vector<std::string> NanaGet::Aria2Instance::GetTaskList()
@@ -617,28 +617,6 @@ void NanaGet::Aria2Instance::UpdateInstance(
 //
 //    this->CloseMessageWebSocket();
 //}
-
-NanaGet::Aria2TaskInformation NanaGet::Aria2Instance::ParseTaskInformation(
-    nlohmann::json const& Value)
-{
-    NanaGet::Aria2::DownloadInformation Information =
-        NanaGet::Aria2::ToDownloadInformation(Value);
-
-    NanaGet::Aria2TaskInformation Result;
-
-    Result.Gid = NanaGet::Aria2::FromDownloadGid(Information.Gid);
-    Result.Status = Information.Status;
-    Result.TotalLength = Information.TotalLength;
-    Result.CompletedLength = Information.CompletedLength;
-    Result.DownloadSpeed = Information.DownloadSpeed;
-    Result.UploadSpeed = Information.UploadSpeed;
-    Result.InfoHash = Information.InfoHash;
-    Result.Dir = Information.Dir;
-    Result.Files = Information.Files;
-    Result.FriendlyName = NanaGet::Aria2::ToFriendlyName(Information);
-
-    return Result;
-}
 
 NanaGet::LocalAria2Instance::LocalAria2Instance()
 {
