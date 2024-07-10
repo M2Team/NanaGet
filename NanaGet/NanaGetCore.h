@@ -74,14 +74,14 @@ namespace NanaGet
     struct Aria2TaskInformation
     {
         std::string Gid;
-        NanaGet::Aria2::DownloadStatus Status;
+        Aria2::DownloadStatus Status;
         std::uint64_t TotalLength;
         std::uint64_t CompletedLength;
         std::uint64_t DownloadSpeed;
         std::uint64_t UploadSpeed;
         std::string InfoHash;
         std::string Dir;
-        std::vector<NanaGet::Aria2::FileInformation> Files;
+        std::vector<Aria2::FileInformation> Files;
         std::string FriendlyName;
     };
 
