@@ -597,39 +597,11 @@ void NanaGet::Aria2Instance::UpdateInstance(
 //        return;
 //    }
 //
-//    try
+//    NanaGet::JsonRpc2::NotificationMessage Response;
+//    if (NanaGet::JsonRpc2::ToNotificationMessage(Message, Response))
 //    {
 //
 //    }
-//    catch (const std::exception&)
-//    {
-//
-//    }
-//
-//
-//    /*nlohmann::json ResponseJson;
-//    try
-//    {
-//        ResponseJson = nlohmann::json::parse(ResponseString);
-//    }
-//    catch (std::exception const& ex)
-//    {
-//        throw winrt::hresult_illegal_method_call(winrt::to_hstring(ex.what()));
-//    }
-//
-//    if ("2.0" != ResponseJson["jsonrpc"].get<std::string>() ||
-//        Identifier != ResponseJson["id"].get<std::string>())
-//    {
-//        throw winrt::hresult_illegal_method_call();
-//    }
-//
-//    if (ResponseJson.end() != ResponseJson.find("error"))
-//    {
-//        throw winrt::hresult_illegal_method_call(
-//            winrt::to_hstring(ResponseJson["error"].get<std::string>()));
-//    }
-//ResponseJson["result"].dump(2);*/
-//    
 //
 //    ::OutputDebugStringW(Mile::FormatWideString(
 //        L"\r\n\r\n%s\r\n\r\n",
