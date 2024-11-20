@@ -26,6 +26,9 @@
 
 namespace NanaGet::Aria2
 {
+    bool ToBoolean(
+        nlohmann::json const& Value);
+
     /**
      * @brief The GID (or gid) is a key to manage each download. Each download
      *        will be assigned a unique GID. The GID is stored as 64-bit binary

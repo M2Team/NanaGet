@@ -12,6 +12,13 @@
 
 #include <Mile.Helpers.CppBase.h>
 
+bool NanaGet::Aria2::ToBoolean(
+    nlohmann::json const& Value)
+{
+    std::string RawValue = Mile::Json::ToString(Value);
+    return (0 == std::strcmp(RawValue.c_str(), "true"));
+}
+
 std::string NanaGet::Aria2::FromDownloadGid(
     NanaGet::Aria2::DownloadGid const& Value)
 {
@@ -95,16 +102,8 @@ NanaGet::Aria2::FileInformation NanaGet::Aria2::ToFileInformation(
     Result.CompletedLength = Mile::ToUInt64(
         Mile::Json::ToString(Mile::Json::GetSubKey(Value, "completedLength")));
 
-    std::string Selected = Mile::Json::ToString(
+    Result.Selected = NanaGet::Aria2::ToBoolean(
         Mile::Json::GetSubKey(Value, "selected"));
-    if (0 == std::strcmp(Selected.c_str(), "true"))
-    {
-        Result.Selected = true;
-    }
-    else if (0 == std::strcmp(Selected.c_str(), "false"))
-    {
-        Result.Selected = false;
-    }
 
     for (nlohmann::json const& Uri : Mile::Json::ToArray(
         Mile::Json::GetSubKey(Value, "uris")))
@@ -209,16 +208,8 @@ NanaGet::Aria2::DownloadInformation NanaGet::Aria2::ToDownloadInformation(
     Result.NumSeeders = Mile::ToUInt64(
         Mile::Json::ToString(Mile::Json::GetSubKey(Value, "numSeeders")));
 
-    std::string Seeder = Mile::Json::ToString(
+    Result.Seeder = NanaGet::Aria2::ToBoolean(
         Mile::Json::GetSubKey(Value, "seeder"));
-    if (0 == std::strcmp(Seeder.c_str(), "true"))
-    {
-        Result.Seeder = true;
-    }
-    else if (0 == std::strcmp(Seeder.c_str(), "false"))
-    {
-        Result.Seeder = false;
-    }
 
     Result.PieceLength = Mile::ToUInt64(
         Mile::Json::ToString(Mile::Json::GetSubKey(Value, "pieceLength")));
@@ -262,16 +253,8 @@ NanaGet::Aria2::DownloadInformation NanaGet::Aria2::ToDownloadInformation(
     Result.VerifiedLength = Mile::ToUInt64(
         Mile::Json::ToString(Mile::Json::GetSubKey(Value, "verifiedLength")));
 
-    std::string VerifyIntegrityPending = Mile::Json::ToString(
+    Result.VerifyIntegrityPending = NanaGet::Aria2::ToBoolean(
         Mile::Json::GetSubKey(Value, "verifyIntegrityPending"));
-    if (0 == std::strcmp(VerifyIntegrityPending.c_str(), "true"))
-    {
-        Result.VerifyIntegrityPending = true;
-    }
-    else if (0 == std::strcmp(VerifyIntegrityPending.c_str(), "false"))
-    {
-        Result.VerifyIntegrityPending = false;
-    }
 
     return Result;
 }
@@ -326,27 +309,11 @@ NanaGet::Aria2::PeerInformation NanaGet::Aria2::ToPeerInformation(
     Result.Bitfield = Mile::Json::ToString(
         Mile::Json::GetSubKey(Value, "bitfield"));
 
-    std::string AmChoking = Mile::Json::ToString(
+    Result.AmChoking = NanaGet::Aria2::ToBoolean(
         Mile::Json::GetSubKey(Value, "amChoking"));
-    if (0 == std::strcmp(AmChoking.c_str(), "true"))
-    {
-        Result.AmChoking = true;
-    }
-    else if (0 == std::strcmp(AmChoking.c_str(), "false"))
-    {
-        Result.AmChoking = false;
-    }
 
-    std::string PeerChoking = Mile::Json::ToString(
+    Result.PeerChoking = NanaGet::Aria2::ToBoolean(
         Mile::Json::GetSubKey(Value, "peerChoking"));
-    if (0 == std::strcmp(PeerChoking.c_str(), "true"))
-    {
-        Result.PeerChoking = true;
-    }
-    else if (0 == std::strcmp(PeerChoking.c_str(), "false"))
-    {
-        Result.PeerChoking = false;
-    }
 
     Result.DownloadSpeed = Mile::ToUInt64(Mile::Json::ToString(
         Mile::Json::GetSubKey(Value, "downloadSpeed")));
@@ -354,16 +321,8 @@ NanaGet::Aria2::PeerInformation NanaGet::Aria2::ToPeerInformation(
     Result.UploadSpeed = Mile::ToUInt64(Mile::Json::ToString(
         Mile::Json::GetSubKey(Value, "uploadSpeed")));
 
-    std::string Seeder = Mile::Json::ToString(
+    Result.Seeder = NanaGet::Aria2::ToBoolean(
         Mile::Json::GetSubKey(Value, "seeder"));
-    if (0 == std::strcmp(Seeder.c_str(), "true"))
-    {
-        Result.Seeder = true;
-    }
-    else if (0 == std::strcmp(Seeder.c_str(), "false"))
-    {
-        Result.Seeder = false;
-    }
 
     return Result;
 }
