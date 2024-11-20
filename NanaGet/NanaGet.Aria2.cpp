@@ -12,28 +12,6 @@
 
 #include <Mile.Helpers.CppBase.h>
 
-namespace NanaGet::Aria2
-{
-    NLOHMANN_JSON_SERIALIZE_ENUM(NanaGet::Aria2::DownloadStatus, {
-        { NanaGet::Aria2::DownloadStatus::Active, "active" },
-        { NanaGet::Aria2::DownloadStatus::Waiting, "waiting" },
-        { NanaGet::Aria2::DownloadStatus::Paused, "paused" },
-        { NanaGet::Aria2::DownloadStatus::Complete, "complete" },
-        { NanaGet::Aria2::DownloadStatus::Error, "error" },
-        { NanaGet::Aria2::DownloadStatus::Removed, "removed" }
-    })
-
-    NLOHMANN_JSON_SERIALIZE_ENUM(NanaGet::Aria2::UriStatus, {
-       { NanaGet::Aria2::UriStatus::Used, "used" },
-       { NanaGet::Aria2::UriStatus::Waiting, "waiting" }
-    });
-
-    NLOHMANN_JSON_SERIALIZE_ENUM(NanaGet::Aria2::BitTorrentFileMode, {
-       { NanaGet::Aria2::BitTorrentFileMode::Single, "single" },
-       { NanaGet::Aria2::BitTorrentFileMode::Multi, "multi" }
-    });
-}
-
 std::string NanaGet::Aria2::FromDownloadGid(
     NanaGet::Aria2::DownloadGid const& Value)
 {
@@ -49,27 +27,43 @@ NanaGet::Aria2::DownloadGid NanaGet::Aria2::ToDownloadGid(
 NanaGet::Aria2::DownloadStatus NanaGet::Aria2::ToDownloadStatus(
     nlohmann::json const& Value)
 {
-    try
+    std::string RawValue = Mile::Json::ToString(Value);
+
+    if (0 == std::strcmp(RawValue.c_str(), "active"))
     {
-        return Value.get<NanaGet::Aria2::DownloadStatus>();
+        return NanaGet::Aria2::DownloadStatus::Active;
     }
-    catch (...)
+    else if (0 == std::strcmp(RawValue.c_str(), "waiting"))
     {
-        return NanaGet::Aria2::DownloadStatus::Error;
+        return NanaGet::Aria2::DownloadStatus::Waiting;
     }
+    else if (0 == std::strcmp(RawValue.c_str(), "paused"))
+    {
+        return NanaGet::Aria2::DownloadStatus::Paused;
+    }
+    else if (0 == std::strcmp(RawValue.c_str(), "complete"))
+    {
+        return NanaGet::Aria2::DownloadStatus::Complete;
+    }
+    else if (0 == std::strcmp(RawValue.c_str(), "removed"))
+    {
+        return NanaGet::Aria2::DownloadStatus::Removed;
+    }
+
+    return NanaGet::Aria2::DownloadStatus::Error;
 }
 
 NanaGet::Aria2::UriStatus NanaGet::Aria2::ToUriStatus(
     nlohmann::json const& Value)
 {
-    try
+    std::string RawValue = Mile::Json::ToString(Value);
+
+    if (0 == std::strcmp(RawValue.c_str(), "waiting"))
     {
-        return Value.get<NanaGet::Aria2::UriStatus>();
+        return NanaGet::Aria2::UriStatus::Waiting;
     }
-    catch (...)
-    {
-        return NanaGet::Aria2::UriStatus::Used;
-    }
+
+    return NanaGet::Aria2::UriStatus::Used;
 }
 
 NanaGet::Aria2::UriInformation NanaGet::Aria2::ToUriInformation(
@@ -125,14 +119,18 @@ NanaGet::Aria2::FileInformation NanaGet::Aria2::ToFileInformation(
 NanaGet::Aria2::BitTorrentFileMode NanaGet::Aria2::ToBitTorrentFileMode(
     nlohmann::json const& Value)
 {
-    try
+    std::string RawValue = Mile::Json::ToString(Value);
+
+    if (0 == std::strcmp(RawValue.c_str(), "single"))
     {
-        return Value.get<NanaGet::Aria2::BitTorrentFileMode>();
+        return NanaGet::Aria2::BitTorrentFileMode::Single;
     }
-    catch (...)
+    else if (0 == std::strcmp(RawValue.c_str(), "multi"))
     {
-        return NanaGet::Aria2::BitTorrentFileMode::None;
+        return NanaGet::Aria2::BitTorrentFileMode::Multi;
     }
+
+    return NanaGet::Aria2::BitTorrentFileMode::None;
 }
 
 NanaGet::Aria2::BitTorrentInfoDictionary NanaGet::Aria2::ToBitTorrentInfoDictionary(
