@@ -128,7 +128,7 @@ winrt::hstring NanaGet::CreateGuidString()
 winrt::hstring NanaGet::ConvertByteSizeToString(
     std::uint64_t ByteSize)
 {
-    const wchar_t* Systems[] =
+    const wchar_t* Units[] =
     {
         L"Byte",
         L"Bytes",
@@ -140,34 +140,29 @@ winrt::hstring NanaGet::ConvertByteSizeToString(
         L"EiB"
     };
 
-    size_t nSystem = 0;
-    double result = static_cast<double>(ByteSize);
+    std::size_t UnitIndex = 0;
+    double Result = static_cast<double>(ByteSize);
 
     if (ByteSize > 1)
     {
         for (
-            nSystem = 1;
-            nSystem < sizeof(Systems) / sizeof(*Systems);
-            ++nSystem)
+            UnitIndex = 1;
+            UnitIndex < sizeof(Units) / sizeof(*Units);
+            ++UnitIndex)
         {
-            if (1024.0 > result)
+            if (1024.0 > Result)
                 break;
 
-            result /= 1024.0;
+            Result /= 1024.0;
         }
 
-        result = static_cast<uint64_t>(result * 100) / 100.0;
-    }
-
-    if (true)
-    {
-
+        Result = static_cast<uint64_t>(Result * 100) / 100.0;
     }
 
     return winrt::hstring(Mile::FormatWideString(
-        nSystem ? L"%.2f %s" : L"%.0f %s",
-        result,
-        Systems[nSystem]));
+        (UnitIndex > 1) ? L"%.2f %s" : L"%.0f %s",
+        Result,
+        Units[UnitIndex]));
 }
 
 winrt::hstring NanaGet::ConvertSecondsToTimeString(
