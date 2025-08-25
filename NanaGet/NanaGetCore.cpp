@@ -139,16 +139,19 @@ winrt::hstring NanaGet::ConvertByteSizeToString(
         L"PiB",
         L"EiB"
     };
+    const std::size_t UnitsCount = sizeof(Units) / sizeof(*Units);
+
+    // Output Format:
+    // For ByteSize is 0 or 1: x Byte
+    // For ByteSize is from 2 to 1023: x Bytes
+    // For ByteSize is larger than 1023: x.xx {KiB, MiB, GiB, TiB, PiB, EiB}
 
     std::size_t UnitIndex = 0;
     double Result = static_cast<double>(ByteSize);
 
     if (ByteSize > 1)
     {
-        for (
-            UnitIndex = 1;
-            UnitIndex < sizeof(Units) / sizeof(*Units);
-            ++UnitIndex)
+        for (UnitIndex = 1; UnitIndex < UnitsCount; ++UnitIndex)
         {
             if (1024.0 > Result)
                 break;
@@ -156,7 +159,8 @@ winrt::hstring NanaGet::ConvertByteSizeToString(
             Result /= 1024.0;
         }
 
-        Result = static_cast<uint64_t>(Result * 100) / 100.0;
+        // Keep two digits after the decimal point.
+        Result = static_cast<std::uint64_t>(Result * 100) / 100.0;
     }
 
     return winrt::hstring(Mile::FormatWideString(
