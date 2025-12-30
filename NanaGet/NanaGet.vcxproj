@@ -153,23 +153,23 @@
     <ResourceCompile Include="NanaGetResources.rc" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Mile.Xaml">
-      <Version>2.3.1064</Version>
-    </PackageReference>
     <PackageReference Include="Mile.Windows.Helpers">
-      <Version>1.0.645</Version>
+      <Version>1.0.952</Version>
+    </PackageReference>
+    <PackageReference Include="Mile.Windows.UniCrt">
+      <Version>1.2.410</Version>
+    </PackageReference>
+    <PackageReference Include="Mile.Xaml">
+      <Version>2.5.1250</Version>
+    </PackageReference>
+    <PackageReference Include="Mile.Json">
+      <Version>1.0.1057</Version>
     </PackageReference>
     <PackageReference Include="Mile.Aria2">
       <Version>1.0.230</Version>
     </PackageReference>
     <PackageReference Include="wtl">
       <Version>10.0.10320</Version>
-    </PackageReference>
-    <PackageReference Include="Mile.Json">
-      <Version>1.0.659</Version>
-    </PackageReference>
-    <PackageReference Include="Mile.Windows.UniCrt">
-      <Version>1.2.410</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
