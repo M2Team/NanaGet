@@ -1,9 +1,9 @@
 ﻿/*
- * PROJECT:   NanaGet
- * FILE:      NanaGet.JsonRpc2.h
- * PURPOSE:   Definition for the NanaGet.JsonRpc2
+ * PROJECT:    NanaGet
+ * FILE:       NanaGet.JsonRpc2.h
+ * PURPOSE:    Definition for the NanaGet.JsonRpc2
  *
- * LICENSE:   The MIT License
+ * LICENSE:    The MIT License
  *
  * MAINTAINER: MouriNaruto (Kenji.Mouri@outlook.com)
  */
