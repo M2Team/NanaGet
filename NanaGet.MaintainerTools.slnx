@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="NanaGet.ProjectAssetsGenerator/NanaGet.ProjectAssetsGenerator.csproj" />
+  <Project Path="NanaGet.RefreshPackageVersion/NanaGet.RefreshPackageVersion.csproj" />
+</Solution>

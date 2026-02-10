@@ -29,7 +29,7 @@ Run `BuildAllTargets.bat` in the root of the repository.
 
 #### How to modify or debugging NanaGet
 
-Open `NanaGet.sln` in the root of the repository.
+Open `NanaGet.slnx` in the root of the repository.
 
 #### Code style and conventions
 

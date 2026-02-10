@@ -1,0 +1,10 @@
+<Solution>
+  <Configurations>
+    <Platform Name="ARM64" />
+    <Platform Name="x64" />
+  </Configurations>
+  <Project Path="NanaGet/NanaGet.vcxproj" Id="4c5f187e-4734-489e-9d80-200b3ef14dca" />
+  <Project Path="NanaGetPackage/NanaGetPackage.wapproj" Type="c7167f0d-bc9f-4e6e-afe1-012c56b48db5">
+    <Deploy />
+  </Project>
+</Solution>
