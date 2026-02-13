@@ -7,7 +7,6 @@
   Windows AppX language default fallback issue feedback by GiorgioUrbani.
 - Defer package updates while the app is running in Windows 11 23H2 or later.
   (Suggested by AndromedaMelody.)
-- Update the icon assets with optimized assets to reduce the binary size.
 - Use Mile.Windows.UniCrt instead of VC-LTL.
 - Migrate from Mile.Project.Windows to Mile.Project.Configurations.
 - Update Mile.Windows.Helpers to 1.0.1171.
