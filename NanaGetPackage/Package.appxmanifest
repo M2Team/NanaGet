@@ -10,12 +10,12 @@
   IgnorableNamespaces="uap rescap uap16 uap17">
 
   <Identity
-    Name="40174MouriNaruto.NanaGetPreview"
+    Name="40174MouriNaruto.NanaGet"
     Publisher="CN=E310A153-74A9-4D81-800B-857A8D58408A"
-    Version="1.2.791.0" />
+    Version="1.3.1390.0" />
 
   <Properties>
-    <DisplayName>NanaGet Preview</DisplayName>
+    <DisplayName>NanaGet</DisplayName>
     <PublisherDisplayName>Kenji Mouri</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
     <uap16:UpdateWhileInUse>defer</uap16:UpdateWhileInUse>
@@ -40,7 +40,7 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="NanaGet Preview"
+        DisplayName="NanaGet"
         Description="NanaGet"
         BackgroundColor="transparent"
         Square150x150Logo="Assets\Square150x150Logo.png"

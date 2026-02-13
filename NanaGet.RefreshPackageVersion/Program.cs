@@ -6,7 +6,7 @@ namespace NanaGet.RefreshPackageVersion
 {
     internal class Program
     {
-        static (int Major, int Minor) Version = (1, 2);
+        static (int Major, int Minor) Version = (1, 3);
         static string BuildStartDay = "2022-04-25";
 
         static string GenerateVersionString()
@@ -77,7 +77,7 @@ namespace NanaGet.RefreshPackageVersion
             }
         }
 
-        static bool SwitchToPreview = true;
+        static bool SwitchToPreview = false;
 
         static List<string> ReleaseStringList = new List<string>
         {
