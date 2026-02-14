@@ -160,7 +160,7 @@
       <Version>1.2.410</Version>
     </PackageReference>
     <PackageReference Include="Mile.Xaml">
-      <Version>2.5.1250</Version>
+      <Version>2.5.1616</Version>
     </PackageReference>
     <PackageReference Include="Mile.Json">
       <Version>1.0.1057</Version>
