@@ -359,30 +359,12 @@ int NanaGet::MainWindow::ShowXamlDialog(
 
     ::EnableWindow(this->m_hWnd, FALSE);
 
-    MSG Message;
-    while (::GetMessageW(&Message, nullptr, 0, 0))
-    {
-        // Workaround for capturing Alt+F4 in applications with XAML Islands.
-        // Reference: https://github.com/microsoft/microsoft-ui-xaml/issues/2408
-        if (Message.message == WM_SYSKEYDOWN && Message.wParam == VK_F4)
-        {
-            ::SendMessageW(
-                ::GetAncestor(Message.hwnd, GA_ROOT),
-                Message.message,
-                Message.wParam,
-                Message.lParam);
-
-            continue;
-        }
-
-        ::TranslateMessage(&Message);
-        ::DispatchMessageW(&Message);
-    }
+    int Result = ::MileXamlContentWindowDefaultMessageLoop();
 
     ::EnableWindow(this->m_hWnd, TRUE);
     ::SetActiveWindow(this->m_hWnd);
 
-    return static_cast<int>(Message.wParam);
+    return Result;
 }
 
 namespace
