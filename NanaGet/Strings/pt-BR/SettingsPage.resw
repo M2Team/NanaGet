@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="ApplyButton.Content" xml:space="preserve">
+    <value>Aplicar</value>
+    <comment>Aplicar</comment>
+  </data>
+  <data name="CancelButton.Content" xml:space="preserve">
+    <value>Cancelar</value>
+    <comment>Cancelar</comment>
+  </data>
+  <data name="CustomDownloadFolderBrowseButton.Content" xml:space="preserve">
+    <value>Procurar para modificar</value>
+    <comment>Procurar para modificar</comment>
+  </data>
+  <data name="DefaultDownloadFolderTitle.Text" xml:space="preserve">
+    <value>Pasta de download padrão</value>
+    <comment>Pasta de download padrão</comment>
+  </data>
+  <data name="GridTitleTextBlock.Text" xml:space="preserve">
+    <value>Configurações</value>
+    <comment>Configurações</comment>
+  </data>
+  <data name="UseCustomFolderCheckBox.Content" xml:space="preserve">
+    <value>Usar uma pasta personalizada em vez da última pasta usada</value>
+    <comment>Usar uma pasta personalizada em vez da última pasta usada</comment>
+  </data>
+</root>
