@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="CancelButton.Content" xml:space="preserve">
+    <value>Cancelar</value>
+    <comment>Cancel</comment>
+  </data>
+  <data name="DownloadButton.Content" xml:space="preserve">
+    <value>Baixar</value>
+    <comment>Download</comment>
+  </data>
+  <data name="DownloadSourceBrowseButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Procurar arquivo BitTorrent ou Metalink</value>
+    <comment>Browse BitTorrent or Metalink file</comment>
+  </data>
+  <data name="DownloadSourceBrowseButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Procurar arquivo BitTorrent ou Metalink</value>
+    <comment>Browse BitTorrent or Metalink file</comment>
+  </data>
+  <data name="DownloadSourceTextBox.PlaceholderText" xml:space="preserve">
+    <value>Insira a fonte do download aqui</value>
+    <comment>Please input the download source here.</comment>
+  </data>
+  <data name="DownloadSourceTitle.Text" xml:space="preserve">
+    <value>Fonte do download</value>
+    <comment>Download Source</comment>
+  </data>
+  <data name="FileNameTextBox.PlaceholderText" xml:space="preserve">
+    <value>Insira o nome do arquivo aqui</value>
+    <comment>Please input the file name here.</comment>
+  </data>
+  <data name="FileNameTitle.Text" xml:space="preserve">
+    <value>Nome do arquivo</value>
+    <comment>File Name</comment>
+  </data>
+  <data name="GridTitleTextBlock.Text" xml:space="preserve">
+    <value>Nova tarefa</value>
+    <comment>New Task</comment>
+  </data>
+  <data name="SaveFolderBrowseButton.AutomationProperties.Name" xml:space="preserve">
+    <value>Procurar pasta para salvar</value>
+    <comment>Browse save folder</comment>
+  </data>
+  <data name="SaveFolderBrowseButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Procurar pasta para salvar</value>
+    <comment>Browse save folder</comment>
+  </data>
+  <data name="SaveFolderTitle.Text" xml:space="preserve">
+    <value>Pasta para salvar</value>
+    <comment>Save Folder</comment>
+  </data>
+</root>

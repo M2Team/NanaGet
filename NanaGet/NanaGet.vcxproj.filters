@@ -73,6 +73,9 @@
     <Filter Include="Strings\en">
       <UniqueIdentifier>{9d409f21-9bdf-4b6f-8d55-6a071f71e8fb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Strings\pt-BR">
+      <UniqueIdentifier>{f7b5f2cb-cb1f-4d5f-a2a3-5e7524dff7d6}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Strings\ja">
       <UniqueIdentifier>{9ea66d82-b2b9-415f-b0a4-dcaad7d2362c}</UniqueIdentifier>
     </Filter>
@@ -112,6 +115,18 @@
     </PRIResource>
     <PRIResource Include="Strings\en\SettingsPage.resw">
       <Filter>Strings\en</Filter>
+    </PRIResource>
+    <PRIResource Include="Strings\pt-BR\AboutPage.resw">
+      <Filter>Strings\pt-BR</Filter>
+    </PRIResource>
+    <PRIResource Include="Strings\pt-BR\MainPage.resw">
+      <Filter>Strings\pt-BR</Filter>
+    </PRIResource>
+    <PRIResource Include="Strings\pt-BR\NewTaskPage.resw">
+      <Filter>Strings\pt-BR</Filter>
+    </PRIResource>
+    <PRIResource Include="Strings\pt-BR\SettingsPage.resw">
+      <Filter>Strings\pt-BR</Filter>
     </PRIResource>
     <PRIResource Include="Strings\ja\AboutPage.resw">
       <Filter>Strings\ja</Filter>
