@@ -2,26 +2,26 @@
 <root>
   <data name="ApplyButton.Content" xml:space="preserve">
     <value>Aplicar</value>
-    <comment>Aplicar</comment>
+    <comment>Apply</comment>
   </data>
   <data name="CancelButton.Content" xml:space="preserve">
     <value>Cancelar</value>
-    <comment>Cancelar</comment>
+    <comment>Cancel</comment>
   </data>
   <data name="CustomDownloadFolderBrowseButton.Content" xml:space="preserve">
     <value>Procurar para modificar</value>
-    <comment>Procurar para modificar</comment>
+    <comment>Browse to modify</comment>
   </data>
   <data name="DefaultDownloadFolderTitle.Text" xml:space="preserve">
     <value>Pasta de download padrão</value>
-    <comment>Pasta de download padrão</comment>
+    <comment>Default download folder</comment>
   </data>
   <data name="GridTitleTextBlock.Text" xml:space="preserve">
     <value>Configurações</value>
-    <comment>Configurações</comment>
+    <comment>Settings</comment>
   </data>
   <data name="UseCustomFolderCheckBox.Content" xml:space="preserve">
     <value>Usar uma pasta personalizada em vez da última pasta usada</value>
-    <comment>Usar uma pasta personalizada em vez da última pasta usada</comment>
+    <comment>Use custom folder instead of last used folder</comment>
   </data>
 </root>

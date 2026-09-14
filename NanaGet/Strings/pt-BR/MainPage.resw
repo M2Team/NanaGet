@@ -2,110 +2,110 @@
 <root>
   <data name="AboutButton.Text" xml:space="preserve">
     <value>Sobre</value>
-    <comment>Sobre</comment>
+    <comment>About</comment>
   </data>
   <data name="ClearListButton.AutomationProperties.Name" xml:space="preserve">
     <value>Limpar lista</value>
-    <comment>Limpar lista</comment>
+    <comment>Clear List</comment>
   </data>
   <data name="ClearListButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Limpar lista</value>
-    <comment>Limpar lista</comment>
+    <comment>Clear List</comment>
   </data>
   <data name="MoreButton.AutomationProperties.Name" xml:space="preserve">
     <value>Mais</value>
-    <comment>Mais</comment>
+    <comment>More</comment>
   </data>
   <data name="MoreButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Mais</value>
-    <comment>Mais</comment>
+    <comment>More</comment>
   </data>
   <data name="NewTaskButton.AutomationProperties.Name" xml:space="preserve">
     <value>Nova tarefa</value>
-    <comment>Nova tarefa</comment>
+    <comment>New Task</comment>
   </data>
   <data name="NewTaskButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Nova tarefa</value>
-    <comment>Nova tarefa</comment>
+    <comment>New Task</comment>
   </data>
   <data name="OpenDownloadsFolderButton.Text" xml:space="preserve">
     <value>Abrir pasta de downloads</value>
-    <comment>Abrir pasta de downloads</comment>
+    <comment>Open Downloads Folder</comment>
   </data>
   <data name="PauseAllButton.AutomationProperties.Name" xml:space="preserve">
     <value>Pausar tudo</value>
-    <comment>Pausar tudo</comment>
+    <comment>Pause All</comment>
   </data>
   <data name="PauseAllButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Pausar tudo</value>
-    <comment>Pausar tudo</comment>
+    <comment>Pause All</comment>
   </data>
   <data name="SearchBox.PlaceholderText" xml:space="preserve">
     <value>Pesquisar downloads</value>
-    <comment>Pesquisar downloads</comment>
+    <comment>Search Downloads</comment>
   </data>
   <data name="SettingsButton.Text" xml:space="preserve">
     <value>Configurações</value>
-    <comment>Configurações</comment>
+    <comment>Settings</comment>
   </data>
   <data name="StartAllButton.AutomationProperties.Name" xml:space="preserve">
     <value>Iniciar tudo</value>
-    <comment>Iniciar tudo</comment>
+    <comment>Start All</comment>
   </data>
   <data name="StartAllButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Iniciar tudo</value>
-    <comment>Iniciar tudo</comment>
+    <comment>Start All</comment>
   </data>
   <data name="TaskItemCancelButton.Text" xml:space="preserve">
     <value>Cancelar</value>
-    <comment>Cancelar</comment>
+    <comment>Cancel</comment>
   </data>
   <data name="TaskItemCopyLinkButton.Text" xml:space="preserve">
     <value>Copiar link</value>
-    <comment>Copiar link</comment>
+    <comment>Copy Link</comment>
   </data>
   <data name="TaskItemMoreButton.AutomationProperties.Name" xml:space="preserve">
     <value>Mais</value>
-    <comment>Mais</comment>
+    <comment>More</comment>
   </data>
   <data name="TaskItemMoreButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Mais</value>
-    <comment>Mais</comment>
+    <comment>More</comment>
   </data>
   <data name="TaskItemOpenFolderButton.Text" xml:space="preserve">
     <value>Abrir pasta</value>
-    <comment>Abrir pasta</comment>
+    <comment>Open Folder</comment>
   </data>
   <data name="TaskItemPauseButton.AutomationProperties.Name" xml:space="preserve">
     <value>Pausar</value>
-    <comment>Pausar</comment>
+    <comment>Pause</comment>
   </data>
   <data name="TaskItemPauseButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Pausar</value>
-    <comment>Pausar</comment>
+    <comment>Pause</comment>
   </data>
   <data name="TaskItemRemoveButton.Text" xml:space="preserve">
     <value>Remover</value>
-    <comment>Remover</comment>
+    <comment>Remove</comment>
   </data>
   <data name="TaskItemResumeButton.AutomationProperties.Name" xml:space="preserve">
     <value>Retomar</value>
-    <comment>Retomar</comment>
+    <comment>Resume</comment>
   </data>
   <data name="TaskItemResumeButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Retomar</value>
-    <comment>Retomar</comment>
+    <comment>Resume</comment>
   </data>
   <data name="TaskItemRetryButton.AutomationProperties.Name" xml:space="preserve">
     <value>Tentar novamente</value>
-    <comment>Tentar novamente</comment>
+    <comment>Retry</comment>
   </data>
   <data name="TaskItemRetryButton.ToolTipService.ToolTip" xml:space="preserve">
     <value>Tentar novamente</value>
-    <comment>Tentar novamente</comment>
+    <comment>Retry</comment>
   </data>
   <data name="TaskListNoItemsTextBlock.Text" xml:space="preserve">
     <value>Nenhum download</value>
-    <comment>Nenhum download</comment>
+    <comment>No Downloads</comment>
   </data>
 </root>

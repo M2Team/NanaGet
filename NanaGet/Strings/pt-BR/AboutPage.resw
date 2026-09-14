@@ -2,10 +2,10 @@
 <root>
   <data name="CancelButton.Content" xml:space="preserve">
     <value>Cancelar</value>
-    <comment>Cancelar</comment>
+    <comment>Cancel</comment>
   </data>
   <data name="GridTitleTextBlock.Text" xml:space="preserve">
     <value>Sobre o NanaGet</value>
-    <comment>Sobre o NanaGet</comment>
+    <comment>About NanaGet</comment>
   </data>
 </root>
