@@ -1,12 +1,12 @@
 ﻿using ImageMagick;
-using Mile.Project.Helpers;
+using Mile.DotNet.Helpers;
 using System.Collections.Concurrent;
 
 namespace NanaGet.ProjectAssetsGenerator
 {
     internal class Program
     {
-        static string RepositoryRoot = GitRepository.GetRootPath();
+        static string RepositoryRoot = Git.GetRootPath();
 
         static void Main(string[] args)
         {
@@ -25,7 +25,7 @@ namespace NanaGet.ProjectAssetsGenerator
                 ConcurrentDictionary<int, MagickImage> MetadataFileSources =
                     new ConcurrentDictionary<int, MagickImage>();
 
-                foreach (var AssetSize in ProjectAssetsUtilities.AssetSizes)
+                foreach (var AssetSize in ImageAssets.AssetSizes)
                 {
                     StandardSources[AssetSize] = new MagickImage(string.Format(
                         @"{0}\{1}\{1}_{2}.png",
@@ -50,18 +50,18 @@ namespace NanaGet.ProjectAssetsGenerator
                         AssetSize));
                 }
 
-                ProjectAssetsUtilities.GeneratePackageApplicationImageAssets(
+                ImageAssets.GeneratePackageApplicationImageAssets(
                     StandardSources,
                     ContrastBlackSources,
                     ContrastWhiteSources,
                     OutputPath);
 
-                ProjectAssetsUtilities.GeneratePackageFileAssociationImageAssets(
+                ImageAssets.GeneratePackageFileAssociationImageAssets(
                     MetadataFileSources,
                     OutputPath,
                     @"MetadataFile");
 
-                ProjectAssetsUtilities.GenerateIconFile(
+                ImageAssets.GenerateIconFile(
                     StandardSources,
                     OutputPath + @"\..\NanaGet.ico");
 
@@ -84,7 +84,7 @@ namespace NanaGet.ProjectAssetsGenerator
                 ConcurrentDictionary<int, MagickImage> MetadataFileSources =
                     new ConcurrentDictionary<int, MagickImage>();
 
-                foreach (var AssetSize in ProjectAssetsUtilities.AssetSizes)
+                foreach (var AssetSize in ImageAssets.AssetSizes)
                 {
                     StandardSources[AssetSize] = new MagickImage(string.Format(
                         @"{0}\{1}\{1}_{2}.png",
@@ -109,18 +109,18 @@ namespace NanaGet.ProjectAssetsGenerator
                         AssetSize));
                 }
 
-                ProjectAssetsUtilities.GeneratePackageApplicationImageAssets(
+                ImageAssets.GeneratePackageApplicationImageAssets(
                     StandardSources,
                     ContrastBlackSources,
                     ContrastWhiteSources,
                     OutputPath);
 
-                ProjectAssetsUtilities.GeneratePackageFileAssociationImageAssets(
+                ImageAssets.GeneratePackageFileAssociationImageAssets(
                     MetadataFileSources,
                     OutputPath,
                     @"MetadataFile");
 
-                ProjectAssetsUtilities.GenerateIconFile(
+                ImageAssets.GenerateIconFile(
                     StandardSources,
                     OutputPath + @"\..\NanaGetPreview.ico");
 
