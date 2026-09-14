@@ -32,7 +32,7 @@ If you'd like me to add features or improvements ahead of time, please use
 - Currently based on Mile.Aria2 (https://github.com/ProjectMile/Mile.Aria2), 
   the customized version of aria2 (https://github.com/aria2/aria2#features)
   which is specialized for MSVC toolchain. 
-- Multi-language Support: English, German, Japanese, Traditional Chinese and 
+- Multi-language Support: English, German, Portuguese, Japanese, Traditional Chinese and 
   Simplified Chinese.
 - Packaging with MSIX for modern deployment experience.
 - Modernize the UI with XAML Islands with the Windows 11 control style, dark
