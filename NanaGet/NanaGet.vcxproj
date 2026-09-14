@@ -181,6 +181,10 @@
     <PRIResource Include="Strings\en\MainPage.resw" />
     <PRIResource Include="Strings\en\NewTaskPage.resw" />
     <PRIResource Include="Strings\en\SettingsPage.resw" />
+    <PRIResource Include="Strings\pt-BR\AboutPage.resw" />
+    <PRIResource Include="Strings\pt-BR\MainPage.resw" />
+    <PRIResource Include="Strings\pt-BR\NewTaskPage.resw" />
+    <PRIResource Include="Strings\pt-BR\SettingsPage.resw" />
     <PRIResource Include="Strings\ja\AboutPage.resw" />
     <PRIResource Include="Strings\ja\MainPage.resw" />
     <PRIResource Include="Strings\ja\NewTaskPage.resw" />
