@@ -1,6 +1,15 @@
 ﻿# NanaGet Release Notes
 
-**NanaGet 1.3 (1.3.1390.0)**
+**NanaGet 1.3 Update 2 (1.3.1607.0)**
+
+- Introduce Brazilian Portuguese translation. (Contributed by maisondasilva.)
+- Use global.json to simplify the MSBuild Project SDK version resolving.
+- Use Mile.DotNet.Helpers instead of Mile.Project.Helpers.
+- Update Mile.Project.Configurations to 1.1.2116.
+- Update Mile.Xaml to 2.5.1616.
+- Update WTL to 10.1.0.
+
+**NanaGet 1.3 Update 1 (1.3.1390.0)**
 
 - Introduce the portable mode support.
 - Use x-generate to define language resources in AppX manifest to solve the
