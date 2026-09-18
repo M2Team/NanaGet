@@ -169,7 +169,7 @@
       <Version>1.0.1050</Version>
     </PackageReference>
     <PackageReference Include="wtl">
-      <Version>10.0.10320</Version>
+      <Version>10.1.0</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
